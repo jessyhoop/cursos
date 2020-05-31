@@ -1,0 +1,229 @@
+<?php //if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+/**
+ *
+ */
+class Ccaragon2 extends CI_Model  {
+
+   public function __construct(){  
+       parent::__construct();   
+       $this->load->database();
+   }
+   
+   function evaluacion(){
+        
+      $query = $this->db->query('SELECT * FROM evaluacion order by PROFESOR limit 20'); 
+        if($query){
+                $row = $query->result_array();
+                   return $row;
+        } else{ 
+               $error = $this->db->error();
+                return $error;
+              
+              }
+      /* $query = $this->db->query("SELECT * FROM evaluacion order by PROFESOR limit 4");
+
+           $row = $query->row_array();
+
+           return $row;*/
+             
+   }
+    function getEvaluacion($profesor, $grupo){
+        
+     //$query = $this->db->query('SELECT  CLAVE_EVALUACION FROM evaluacion WHERE GRUPO="'.$grupo.'" AND profesor="'.$profesor.'"  limit 1'); 
+        $query = $this->db->query('SELECT  idevaluacion FROM evaluacion WHERE grupo="'.$grupo.'" AND profesor_idprofesor="'.$profesor.'"  limit 1'); 
+     // echo ($query);
+        if($query){
+                $row = $query->row();
+                   return $row;
+        } else{ 
+               $error = $this->db->error(); 
+                return $error;  
+              
+              }
+     
+             
+   }  
+     function getProfesor($nombre){
+        
+      $query = $this->db->query('SELECT  idprofesor FROM  profesor WHERE nombre="'.$nombre.'"  limit 1'); 
+    // echo 'SELECT  idprofesor FROM  profesor WHERE nombre="'.$nombre.'"  limit 1';
+        if($query){
+                $row = $query->row();
+                   return $row;
+        } else{ 
+               $error = $this->db->error(); 
+                return $error;
+              
+              }
+     
+             
+   }  
+    
+    
+    
+    
+    function insertaEvaluacion($grupo,$periodo,$horario,$array_datos){
+            //REVISAR GRUPO 
+          //AGREGAR VARIABLES DE SESSION
+         $query = $this->db->query("INSERT INTO `evaluacion` (`CLAVE_EVALUACION`, `GRUPO`, `CLAVE_MATERIA`, `PROFESOR`, `MATERIA`, `PERIODO`, `HORARIO`) VALUES ('null', 'dsfg', '0001', '1', 'sdfsdfsdfsdfsdf', 'fdfdsfsdfsdf', 'sdfsdfsdfsd');"); 
+        if($query){
+                $row = $query->result_array();
+                   return $row;
+        } else{ 
+               $error = $this->db->error(); 
+                return $error;
+              
+              }
+      /* $query = $this->db->query("SELECT * FROM evaluacion order by PROFESOR limit 4");
+
+           $row = $query->row_array();
+
+           return $row;*/
+        
+        
+    }
+    
+    //******************** PRUEBA ccargon CAMBIO A ccargon2
+    function insertaCaptura($evaluacion,$respuestas,$comentarios,$respuesta_1,$respuesta_2,$respuesta_3,$respuesta_4,$respuesta_5,$respuesta_6,$respuesta_7,$respuesta_8,$respuesta_9,$respuesta_10,$respuesta_11,$respuesta_12,$respuesta_13,$respuesta_14,$respuesta_15,$respuesta_16,$respuesta_17){ 
+            // $claveEvaluacion $stringRespuestas
+            //REVISAR GRUPO 
+          //AGREGAR VARIABLES DE SESSION
+         /*$query = $this->db->query("INSERT INTO `captura` (`CONTADOR`, `CLAVE_EVALUACION`, `RESPUESTAS`, `COMENTARIOS`, `CALIFICACIONES`) VALUES (' 0', '".$claveEvaluacion."', '".$stringRespuestas."', '".$comentarios."', '405');"); */
+      //`idcaptura`,
+        $data = array(
+   'idevaluacion' => $evaluacion ,
+   'respuestas' => $respuestas ,
+   'comentarios' => $comentarios,
+   'calificaciones' => '405' ,
+   'fecham' => date('Y-m-d H:i:s') ,
+   'respuesta_1' => $respuesta_1 ,
+   'respuesta_2' => $respuesta_2 ,
+   'respuesta_3' => $respuesta_3 ,
+   'respuesta_4' => $respuesta_4 ,
+   'respuesta_5' => $respuesta_5 ,
+   'respuesta_6' => $respuesta_6 ,
+   'respuesta_7' => $respuesta_7 ,
+   'respuesta_8' => $respuesta_8,
+   'respuesta_9' => $respuesta_9 ,
+   'respuesta_10' => $respuesta_10 ,
+   'respuesta_11' => $respuesta_11 ,
+   'respuesta_12' => $respuesta_12 ,
+   'respuesta_13' => $respuesta_13 ,
+   'respuesta_14' => $respuesta_14 ,
+   'respuesta_15' => $respuesta_15 ,
+   'respuesta_16' => $respuesta_16,
+   'respuesta_17' => $respuesta_17 
+
+            );
+
+$query = $this->db->insert('captura', $data); 
+
+        if($query){ 
+              
+                   return true;
+        } else{ 
+               $error = $this->db->error(); 
+                return $error;
+              
+           }
+    }
+     function profesores(){
+        
+     // $query = $this->db->query('SELECT nombre FROM profesor order by nombre');  
+    $query = $this->db->query('SELECT nombre FROM profesor order by nombre'); //ccaragon2
+        if($query){
+                $row = $query->result_array();
+                   return $row;
+        } else{ 
+               $error = $this->db->error(); 
+                return $error;
+              
+              }
+     
+             
+   }
+   function materias(){
+        
+      //$query = $this->db->query('SELECT MATERIA FROM materias order by MATERIA limit 10'); 
+       $query = $this->db->query('SELECT materia FROM materia order by materia '); 
+        if($query){
+                $row = $query->result_array();
+                   return $row;
+        } else{ 
+               $error = $this->db->error(); 
+                return $error;
+              
+              }
+     
+             
+   }
+    
+    function profesor_curso($profesor){
+        
+      //$query = $this->db->query('SELECT MATERIA, PERIODO , GRUPO, HORARIO FROM evaluacion WHERE profesor="'.$profesor.'" order by MATERIA limit 10'); 
+        //$profesor=1;
+        
+        $query = $this->db->query('SELECT materia.materia AS nombreMateria, periodo , grupo, horario FROM evaluacion INNER JOIN materia ON  evaluacion.profesor_idprofesor="'.$profesor.'" AND materia.idmateria=evaluacion.materia_idmateria order by materia_idmateria'); 
+        
+        if($query){
+                $row = $query->result_array();
+                   return $row;
+        } else{ 
+               $error = $this->db->error(); 
+                return $error;
+              
+              }
+     
+             
+   }
+    
+  function horario_curso($profesor, $grupo){
+        
+      //$query = $this->db->query('SELECT  PERIODO , HORARIO FROM evaluacion WHERE GRUPO="'.$grupo.'" AND profesor="'.$profesor.'" order by MATERIA limit 10'); 
+      
+      $query = $this->db->query('SELECT  periodo , horario FROM evaluacion WHERE grupo="'.$grupo.'" AND profesor_idprofesor="'.$profesor.'" order by materia_idmateria limit 1'); 
+     //echo ('SELECT  periodo , horario FROM evaluacion WHERE grpo="'.$grupo.'" AND profesor_idprofesor="'.$profesor.'" order by materia limit 1');
+        if($query){
+                $row = $query->result_array();
+                   return $row;
+        } else{ 
+               $error = $this->db->error(); 
+                return $error;
+              
+              }         
+   }  
+    
+ function nombre_cursos(){
+      $ssql = "select * from articulo order by id desc limit 5";
+      return mysqli_query($ssql);
+   }
+    
+//}
+
+
+//--------------funcion Cursos------------------//
+ function lista_cursos(){
+
+$query = $this->db->query('SELECT clave_materia, materia, semestre FROM `materia` ORDER BY materia ');
+ 
+ if($query){
+      $row = $query->result_array();
+                   return $row;
+        
+        } else{ 
+     
+        $error = $this->db->error(); 
+                return $error;
+              
+        }
+       // return mysql_query($query);
+
+     }
+//---------------Termina Funcion----------------//
+
+
+
+}
+
+
+?>

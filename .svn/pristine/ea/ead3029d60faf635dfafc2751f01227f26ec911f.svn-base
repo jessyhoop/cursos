@@ -1,0 +1,68 @@
+<?php
+
+defined("BASEPATH") OR die("El acceso al script no está permitido");
+
+class profesores_model extends CI_Model {
+
+    public function __construct() {
+        parent::__construct();
+        $this->load->database();
+    }
+
+    function get_rfc($rfc) {
+        $this->db->select("rfc");
+        $this->db->where('rfc', $rfc);
+        $query = $this->db->get('profesor');
+            // echo '<pre>';
+            //  $this->db->last_query();     
+            // echo '</pre>';
+        return $query->num_rows() > 0 ? $query->result_array() : false;
+    }
+
+    function get_profesores() {
+        $this->db->select("rfc,idprofesor,nombre");
+        $this->db->where("status", 1);
+        $query = $this->db->get('profesor');
+        return $query->num_rows() > 0 ? $query->result_array() : false;
+    }
+
+    function get_profesor($id_profesor) {
+        $this->db->select("rfc,idprofesor,nombre");
+        $this->db->where("idprofesor", $id_profesor);
+        $query = $this->db->get('profesor');
+        return $query->result_array();
+    }
+
+    function elimina_profesor($id_profesor) {
+
+        $this->db->set('status', 0);
+        $this->db->where('idprofesor', $id_profesor);
+        return $this->db->update('profesor');
+    }
+
+    function update_datos_profesor($id_profesor, $nombre, $rfc) {
+
+        $this->db->set('nombre', $nombre);
+        $this->db->set('rfc', $rfc);
+        $this->db->where('idprofesor', $id_profesor);
+        return $this->db->update('profesor');
+    }
+
+    function insert_datos_profesor($nombre, $rfc, $status) {
+        $data = array(
+            'nombre' => $nombre,
+            'rfc' => $rfc,
+            'status' => $status
+        );
+        $query = $this->db->insert('profesor', $data);
+
+        if ($query) {
+
+            return true;
+        } else {
+            $error = $this->db->error();
+            return $error;
+        }
+    }
+
+}

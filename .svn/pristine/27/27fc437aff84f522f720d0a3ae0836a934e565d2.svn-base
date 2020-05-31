@@ -1,0 +1,264 @@
+<?php
+
+if (!defined('BASEPATH'))
+    exit('No direct script access allowed');
+
+class Calificacion_por_profesor_por_orden_de_promedio extends CI_Controller {
+
+    public function __construct() {
+        parent::__construct();
+        //cargamos la libreria html2pdf
+        $this->load->library('html2pdf');
+        //cargamos el modelo pdf_model
+        $this->load->model('reportes_model');
+    }
+
+    private function createFolder() {
+        if (!is_dir("./files")) {
+            mkdir("./files", 0777);
+            mkdir("./files/pdfs", 0777);
+        }
+    }
+
+   public function index() {
+
+        $suma = 0;
+        $profesor = "";
+        $nuevo = array();
+        $elementos = array();
+        //establecemos la carpeta en la que queremos guardar los pdfs,
+        //si no existen las creamos y damos permisos
+        $this->createFolder();
+
+        //importante el slash del final o no funcionará correctamente
+        $this->html2pdf->folder('./files/pdfs/');
+
+        //establecemos el nombre del archivo
+        $this->html2pdf->filename('test.pdf');
+
+        //establecemos el tipo de papel
+//        $this->html2pdf->paper('a4', 'portrait'); //vertical
+        $this->html2pdf->paper('a4', 'landscape'); //horizontal
+        //datos que queremos enviar a la vista, lo mismo de siempre
+
+        $elementos = $this->reportes_model->get_elementos_captura();
+        foreach ($elementos as $elemento) {
+            $arreglo_promedio[] = ["calif_profesor" => 0,
+                "hora_fin" => $elemento["hora_fin"],
+                "hora_inicio" => $elemento["hora_inicio"],
+                "fecha_inicio" => $this->convertir_fecha_formato_sql_a_diagonal($elemento["fecha_inicio"]),
+                "fecha_fin" => $this->convertir_fecha_formato_sql_a_diagonal($elemento["fecha_fin"]),
+                "calificacion_texto" => $this->obtener_calificacion_texto_by_calificacion($elemento['respuestas']),
+                "clave_materia" => $elemento["clave_materia"],
+                "materia" => $elemento['materia'],
+                "grupo" => $elemento['grupo'],
+                "nombre" => $elemento['nombre'],
+                "promedio" => $this->obtener_promedio_by_id($elemento['respuestas'])
+            ];
+        }
+        //obtenemos todos los grupos del array $arreglo_promedio  para iniciar la busqueda
+        foreach ($arreglo_promedio as $parte) {
+            $grupos[] = $parte["grupo"];
+        }
+        $grupo_unico = array_unique($grupos);
+
+        foreach ($grupo_unico as $un) {
+            $contador = 0;
+            foreach ($arreglo_promedio as $original) {
+                if ($un == $original["grupo"]) {
+                    $suma = $suma + $original['promedio'];
+                    $profesor = $original['nombre'];
+                    $hora_fin = $original['hora_fin'];
+                    $hora_inicio = $original['hora_inicio'];
+                    $fecha_inicio = $original['fecha_inicio'];
+                    $fecha_fin = $original['fecha_fin'];
+//                    $calificacion_texto = $original['calificacion_texto'];
+                    $clave_materia = $original['clave_materia'];
+                    $materia = $original['materia'];
+//                    $grupo = $original['grupo'];
+                    $contador++;
+                }
+            }
+            $ele['grupo'] = $un;
+//            $ele['promedio'] = ($suma);
+            $ele['promedio'] = ($suma) / $contador;
+            $ele['profesor'] = $profesor;
+            $ele['hora_fin'] = $hora_fin;
+            $ele['hora_inicio'] = $hora_inicio;
+            $ele['fecha_inicio'] = $fecha_inicio;
+            $ele['fecha_fin'] = $fecha_fin;
+            $ele['calificacion_texto'] = $this->obtener_calificacion_texto_by_calificacion($ele['promedio']);
+            $ele['clave_materia'] = $clave_materia;
+            $ele['materia'] = $materia;
+            $ele['numero_de_cuestionarios'] = $contador;
+            array_push($nuevo, $ele);
+            $suma = 0;
+        }
+
+//mandamos el array para que se muestre  en el php
+        $data = array( 'calificaciones' => $this->ordenar_array_asc_by_elemento($nuevo,'promedio'));
+        $this->html2pdf->html(utf8_decode($this->load->view('Reportes/reporte_calificacion_por_profesor_por_orden_de_promedio', $data, true)));
+        //si el pdf se guarda correctamente lo mostramos en pantalla
+        if ($this->html2pdf->create('save')) {
+            $this->show();
+        }
+    }
+
+//funcion que ordena un array multi con base a un elemento del mismo
+    function ordenar_array_asc_by_elemento($array_nuevo,$elemento_a_ordenar) {
+        $ordenar = array($elemento_a_ordenar => array());
+
+        foreach ($array_nuevo as $clave => $nuevo_a) {
+            $ordenar[$elemento_a_ordenar][$clave] = $nuevo_a[$elemento_a_ordenar];
+        }
+
+        array_multisort($ordenar[$elemento_a_ordenar], SORT_ASC, $array_nuevo);
+        return $array_nuevo;
+    }
+
+    public function obtener_promedio_by_id($respuesta) {
+        $strtempo = $respuesta;
+        //print_r($split[0]["respuestas"]);
+        $arraytempo = str_split($strtempo);
+
+        // var_dump($arraytempo);
+        //print_r($arraytempo[0]);
+        for ($x = 0; $x < count($arraytempo); $x++) {
+            switch ($arraytempo[$x]) {
+                case 'a':
+                    $arraytempo[$x] = 10;
+                    break;
+
+                case 'b':
+                    $arraytempo[$x] = 8;
+                    break;
+                case 'c':
+                    $arraytempo[$x] = 6;
+                    break;
+
+                case 'd':
+                    $arraytempo[$x] = 5;
+                    break;
+            }//fin switch
+        }//fin for
+        // var_dump($arraytempo);
+        //ARRAY CON PESO
+        // print_r($arraytempo[0]);
+        // PROMEDIO CON ARRAY*
+        //  $a = array_filter($a);
+        $average = array_sum($arraytempo) / count($arraytempo);
+        return $average;
+    }
+
+    public function obtener_calificacion_texto_by_calificacion($calificacion) {
+
+//       $calificacion= $this->obtener_promedio_by_id($calificacion_respuesta);
+
+        if ($calificacion <= 10 && $calificacion >= 9) {
+            return "EXCELENTE";
+        } elseif ($calificacion < 9 && $calificacion >= 8) {
+            return "MUY BIEN";
+        } elseif ($calificacion < 8 && $calificacion >= 5) {
+            return "BIEN";
+        } elseif ($calificacion <= 4 && $calificacion = 0) {
+            return "DEFICIENTE";
+        }
+    }
+
+    public function convertir_fecha_formato_sql_a_diagonal($fecha) {
+        $valores = explode('-', $fecha);
+        if (count($valores) == 3 && checkdate($valores[1], $valores[2], $valores[0])) {
+            return $valores[2] . '/' . $valores[1] . '/' . $valores[0];
+        }
+        return FALSE;
+    }
+
+    //funcion que ejecuta la descarga del pdf
+    public function downloadPdf() {
+        //si existe el directorio
+        if (is_dir("./files/pdfs")) {
+            //ruta completa al archivo
+                        $route =("http://localhost/ccaragon/codeigniter/files/pdfs/test.pdf");
+
+//            $route = base_url("files/pdfs/test.pdf");
+            //nombre del archivo
+            $filename = "test.pdf";
+            //si existe el archivo empezamos la descarga del pdf
+            if (file_exists("./files/pdfs/" . $filename)) {
+                header("Cache-Control: public");
+                header("Content-Description: File Transfer");
+                header('Content-disposition: attachment; filename=' . basename($route));
+                header("Content-Type: application/pdf");
+                header("Content-Transfer-Encoding: binary");
+                header('Content-Length: ' . filesize($route));
+                readfile($route);
+            }
+        }
+    }
+
+    //esta función muestra el pdf en el navegador siempre que existan
+    //tanto la carpeta como el archivo pdf
+    public function show() {
+        if (is_dir("./files/pdfs")) {
+            $filename = "test.pdf";
+//            $route = base_url("files/pdfs/test.pdf");
+                        $route =("http://localhost/ccaragon/codeigniter/files/pdfs/test.pdf");
+
+            if (file_exists("./files/pdfs/" . $filename)) {
+                header('Content-type: application/pdf');
+                readfile($route);
+            }
+        }
+    }
+
+    //función para crear y enviar el pdf por email
+    //ejemplo de la libreria sin modificar
+    public function mail_pdf() {
+
+        //establecemos la carpeta en la que queremos guardar los pdfs,
+        //si no existen las creamos y damos permisos
+        $this->createFolder();
+
+        //importante el slash del final o no funcionará correctamente
+        $this->html2pdf->folder('./files/pdfs/');
+
+        //establecemos el nombre del archivo
+        $this->html2pdf->filename('test.pdf');
+
+        //establecemos el tipo de papel
+        $this->html2pdf->paper('a4', 'portrait');
+
+        //datos que queremos enviar a la vista, lo mismo de siempre
+        $data = array(
+            'title' => 'Listado de las provincias españolas en pdf',
+            'provincias' => $this->pdf_model->getProvincias()
+        );
+
+        //hacemos que coja la vista como datos a imprimir
+        //importante utf8_decode para mostrar bien las tildes, ñ y demás
+        $this->html2pdf->html(utf8_decode($this->load->view('reporte_individual', $data, true)));
+
+
+        //Check that the PDF was created before we send it
+        if ($path = $this->html2pdf->create('save')) {
+
+            $this->load->library('email');
+
+            $this->email->from('your@example.com', 'Your Name');
+            $this->email->to('israel965@yahoo.es');
+
+            $this->email->subject('Email PDF Test');
+            $this->email->message('Testing the email a freshly created PDF');
+
+            $this->email->attach($path);
+
+            $this->email->send();
+
+            echo "El email ha sido enviado correctamente";
+        }
+    }
+
+}
+
+/* End of file pdf_ci.php */
+/* Location: ./application/controllers/pdf_ci.php */

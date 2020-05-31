@@ -1,0 +1,210 @@
+<?php 
+
+class CreaPdf extends CI_Controller {
+ 
+    
+/* function __construct() 
+ {   //en el constructor cargamos nuestro modelo
+    parent::__construct();
+    $this->load->helper('url'); //agrega base_url
+    //$this->load->helper('form');
+    //$this->load->helper(array('form', 'url'));
+    //$this->load->library('form_validation');   
+    //$this->load->model('ReporteModel');
+ }*/
+//	dnvdfiofd
+    
+    
+    public function Index()
+    {
+    
+	    //Load the library
+	    $this->load->library('html2pdf');
+	    
+	    //Set folder to save PDF to
+	    $this->html2pdf->folder('/var/www/codeigniter3/assets/pdfs/'); 
+	    
+	    //Set the filename to save/download as
+	    $this->html2pdf->filename('prueba2.pdf');
+	    
+	    //Set the paper defaults
+	    $this->html2pdf->paper('a4', 'portrait');
+        
+	    //$this->html2pdf->SetDisplayMode('fullpage');
+         
+       $reporte = $this->ReporteModel->reporte_alumno();
+	   $data = array( 'alumno' => $reporte );
+        
+	   /* $data = array(
+	    	'title' => 'PDF Created',
+	    	'message' => 'Hello World!'
+	    );*/
+	    
+	    //Load html view
+	    $this->html2pdf->html($this->load->view('pdfview', $data, true));
+        //$this->html2pdf->html($this->load->view('pdfview'));
+        
+        
+        
+        //$this->html2pdf->Output('directory/file_xxxx.pdf', 'F');
+	    
+	    if($this->html2pdf->create('download')) {
+	    	//PDF was successfully saved or downloaded
+	    	echo 'PDF saved';
+	    }
+	    
+    } 
+    
+    //==============Funcion para el reporte de Alumnos=============//
+    public function reporte()
+    {
+    
+	   //Load the library
+	    $this->load->library('html2pdf');
+	    
+	    //Set folder to save PDF to
+	    $this->html2pdf->folder('./assets/pdfs/');  /*<?php echo base_url(); ?>*/
+	    
+	    //Set the filename to save/download as
+	    $this->html2pdf->filename('Reporte.pdf');
+	    
+	    //Set the paper defaults
+	    $this->html2pdf->paper('a4', 'portrait');
+	    
+        
+        $reporte = $this->ReporteModel->reporte_alumno();
+	    $data = array( 'alumno' => $reporte );
+        
+	    /*$data = array(
+	    	'title' => 'PDF Created',
+	    	'message' => 'Hello World!'
+	    );*/
+	    
+	    //Load html view
+	    $this->html2pdf->html($this->load->view('adminLTE/reporteview', $data, true));
+        
+        
+        //$this->html2pdf->Output('directory/file_xxxx.pdf', 'F');
+	    
+	    if($this->html2pdf->create('download')) {
+	    	//PDF was successfully saved or downloaded
+	    	echo 'PDF saved';
+	    }
+	    
+    }
+ //==============Termina Función de Reporte=============//  
+    
+    //==============Funcion Comprobanter==============//
+    public function comprobante_alumno()
+    {
+    
+	   //Load the library
+	    $this->load->library('html2pdf');
+	    
+	    //Set folder to save PDF to
+	    $this->html2pdf->folder('./assets/pdfs/');  /*<?php echo base_url(); ?>*/
+	    
+	    //Set the filename to save/download as
+	    $this->html2pdf->filename('Comprobante.pdf');
+	    
+	    //Set the paper defaults
+	    $this->html2pdf->paper('a4', 'portrait');
+	    
+        
+        $reporte = $this->ReporteModel->comprobante_alumno();
+	    $data = array( 'alumno' => $reporte );
+        
+	    /*$data = array(
+	    	'title' => 'PDF Created',
+	    	'message' => 'Hello World!'
+	    );*/
+	    
+	    //Load html view
+	    $this->html2pdf->html($this->load->view('adminLTE/comprobanteview', $data, true));
+        
+        
+        //$this->html2pdf->Output('directory/file_xxxx.pdf', 'F');
+	    
+	    if($this->html2pdf->create('download')) {
+	    	//PDF was successfully saved or downloaded
+	    	echo 'PDF saved';
+	    }
+	    
+    } 
+    //==============Termino Comprobante==============//
+    
+	public function mail_pdf()
+    {
+		//Load the library
+	    $this->load->library('html2pdf');
+	    
+	    $this->html2pdf->folder('<?php echo base_url(); ?> assets/pdfs/');
+	    $this->html2pdf->filename('email_test.pdf');
+	    $this->html2pdf->paper('a4', 'portrait');
+	    
+	    $data = array(
+	    	'title' => 'PDF Created',
+	    	'message' => 'Hello World!'
+	    );
+	    //Load html view
+	    $this->html2pdf->html($this->load->view('pdf', $data, true));
+	    
+	    //Check that the PDF was created before we send it
+	    if($path = $this->html2pdf->create('save')) {
+	    	
+			$this->load->library('email');
+
+			$this->email->from('your@example.com', 'Your Name');
+			$this->email->to('someone@example.com'); 
+			
+			$this->email->subject('Email PDF Test');
+			$this->email->message('Testing the email a freshly created PDF');	
+
+			$this->email->attach($path);
+
+			$this->email->send();
+			
+			echo $this->email->print_debugger();
+						
+	    }
+	    
+    } 
+
+
+    //------------------------Ejemplo de Pdf------------------//
+    public function ejemplo_pdf(){
+    
+	    //Load the library
+	    $this->load->library('html2pdf');
+	    
+	    //Set folder to save PDF to
+	    $this->html2pdf->folder('./assets/pdfs/');
+	    
+	    //Set the filename to save/download as
+	    $this->html2pdf->filename('test.pdf');
+	    
+	    //Set the paper defaults
+	    $this->html2pdf->paper('a4', 'portrait');
+	    
+	    $data = array(
+	    	'title' => 'PDF Created',
+	    	'message' => 'Hello World!'
+	    );
+	    
+	    //Load html view
+	    $this->html2pdf->html($this->load->view('pdf', $data, true));
+	    
+	    if($this->html2pdf->create('save')) {
+	    	//PDF was successfully saved or downloaded
+	    	echo 'PDF saved';
+	    }
+	    
+    } 
+     //---------------------Termina Ejemplo de Pdf------------------//
+
+
+
+}
+
+/* End of file example.php */
+/* Location: ./application/controllers/example.php */

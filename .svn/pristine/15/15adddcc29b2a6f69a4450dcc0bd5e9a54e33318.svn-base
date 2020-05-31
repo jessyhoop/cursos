@@ -1,0 +1,143 @@
+<?php
+class Gestion extends CI_Controller
+{
+    public function __construct()
+    {
+        parent::__construct();
+		$this->load->library(array('session','form_validation'));
+		$this->load->helper(array('url','form'));
+		$this->load->model('Ccaragon2');
+	    $this->load->database('default');
+    }
+
+    public function index()
+	{	
+    $this->load->view('ccaragon/gestionview');
+	}
+
+   //---------------Nueva vista con el Dashboard----------------------------//
+   public function gestion()
+   {
+   $this->load->view('ccaragon/usuarioview.php');
+   }
+   //------------------Termina vista nueva----------------------------//
+
+ 
+   //---------------------Funcion para saber el total de evaluaciones--------------------//
+    public function getTotalEval(){
+      
+      $this->load->model('Usuarios');
+
+      $evaluaciones = $this->Usuarios->total_evaluacion();
+	  $datos_alumnos = array('evaluacion' => $evaluaciones); 
+      echo json_encode($datos_alumnos);
+
+       //echo ('evaluacion');  
+       // comentario de prueba             
+    }
+
+
+   //--------------------Termina funcion ------------------------------//
+
+   
+   //---------------------Funcion para traer las respuestas--------------------//
+    public function getRespuestas(){
+
+    	$respuestas =$this->Ccaragon2->respuestas();
+    	$respuestas_alumnos = array('respuestas_total' => $respuestas);
+    	 echo json_encode($respuestas_alumnos);	
+    }
+   //--------------------Termina funcion ------------------------------//
+
+   //-----------------Funcion para evaluar respuestas---------------------------//
+    public function split(){
+   
+     $this->load->model('Usuarios');
+     $this->load->database('default');
+
+      //print_r(str_split("aaabbbcccddd"));
+
+      //$split = $this ->Ccaragon2->respuestas();	
+      //print_r(str_split($split));
+
+     $split = $this->Usuarios->respuestas();
+      //print_r(str_split($split));
+     //print_r(var_dump($split));
+     //var_dump($split);
+     $strtempo=$split[0]["respuestas"];
+     //print_r($split[0]["respuestas"]);
+     $arraytempo=str_split($strtempo);
+    
+     // var_dump($arraytempo);
+     //print_r($arraytempo[0]);
+      for($x=0; $x<count($arraytempo); $x++){
+           switch ($arraytempo[$x]){
+		    case 'a':
+		         $arraytempo[$x]=10;
+		        break;
+
+		    case 'b':
+		        $arraytempo[$x]=8;
+		        break;
+		    case 'c':
+		         $arraytempo[$x]=6;
+		        break;
+
+		        case 'd':
+		        $arraytempo[$x]=5;
+		        break;
+		}//fin switch
+      }//fin for
+    
+     // var_dump($arraytempo);
+      //ARRAY CON PESO
+    // print_r($arraytempo[0]);
+     // PROMEDIO CON ARRAY*
+	   //  $a = array_filter($a);
+	$average = array_sum($arraytempo)/count($arraytempo);
+	echo $average;
+
+
+    }
+
+    //----------------------Termina Funcion----------//
+
+    //------------Funcion para ordenar los profesores-------------//
+
+    public function getProfesores(){
+        
+        /*$respuestas =$this->Ccaragon2->respuestas();
+    	$respuestas_alumnos = array('respuestas_total' => $respuestas);
+    	 echo json_encode($respuestas_alumnos);	*/
+      
+      $this->load->model('Usuarios');
+       
+    	$profesores =$this->Usuarios->listaMaestros();
+    	$listaProf = array('profesores' => $profesores);
+    	 echo json_encode($listaProf);	
+
+    	//echo $profesores;
+
+
+    }
+
+    //--------------------Termina Funcion----------------//
+
+    //--------------Fucnion Cursos--------------------//
+
+    public function getCursos(){
+    
+    $this->load->model('Ccaragon2');
+    
+    $cursos = $this->Ccaragon2->lista_cursos();
+    $listaCursos= array('cursos' => $cursos);
+    echo json_encode($listaCursos);
+     
+      //echo $listaCursos;
+
+
+    }
+
+    //-----------Termina Funcion---------------------//
+
+}

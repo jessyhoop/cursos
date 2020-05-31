@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="utf-8">
+        <style type="text/css">
+            /*    
+
+            /* estilos para el footer y el numero de pagina */
+            @page { margin: 40px 40px 90px 40px }
+            #footer {
+                position: fixed;
+                left: 0px;
+                bottom: -180px;
+                right: 0px;
+                height: 150px;
+                /*background-color: #333;*/
+                /*color: #fff;*/
+                text-align: center;
+            }
+            #footer .page:after {
+                content: counter(page, upper-roman);
+            }
+        </style>
+        <!--<link href="js/bootstrap.min.css" rel="stylesheet" type="text/css"/>-->
+    </head>
+    <body>
+        <!--header para cada pagina-->
+        <table width="100%" style=' margin-top:2px; font-family:serif ; font-size: 12pt;'>
+            <tr>
+                <td  width="30%"><img src="images/unam.jpg"/></td>
+                <td align='center' ><span ><strong > UNIVERSIDAD NACIONAL AUT&Oacute;NOMA DE M&Eacute;XICO<br/>
+                            FACULTAD DE ESTUDIOS SUPERIORES ARAG&Oacute;N<br/><br/>
+                            </br>
+                            CENTRO DE C&Oacute;MPUTO
+                            </br>
+                            </br>
+                            </br>
+                            <p style='font-size:9pt;'>  EVALUACIO&Aacute;N GLOBAL DE PROFESORES POR ORDEN DE PROFESOR  </p> 
+                        </strong> </span></td>
+                <td width="30%" align="right"> <img src="images/aragon.png"/></td>
+            </tr>
+        </table>
+        <!--<p>Calificaciones.</p>-->
+        <table width="100%" >
+            <thead style='border-bottom: 1px solid #00000C; font-size: 8pt; '>
+                <tr>
+                    <th width="20">GRUPO</th>
+                    <th width="40">C.M.</th>
+                    <th width="150">MATERIA</th>
+                    <th width="100">PROFESOR</th>
+                    <th width="50">PROM.</th>
+                    <th width="50">EVALUACI&Oacute;N</th>
+                    <th width="100">PERIODO</th>
+                    <th width="150">HORARIO</th>
+                </tr>
+            </thead>
+            <tbody  style=' vertical-align: bottom; font-family:monospace; font-size: 8pt;'>
+                <?php // foreach ($respuestas as $respuesta) { ?>
+                <?php foreach ($respuestas as $res) { ?>
+                    <tr>
+                        <td width="20" align='center'><?php echo $res['grupo'] ?></td>
+                        <td width="40"   align='center'><?php echo $res['clave_materia'] ?></td>
+                        <td width="150" align='left'><?php echo $res['materia'] ?></td>
+                        <td width="100" align='center'><?php echo $res['nombre'] ?></td>
+                        <td width="50" align='center'><?php echo bcdiv($res['promedio'], '1', 2); ?></td>
+                        <td width="50" align='justify'><?php echo $res['calificacion_texto']; ?></td>
+                        <td width="100" align='center'><?php echo $res['fecha_inicio'] . "-" . $res['fecha_fin']; ?></td>
+                        <td width="150" align='center'><?php echo $res['hora_inicio'] . "-" . $res['hora_fin']; ?></td>
+                    </tr>
+                    <?php ?>
+                <?php } ?>
+            </tbody>
+        </table>
+        </br>
+        </br>
+        </br>
+        <p><strong> Total de evaluaciones:</strong><?php echo $total_de_evaluaciones ?></p>
+        <div id="footer">
+            <table style='vertical-align: bottom;  font-size: 8pt;'>
+                <tr>
+                    <td  align='center' width="350">
+                        <strong>UNIDAD DE SISTEMAS Y SERVICIOS EN C&Oacute;MPUTO </strong>
+                    </td>                   
+                    <td  align='LEFT' width="100">
+                        <p class="page">P&Aacute;GINA:</p>
+                    </td>                   
+                    <td  align='center' width="200">
+                        <strong>DEPARTAMENTO DE INFORM&Aacute;TICA </strong>
+                    </td>                   
+                </tr>
+            </table>
+        </div>
+    </body>
+</html>

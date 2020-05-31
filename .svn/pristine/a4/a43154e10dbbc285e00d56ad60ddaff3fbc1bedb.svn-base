@@ -1,0 +1,123 @@
+<?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+/**
+ * 
+ */
+class Usuarios extends CI_Model {
+	//dsfds
+	public function __construct() {  
+       parent::__construct();   
+       $this->load->database();
+   }
+	
+	
+	public function login_user($username,$password)
+	{
+		$this->db->where('username',$username);
+		$this->db->where('password',sha1($password));
+		//$query = $this->db->get('users');
+        $query = $this->db->get('usuarios');
+		if($query->num_rows() == 1)
+		{
+			return $query->row();
+		}else{
+			$this->session->set_flashdata('usuario_incorrecto','Los datos introducidos son incorrectos');
+			redirect(base_url().'login','refresh');
+		}
+	}
+
+
+   public function login_usuario2($username,$password)
+	{
+		$this->db->where('user',$username);
+		//$this->db->where('fecha_nacimiento',$password);
+		//$query = $this->db->get('users');
+        $query = $this->db->get('nombre');
+		if($query->num_rows() == 1)
+		{
+			return $query->row();
+		}else{
+			$this->session->set_flashdata('usuario_incorrecto','Los datos introducidos son incorrectos');
+			redirect(base_url().'index.php/Login','refresh');
+		}
+	}
+
+
+   
+   function login_usuario($username,$password){
+        
+    $query = $this->db->query('SELECT usuario FROM reg_usuarios WHERE usuario="'.$username.'" AND passwd="'.sha1($password).'" limit 1');
+	   //echo"".$query; 
+        if($query){
+                $row = $query->result_array();
+                   return $row;
+        } else{ 
+               $error = $this->db->error();
+                return $error;
+              
+              }
+             
+   }
+
+   //-----------------Funcion para saber el no. total de personas que evaluaron-----------------//
+
+   function total_evaluacion(){
+
+   $query = $this->db->query('SELECT COUNT(idcaptura) as idcaptura FROM captura');
+
+    if($query){
+                $row = $query->result_array();
+                   return $row;
+        } else{ 
+               
+               $error = $this->db->error();
+                return $error;
+              
+              }
+          
+          }
+
+
+      function respuestas(){
+
+   $query = $this->db->query('SELECT respuestas FROM `captura` WHERE idcaptura="1" ');
+
+    if($query){
+               $row = $query->result_array();
+                   return $row;
+        } else{ 
+               
+               $error = $this->db->error();
+                return $error;
+              
+              }
+
+
+      } 
+
+
+
+
+//--------------Funcion para ordenar a los maestros---------------------------//
+    function listaMaestros(){
+    
+    $query = $this->db->query('SELECT `nombre` as nombre FROM `profesor` ORDER by `nombre` ');
+
+    if ($query) {
+    	# code...
+    	$row = $query->result_array();
+    	return $row;
+
+    }else{
+        
+        $error = $this->db->error();
+        return $error;
+     }
+
+   }
+//------------------------------------------------------------------------------//
+
+
+
+}
+
+?>

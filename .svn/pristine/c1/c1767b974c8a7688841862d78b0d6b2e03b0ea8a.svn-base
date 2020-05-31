@@ -1,0 +1,258 @@
+<?php 
+
+function getFecha()
+{
+$meses['01']="enero";
+$meses['02']="febrero";
+$meses['03']="marzo";
+$meses['04']="abril";
+$meses['05']="mayo";
+$meses['06']="junio";
+$meses['07']="julio";
+$meses['08']="agosto";
+$meses['09']="septiembre";
+$meses['10']="octubre";
+$meses['11']="noviembre";
+$meses['12']="diciembre";
+
+$dias['01'] = "1";
+$dias['02'] = "2";
+$dias['03'] = "3";
+$dias['04'] = "4";
+$dias['05'] = "5";
+$dias['06'] = "6";
+$dias['07'] = "7";
+$dias['08'] = "8";
+$dias['09'] = "9";
+
+$dia = date("d");
+$mes = date("m");
+$mes = $meses[$mes];
+$anio = date("Y");
+
+if($dia < 10)
+$dia = $dias[$dia];
+
+$fecha =$dia." de ".$mes." del ".$anio;
+
+return $fecha;
+}
+?>
+
+<!DOCTYPE html>
+<html>
+<head>
+<title>Bootstrap Template</title>   
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="css/bootstrap.css" rel="stylesheet" media="screen">
+<link href="nuevoStyle.css" rel="stylesheet" media="all">
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="plugins/Equal-Height-Columns-Using-jQuery-Sameheight-Responsive-Plugin/jquery.sameheight.min.js"></script><!-- plugin sameheight--> 
+<script>
+     
+   
+    function enlaces(){
+     $("#aPresentacion").click(function(event){
+		  event.preventDefault();
+     	  	
+     	  $("#contenedor").hide().load("pruebaBootstrap5a.php #contenedor" ).show('4000');
+     	 
+          });
+          
+        $("#aRequiPerfil").click(function(event){
+		  event.preventDefault();
+     	  	
+     	  $("#contenedor").hide().load("pruebaBootstrap5a.php #contenedor" ).show('4000');
+     	 
+          });       
+   
+     }
+  
+	(function($) {
+	    $(document).ready(function(){
+	    	
+	        $('.sameHeight').sameheight();
+	        enlaces();
+	    });
+	})(jQuery);
+</script>
+        
+</head>
+<body>   
+<div class="container">
+
+ <div class="row marginBottom5" id="header">
+  <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" id="">
+	 <a href="http://www.unam.mx"><img class="img-responsive img-rounded" alt="Imagen responsive" src="img/encabezado-unamaz.jpg" border="0"  /></a>
+  </div><!-- rowHeader0 -->
+  
+  <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" role="navigation" id="">
+     <nav role="navigation" class="navbar navbar-default marginBottom colorAmarillo">
+        <div class="navbar-header  ">
+            <button type="button" data-target="#navbarCollapse" data-toggle="collapse" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                
+            </button>
+            <a href="http://www.aragon.unam.mx/unam/index.html"  class="navbar-brand"><img src="img/house.gif" alt="Ir a página principal" title="Ir a página principal" width="17" height="18" border="0"/></a>
+            <a class="navbar-brand" id="fecha" name="fecha"><?php echo getFecha(); ?></a>
+        </div>
+ 
+        <div id="navbarCollapse" class="collapse navbar-collapse">
+        
+            <ul class="nav navbar-nav navbar-right   ">
+                <li><a href="http://www.aragon.unam.mx/unam/mapa_sitio.html" class="tituIcon"><img src="img/sitemap_color.gif" width="16" height="16" alt="Sitemap" class="img-text" />
+                	  Mapa de sitio</a></li>
+                <li><a href="http://www.aragon.unam.mx/unam/contacto.html" class="tituIcon"><img   src="img/email.gif"  width="18" height="14"alt="Contáctanos por e-mail" class="img-text" /> 
+                	  Contacto</a>                	  	
+                </li>
+                <li>
+                	<a href="http://www.aragon.unam.mx/unam/directorio.html" class="tituIcon"><img  src="img/directorio.jpg" width="16" height="16" alt="Directorios" class="img-text" />
+                	  Directorio</a>
+                </li>
+                <li >
+                	 
+					  <form class="form-inline col-xs-12 col-sm-12 col-md-12 col-lg-12 styleBuscar " role="form">
+				        <div class="form-group">
+				         <input type="text" class="form-control  input-sm" placeholder="Buscar">
+				        </div>
+				        <button type="submit" class="btn btn-primary btn-sm tituIcon">BUSCAR</button>
+				      </form> 
+				          	
+                </li>
+            </ul>
+        </div>
+</nav>
+	
+	</div>
+
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12  " id="">
+	  	 <a href="http://www.unam.mx"><img class="img-responsive img-rounded" alt="Imagen responsive" src="img/fesaragon.jpg"  /></a>
+</div>
+
+</div><!-- HEADER-->
+
+<div class="col-xs-12  col-sm-12 col-md-12 col-lg-12 " id="aside">
+  	    <!--MENU HORIZONTAL-->
+<div class="row " id="menuHorizontal ">   
+  	<nav class=" col-xs-12 col-sm-12 col-md-12 col-lg-12 navbar navbar-default styleMenuHorizontal" role="navigation">
+   <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" 
+         data-target="#example-navbar-collapse">
+         <span class="sr-only">Toggle navigation</span>
+         <span class="icon-bar"></span>
+         <span class="icon-bar"></span>
+        
+   </button>
+        <a class="navbar-brand2  colorWhite"  id="aMenuHoriz" name="aMenuHoriz">MENU</a>
+   </div>
+   <div class="collapse navbar-collapse" id="example-navbar-collapse">
+      <ul class="nav navbar-nav">
+  
+         <li><a href="#" id="aPresentacion">Presentaci&oacute;n</a></li>
+         <li><a href="#" id="aRequiPerfil">Requisitos y perfiles</a></li>
+         <li><a href="#" id="CampoAccion">Campo de acci&oacute;n</a></li>
+         <li><a href="#" id="aPlanEstudio">Plan de estudios</a></li>
+         <li><a href="#" id="aTitulacion">Titulaci&oacute;n</a></li>
+          <!--<li class="dropdown">
+               <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+               NIVEL 1 <b class="caret"></b>
+            </a>
+            <ul class="dropdown-menu">
+               <li><a href="#">NIVEL2 </a></li>
+               <li><a href="#">NIVEL2</a></li>
+               <li><a href="#">NIVEL2</a></li>
+               
+            </ul>
+         </li> --> <!--SEGUNDO NIVEL MENU --> 
+      </ul>
+   </div>
+</nav>
+  	
+  
+</div>	
+ <!--TERMINO MENU HORIZONTAL-->
+ 
+<!-- <ul>
+  <li><a href="#">Liceniatura</a></li>
+  <li><a href="#">Posgrado</a></li>
+  <li><a href="#">Sistema Universidad Abierta y Educación a Distancia</a></li>
+  <li><a href="#">Educacion continua</a></li>
+  <li><a href="#">Centro de lenguas extranjeras</a></li>
+ </ul>
+ -->
+ 
+ <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" id="contenedor">	
+ <ul>
+  <li><a href="pruebaBootstrap4.php">Liceniatura</a></li>
+  <li><a href="#">Posgrado</a></li>
+  <li><a href="#">Sistema Universidad Abierta y Educacion a Distancia</a></li>
+  <li><a href="#">Educacion continua</a></li>
+  <li><a href="#">Centro de lenguas extranjeras</a></li>
+ </ul>	
+ 
+ </div>
+
+<!--<ul class="pager">
+  <li><a href="#">Anterior</a></li>
+  <li><a href="#">Siguiente</a></li>
+</ul>-->
+
+
+ 
+</div><!-- TERMINO ASIDE-->
+ 
+
+ 
+<div class="row footer" id="footer"> 
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" id="rowFooter1">
+	    
+ <nav class="navbar pie-banners ">
+  
+      <ul class="nav nav-justified">
+        
+         <li> <a href="http://www.youtube.com/UNAMFESAragon" class=""> 
+        	  <img src="img/youtubeImg.jpg" alt="" class="img-rounded imgBanners">
+        	 </a>
+        </li>
+        
+	      <li ><a href="https://www.facebook.com/FESAragonUNAM" class=" ">
+	        	 <img src="img/facebookImg.png" alt="" class="img-rounded imgBanners" >
+	        	 </a>
+	      </li> 
+          
+        <li > <a href="https://twitter.com/FESAragonUNAM" class="">
+        	  <img src="img/twitterImg.png" alt="Moustiers Sainte Marie" class="img-rounded imgBanners" >
+        	 </a>
+        </li>
+                      
+      </ul>
+   
+</nav>
+          
+                             
+ </div>
+
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 pie-derechos" id="rowFooter2">
+           <p class='text-justify'>Hecho en M&eacute;xico, todos los derechos reservados 2014. Esta p&aacute;gina puede ser 
+	 		reproducida con fines no lucrativos, siempre y cuando no se mutile, se cite la 
+			fuente completa y su direcci&oacute;n electr&oacute;nica. De otra forma requiere permiso 
+			previo por escrito de la instituci&oacute;n.
+			</p>
+			<p class="textColorBlue ">
+		    Sitio web administrado por:<BR>Facultad de Estudios 
+		  	Superiores Arag&oacute;n. <A href="mailto:www@informatica.aragon.unam.mx">www@informatica.aragon.unam.mx</A>
+
+</div><!--ROW2 FOOTER-->
+ 
+</div> <!-- footer-->
+
+
+
+</div> <!-- /container -->
+<script src="http://code.jquery.com/jquery.js"></script>
+<script src="js/bootstrap.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,652 @@
+<?php 
+function getFecha()
+{
+$meses['01']="enero";
+$meses['02']="febrero";
+$meses['03']="marzo";
+$meses['04']="abril";
+$meses['05']="mayo";
+$meses['06']="junio";
+$meses['07']="julio";
+$meses['08']="agosto";
+$meses['09']="septiembre";
+$meses['10']="octubre";
+$meses['11']="noviembre";
+$meses['12']="diciembre";
+
+$dias['01'] = "1";
+$dias['02'] = "2";
+$dias['03'] = "3";
+$dias['04'] = "4";
+$dias['05'] = "5";
+$dias['06'] = "6";
+$dias['07'] = "7";
+$dias['08'] = "8";
+$dias['09'] = "9";
+
+$dia = date("d");
+$mes = date("m");
+$mes = $meses[$mes];
+$anio = date("Y");
+
+if($dia < 10)
+$dia = $dias[$dia];
+
+$fecha =$dia." de ".$mes." del ".$anio;
+
+return $fecha;
+}
+?>
+<!DOCTYPE html>
+<html>
+<head>
+<title></title>
+<noscript><META HTTP-EQUIV="Refresh" CONTENT="1;URL=nojs.html"></noscript>   
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link rel="stylesheet" href="<?php echo base_url(); ?>/assets/css/bootstrap.css"  media="screen"/>    
+<link rel="stylesheet" href="<?php echo base_url(); ?>/assets/nuevoStyle.css"  media="all" />
+
+<script type="text/javascript" src="<?php echo base_url(); ?>/assets/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="<?php echo base_url(); ?>/assets/jquery-2.1.3.js"></script>
+<script type="text/javascript" src="<?php echo base_url(); ?>/assets/plugins/Equal-Height-Columns-Using-jQuery-Sameheight-Responsive-Plugin/jquery.sameheight.min.js"></script>
+
+<!--<link href="css/bootstrap.css" rel="stylesheet" media="screen">-->
+<!--<link href="nuevoStyle.css" rel="stylesheet" media="all"><!--ESTILOS UNAM-->
+<!--<script src="jquery-2.1.3.js"></script>-->
+<!--<script src="plugins/Equal-Height-Columns-Using-jQuery-Sameheight-Responsive-Plugin/jquery.sameheight.min.js"></script><!-- PLUGIN SAMEHEIGHT--> 
+<!--<script src="js/bootstrap.min.js"></script>-->
+    <!-----PLUGIN ----> 
+<script src="<?php echo base_url(); ?>/assets/plugins/sweetalert-master/dist/sweetalert-dev.js"></script><link rel="stylesheet" href="<?php echo base_url(); ?>/assets/plugins/sweetalert-master/dist/sweetalert.css"> 
+   <!-----PLUGIN ACCORDION ----> 
+<script src="<?php echo base_url(); ?>/assets/plugins/jquery-ui-1.12.1.custom/jquery-ui.js"></script>
+<link rel="stylesheet" href="<?php echo base_url(); ?>/assets/plugins/jquery-ui-1.12.1.custom/jquery-ui.css"> 
+    
+    
+    <script type="text/javascript">    
+        
+        alert("Formulario De Evaluacion"); 
+        
+        function formularioCurso(){
+            
+         $("#formularioCurso").submit(function(e)
+         {      
+              //$valor=$("#profesor").val();
+             
+              $valor=$("#formularioCurso").serialize();  
+              alert("ajax funcionando");
+             // alert("lista de cursos de profesores = "+$valor);
+              //alert("lista de url = "+url);
+              // alert("<?php //echo base_url('index.php/Cuestionario/inserta_captura') ?>");
+              $.ajax({
+                 
+             type: "POST",
+              url: "<?php echo base_url('index.php/Cuestionario/inserta_captura')?>",                 
+                 //data: {profesor: $("#profesor").val(), curso: $("#materia").val()},                  
+                 data: $valor,                   
+                 success: 
+                  function(data){ 
+                   alert("ajax funcionando = "+data);  //as a debugging message.
+                 //var obj = jQuery.parseJSON(data); //datos javascript   
+                   swal(data , "click en el boton para continuar", "success");
+                   $("#mensaje").html(data);
+                   window.location.href = 'http://www.google.com'; //Will take you to Google.
+                          //alert("ajax funcionando = ".data); 
+                          //$('#periodo').val(obj.horario[0].PERIODO).prop("disabled", true); 
+                          //$('#horario').val(obj.horario[0].HORARIO).prop("disabled", true);                 
+                      },
+                       
+                       error: function(errorThrown) {
+                       alert('error');
+                       alert('error 2');
+                       console.log(errorThrown);
+                    }
+
+                  });// you have missed this bracket
+             return false;         
+           e.preventDefault();
+         });   
+            
+            
+        }
+        
+        function acordeon(){
+             $( "#accordion" ).accordion({
+              collapsible: true
+            });
+             $( "#accordion2,#accordion3,#accordion4,#accordion5,#accordion6" ).accordion({
+              collapsible: true,
+                 active: false
+            });   
+          }
+        
+     $(document).ready(function(){
+     formularioCurso();
+     acordeon();
+    
+    
+ });
+</script>
+    
+        
+</head>
+<body>   
+<div class="container">
+<!-- HEADER -->
+ <div class="row marginBottom5" id="header">
+  <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" id=""><!--SE DEFINE REJILLA-->
+	 <a href="http://www.unam.mx"><img class="img-responsive img-rounded" alt="Imagen responsive" src="<?php echo base_url(); ?>/assets/img/encabezado-unamaz.jpg" border="0"  /></a>
+  </div><!-- rowHeader0 -->
+  
+  <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" role="navigation" id=""> <!--SE DEFINE REJILLA-->
+     <nav role="navigation" class="navbar navbar-default marginBottom colorAmarillo"><!-- MENU HEADER-->
+        <div class="navbar-header">	
+            <button type="button" data-target="#navbarCollapse" data-toggle="collapse" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                
+            </button>
+            <a href="http://www.aragon.unam.mx/unam/index.html"  class="navbar-brand"><img src="<?php echo base_url(); ?>/assets/img/house.gif" alt="Ir a página principal" title="Ir a página principal" width="17" height="18" border="0"/></a>
+            <a class="navbar-brand2 " id="fecha" name="fecha"><?php echo"".getFecha(); ?></a> <!-- IMPRESION DE LA FECHA DEL SERVIDOR-->
+        </div>
+ 
+        <div id="navbarCollapse" class="collapse navbar-collapse "> <!-- MENU QUE SE COLAPSA-->
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="http://www.aragon.unam.mx/unam/mapa_sitio.html" class="tituIcon"><img src="<?php echo base_url(); ?>/assets/img/sitemap_color.gif" width="16" height="16" alt="Sitemap" class="img-text" />
+                	  Mapa de sitio</a></li>
+                <li><a href="http://www.aragon.unam.mx/unam/contacto.html" class="tituIcon"><img   src="<?php echo base_url(); ?>/assets/img/email.gif"  width="18" height="14"alt="Contáctanos por e-mail" class="img-text" /> 
+                	  Contacto</a>                	  	
+                </li>
+                <li>
+                	<a href="http://www.aragon.unam.mx/unam/directorio.html" class="tituIcon"><img  src="<?php echo base_url(); ?>/assets/img/directorio.jpg" width="16" height="16" alt="Directorios" class="img-text" />
+                	  Directorio</a>
+                </li>
+                <li >
+                	 
+					  <form class="form-inline col-xs-12 col-sm-12 col-md-12 col-lg-12 styleBuscar " role="form">
+				        <div class="form-group">
+				         <input type="text" class="form-control  input-sm" placeholder="Buscar">
+				        </div>
+				        <button type="submit" name='grabar' id='grabar' class="btn btn-primary btn-sm tituIcon">BUSCAR</button>
+				      </form> 
+				          	
+                </li>
+            </ul>
+        </div> <!-- TERMINO MENU QUE SE COLAPSA-->
+  </nav><!-- TERMINO MENU HEADER-->
+</div>
+
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12  " id="">
+	  	 <a href="http://www.unam.mx"><img class="img-responsive img-rounded" alt="Imagen responsive" src="<?php echo base_url(); ?>/assets/img/fesaragon.jpg"  /></a>
+</div>
+
+</div><!--TERMINO HEADER-->
+
+
+
+ 
+ 
+<div class="row" id="menu"> <!-- MENU VERTICAL-->
+ <!--<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6  col-md-offset-3 " id="">
+ 	-->
+	<div class="col-xs-12 col-sm-6  col-md-6 col-lg-6  col-sm-offset-3 col-md-offset-3 col-lg-offset-3" id="">  
+	
+ <h2 class="text-center">CUESTIONARIO DE EVALUACIÓN
+CURSOS DEL CENTRO DE CÓMPUTO DE LA FES ARAGÓN  </h2>
+        <h4>Instrucciones: Lee con atención cada una de las siguientes preguntas, marca con un clic en la letra que consideres adecuada.</h4>
+        
+   <br>
+	
+        
+        
+ <form  role="form" name="formularioCurso" id="formularioCurso"  method="post" action='' > 
+         <!--action='verifica.php'-->
+<div id="accordion">
+<h3>1. OBJETIVOS Y CONTENIDOS DEL CURSO</h3>
+
+        <div class="form-group">
+       <!-- <label for="">1. OBJETIVOS Y C.ONTENIDOS DEL CURSO</label>-->
+	    <label for="">El profesor dió un panorama general de los contenidos y planteó los objetivos del curso.</label>
+	    <div class="radio">
+          <label >
+            <input type="radio" required="required" name="inp_1obje_1" id="inp_1obje_1" value="a">
+            a) Al inicio del curso
+          </label>        
+        </div>
+        <div class="radio">         
+          <label>
+            <input type="radio" name="inp_1obje_1" id="inp_1obje_1" value="b">
+            b) Durante el curso
+          </label>         
+        </div>
+        <div class="radio">         
+           <label>
+            <input type="radio" name="inp_1obje_1" id="inp_1obje_1" value="c">
+            c) Nunca
+          </label>                 
+        </div>
+            
+            
+            <label for="">Se alcanzaron los objetivos planteados en el curso.</label>
+	    <div class="radio">
+          <label >
+            <input type="radio" required="required" name="inp_1obje_2" id="inp_1obje_2" value="a">
+            a) Totalmente
+          </label>        
+        </div>
+        <div class="radio">         
+          <label>
+            <input type="radio" name="inp_1obje_2" id="inp_1obje_2" value="b">
+            b) Parcialmente
+          </label>         
+        </div>
+        <div class="radio">         
+           <label>
+            <input type="radio" name="inp_1obje_2" id="inp_1obje_2" value="c">
+            c) No se alcanzaron
+          </label>                 
+        </div>
+            
+             <label for="">Consideras que los objetivos y contenidos del curso cubren los requisitos para desempeñar tu labor educativa o profesional.</label>
+	    <div class="radio">
+          <label >
+            <input type="radio" required="required" name="inp_1obje_3" id="inp_1obje_3" value="a">
+            a) Totalmente
+          </label>        
+        </div>
+        <div class="radio">         
+          <label>
+            <input type="radio" name="inp_1obje_3" id="inp_1obje_3" value="b">
+            b) Parcialmente
+          </label>         
+        </div>
+        <div class="radio">         
+           <label>
+            <input type="radio" name="inp_1obje_3" id="inp_1obje_3" value="c">
+            c) No los cubren
+           </label>
+         </div> 
+            
+            <label for="">Existió continuidad y coherencia en el desarrollo de los contenidos del curso.</label>
+	    <div class="radio">
+          <label >
+            <input type="radio" required="required" name="inp_1obje_4" id="inp_1obje_3" value="a">
+            a) Siempre
+          </label>        
+        </div>
+        <div class="radio">         
+          <label>
+            <input type="radio" name="inp_1obje_4" id="inp_1obje_3" value="b">
+            b) Algunas veces
+          </label>         
+        </div>
+        <div class="radio">         
+           <label>
+            <input type="radio" name="inp_1obje_4" id="inp_1obje_3" value="c">
+            c) Nunca
+          </label>
+        </div>          
+	  </div> <!--TERMINO PUNTO 1 -->
+ </div><!--TERMINO ACORDION PUNTO 1 -->
+           
+           
+ <div id="accordion2">
+<h3>2. MÉTODOS DE ENSEÑANZA.</h3>
+    <div class="form-group">
+       <!-- <label for="">2. MÉTODOS DE ENSEÑANZA.</label>-->
+	    <label for="">Los métodos de enseñanza utilizados favorecieron el aprendizaje de los contenidos del curso.</label>
+	    <div class="radio">
+          <label >
+            <input type="radio" required="required" name="inp_2met_1" id="inp_2met_1" value="a">
+            a) Siempre
+          </label>        
+        </div>
+        <div class="radio">         
+          <label>
+            <input type="radio" name="inp_2met_1" id="inp_2met_1" value="b">
+            b) Algunas veces
+          </label>         
+        </div>
+        <div class="radio">         
+           <label>
+            <input type="radio" name="inp_2met_1" id="inp_2met_1" value="c">
+            c) Nunca
+          </label>                 
+        </div>
+            <label for="">Las dudas presentadas al profesor durante el curso se aclararon.</label>
+	    <div class="radio">
+          <label >
+            <input type="radio" required="required" name="inp_2met_2" id="inp_2met_2" value="a">
+            a) Totalmente
+          </label>        
+        </div>
+        <div class="radio">         
+          <label>
+            <input type="radio" name="inp_2met_2" id="inp_2met_2" value="b">
+            b) Parcialmente
+          </label>         
+        </div>
+        <div class="radio">         
+           <label>
+            <input type="radio" name="inp_2met_2" id="inp_2met_2" value="c">
+           c) No se aclararon
+          </label>                 
+        </div>           
+	  </div><!--TERMINO PUNTO 2 -->
+ </div><!--TERMINO ACORDION PUNTO 2 -->
+           
+<div id="accordion3">
+<h3>3. MÉTODOS DE EVALUACIÓN.</h3>
+             <div class="form-group">
+        <!--<label for="">3. MÉTODOS DE EVALUACIÓN.</label>-->
+	    <label for="">El profesor explicó los criterios de evaluación del curso.</label>
+	    <div class="radio">
+          <label >
+            <input type="radio" required="required" name="inp_3met_1" id="inp_3met_1" value="a">
+            a) Al inicio del curso
+          </label>        
+        </div>
+        <div class="radio">         
+          <label>
+            <input type="radio" name="inp_3met_1" id="inp_3met_1" value="b">
+            b) Durante o al final del curso
+          </label>         
+        </div>
+        <div class="radio">         
+           <label>
+            <input type="radio" name="inp_3met_1" id="inp_3met_1" value="c">
+            c) Nunca
+          </label>                 
+        </div>          
+           
+	  </div><!--TERMINO PUNTO 3 -->
+   </div><!--TERMINO ACORDION PUNTO 3 -->         
+<div id="accordion4"> 
+<h3>4. CONOCIMIENTO DEL PROFESOR.</h3>         
+            <div class="form-group">                
+	    <label for="">El conocimiento que el profesor mostró sobre los contenidos del curso.</label>
+	    <div class="radio">
+          <label >
+            <input type="radio" required="required" name="inp_4con_1" id="inp_4con_1" value="a">
+            a) Bueno
+          </label>        
+        </div>
+        <div class="radio">         
+          <label>
+            <input type="radio" name="inp_4con_1" id="inp_4con_1" value="b">
+            b) Regular
+          </label>         
+        </div>
+        <div class="radio">         
+           <label>
+            <input type="radio" name="inp_4con_1" id="inp_4con_1" value="c">
+           c) Deficiente
+          </label>                 
+        </div> 
+        <label for="">Las explicaciones del profesor y las prácticas realizadas permiten aplicar lo aprendido en el curso.</label>
+	    <div class="radio">
+          <label >
+            <input type="radio" required="required" name="inp_4con_2" id="inp_4con_2" value="a">
+            a) Totalmente
+          </label>        
+        </div>
+        <div class="radio">         
+          <label>
+            <input type="radio" name="inp_4con_2" id="inp_4con_2" value="b">
+            b) Parcialmente
+          </label>         
+        </div>
+        <div class="radio">         
+           <label>
+            <input type="radio" name="inp_4con_2" id="inp_4con_2" value="c">
+           c) Deficientemente
+          </label>                 
+        </div>
+                
+         <label for="">El profesor mostró interés para que el alumno lograra el dominio de los contenidos del curso.</label>
+	    <div class="radio">
+          <label >
+            <input type="radio" required="required" name="inp_4con_3" id="inp_4con_3" value="a">
+            a) Siempre
+          </label>        
+        </div>
+        <div class="radio">         
+          <label>
+            <input type="radio" name="inp_4con_3" id="inp_4con_3" value="b">
+            b) Frecuentemente
+          </label>         
+        </div>
+        <div class="radio">         
+           <label>
+            <input type="radio" name="inp_4con_3" id="inp_4con_3" value="c">
+           c) Casi nunca
+          </label>                 
+        </div> 
+                
+        <label for="">El profesor resolvió las dudas del curso.</label>
+	    <div class="radio">
+          <label >
+            <input type="radio" required="required" name="inp_4con_4" id="inp_4con_4" value="a">
+            a) Totalmente
+          </label>        
+        </div>
+        <div class="radio">         
+          <label>
+            <input type="radio" name="inp_4con_4" id="inp_4con_4" value="b">
+            b) Parcialmente
+          </label>         
+        </div>
+        <div class="radio">         
+           <label>
+            <input type="radio" name="inp_4con_4" id="inp_4con_4" value="c">
+           c) Nunca
+          </label>                 
+        </div>   
+                
+        <label for="">La relación profesor - alumno se estableció en un marco de respeto.</label>
+	    <div class="radio">
+          <label >
+            <input type="radio" required="required" name="inp_4con_5" id="inp_4con_5" value="a">
+            a) Siempre
+          </label>        
+        </div>
+        <div class="radio">         
+          <label>
+            <input type="radio" name="inp_4con_5" id="inp_4con_5" value="b">
+            b) Frecuentemente
+          </label>         
+        </div>
+        <div class="radio">         
+           <label>
+            <input type="radio" name="inp_4con_5" id="inp_4con_5" value="c">
+           c) Casi nunca
+          </label>                 
+        </div>  
+                
+        <label for="">El profesor inicio las clases.</label>
+	    <div class="radio">
+          <label >
+            <input type="radio" required="required" name="inp_4con_6" id="inp_4con_6" value="a">
+            a) Puntualmente
+          </label>        
+        </div>
+        <div class="radio">         
+          <label>
+            <input type="radio" name="inp_4con_6" id="inp_4con_6" value="b">
+            b) Con un retraso de 10 a 20 min.
+          </label>         
+        </div>
+        <div class="radio">         
+           <label>
+            <input type="radio" name="inp_4con_6" id="inp_4con_6" value="c">
+           c) Con un retraso de más de 20 min.
+          </label>                 
+        </div>   
+           
+	  </div><!--TERMINO PUNTO 4 -->
+   </div> <!--TERMINO ACCORDION 4 -->        
+    <div id="accordion5">
+<h3>5.  INSTALACIONES.</h3>
+             <div class="form-group">
+        <!--<label for="">3. MÉTODOS DE EVALUACIÓN.</label>-->
+	    <label for="">Consideras que el número de equipos para el curso fueron.</label>
+	    <div class="radio">
+          <label >
+            <input type="radio" required="required" name="inp_5inst_1" id="inp_5inst_1" value="a">
+            a) Adecuado
+          </label>        
+        </div>
+        <div class="radio">         
+          <label>
+            <input type="radio"  name="inp_5inst_1" id="inp_5inst_1" value="b">
+            b) Suficiente
+          </label>         
+        </div>
+        <div class="radio">         
+           <label>
+            <input type="radio"  name="inp_5inst_1" id="inp_5inst_1" value="c">
+            c) Deficiente
+          </label>                 
+        </div>          
+           
+        <label for="">Los equipos cuentan con la tecnología para realizar las prácticas.</label>
+	    <div class="radio">
+          <label >
+            <input type="radio" required="required"  name="inp_5inst_2" id="inp_5inst_2" value="a">
+            a) Adecuado
+          </label>        
+        </div>
+        <div class="radio">         
+          <label>
+            <input type="radio" name="inp_5inst_2" id="inp_5inst_2" value="b">
+            b) Suficiente
+          </label>         
+        </div>
+        <div class="radio">         
+           <label>
+            <input type="radio" name="inp_5inst_2" id="inp_5inst_2" value="c">
+            c) Deficiente
+          </label>                 
+        </div>        
+	  </div><!--TERMINO PUNTO 5 -->
+   </div><!--TERMINO ACORDION PUNTO 5 --> 
+    
+<div id="accordion6">
+<h3>6. SOBRE EL ALUMNO.</h3>
+             <div class="form-group">
+        <!--<label for="">3. MÉTODOS DE EVALUACIÓN.</label>-->
+	    <label for="">El nivel de comprensión que alcanzaste sobre los contenidos revisados en el curso.</label>
+	    <div class="radio">
+          <label >
+            <input type="radio" required="required" name="inp_6alum_1" id="inp_6alum_1" value="a">
+            a) Bueno
+          </label>        
+        </div>
+        <div class="radio">         
+          <label>
+            <input type="radio" name="inp_6alum_1" id="inp_6alum_1" value="b">
+            b) Regular
+          </label>         
+        </div>
+        <div class="radio">         
+           <label>
+            <input type="radio" name="inp_6alum_1" id="inp_6alum_1" value="c">
+            c) Deficiente
+          </label>                 
+        </div> 
+                 
+        <label for="">El porcentaje de horas al que asististe fue.</label>
+	    <div class="radio">
+          <label >
+            <input type="radio" required="required" name="inp_6alum_2" id="inp_6alum_2" value="a">
+            a) 100 %
+          </label>        
+        </div>
+        <div class="radio">         
+          <label>
+            <input type="radio" name="inp_6alum_2" id="inp_6alum_2" value="b">
+            b) 90 % al 80 %
+          </label>         
+        </div>
+        <div class="radio">         
+           <label>
+            <input type="radio" name="inp_6alum_2" id="inp_6alum_2" value="c">
+            c) menos del 70 %
+          </label>            
+          
+        </div> 
+          <label for="comment">COMENTARIOS:</label>
+           <textarea class="form-control" rows="5" id="comentarios" name="comentarios"></textarea> 
+	  </div><!--TERMINO PUNTO 3 -->
+   </div><!--TERMINO ACORDION PUNTO 3 -->      
+           <button type="submit" class="btn btn-primary btn-block">ENVIAR</button>        
+        </form>	  
+	        <div class="" name="mensaje" id="mensaje"> </div>
+        
+	   
+        <label> </label>             
+	<!--</form>-->	
+			
+  </div><!-- -->
+  
+ <!-- <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 " id="rightColumn">  
+  	<div class="panel panel-info">
+  <div class="panel-heading fontSizeLogin">COMO INGRESAR AL SITIO </div>
+  <div class="panel-body">
+     <p class='text-justify fontSizeLogin12'>
+     	Para acceder como academico, en el nombre 
+     	de usuario digite su RFC con homoclave.
+     	Y como contrase&ntilde;a la que fue proporcionada.
+	</p>
+  </div>
+</div> -->
+  
+ </div><!--ROW menu-->
+
+ 
+<div class="row footer" id="footer"> 
+	<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" id="rowFooter1">
+		    
+	<!-- <nav class="navbar pie-banners ">
+	  
+	      <ul class="nav nav-justified">
+	        
+	         <li> <a href="http://www.youtube.com/UNAMFESAragon" class=""> 
+	        	
+	        	 </a>
+	        </li>
+	        
+		      <li ><a href="https://www.facebook.com/FESAragonUNAM" class=" ">
+		        	
+		        	 </a>
+		      </li> 
+	          
+	        <li > <a href="https://twitter.com/FESAragonUNAM" class="">
+	        	  
+	        	 </a>
+	        </li>
+	                      
+	      </ul>
+	   
+	</nav> -->                            
+	 </div><!--TERMINO rowFooter1-->
+	 
+
+	<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 pie-derechos" id="rowFooter2">
+	           <p class='text-justify'>Hecho en M&eacute;xico, todos los derechos reservados 2014. Esta p&aacute;gina puede ser 
+		 		reproducida con fines no lucrativos, siempre y cuando no se mutile, se cite la 
+				fuente completa y su direcci&oacute;n electr&oacute;nica. De otra forma requiere permiso 
+				previo por escrito de la instituci&oacute;n.
+				</p>
+				<p class="textColorBlue ">
+			    Sitio web administrado por:<BR>Facultad de Estudios 
+			  	Superiores Arag&oacute;n. <A href="mailto:www@informatica.aragon.unam.mx">www@informatica.aragon.unam.mx</A>
+	
+	</div><!--TERMINO rowFooter2-->
+ 
+</div> <!-- footer-->
+
+</div> <!-- /container -->
+</body>
+</html>

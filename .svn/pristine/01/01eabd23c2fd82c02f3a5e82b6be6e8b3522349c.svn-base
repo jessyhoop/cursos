@@ -1,0 +1,48 @@
+class Products_Model extends CI_Model {
+ 
+  public function __construct() {
+    parent::__construct();
+    $this->load->database();
+  }
+ 
+  public function selectProducts() {
+ 
+    $sql = "
+      SELECT `id`
+      , `name`
+      , `price`
+      FROM `products`
+      ORDER BY `id` ASC;
+      ";
+ 
+    $result = $this->db->query($sql);
+    if(!$result) {
+      return false;
+    }
+ 
+    return $result;
+  }
+ 
+  public function selectProduct($id) {
+ 
+    $sql = "
+      SELECT `id`
+      , `name`
+      , `descri`
+      , `price`
+      FROM `products`
+      WHERE `id` = ?;
+      ";
+ 
+    $bindings = array(
+      $id
+    );
+ 
+    $result = $this->db->query($sql, $bindings);
+    if(!$result) {
+      return false;
+    }
+ 
+    return $result;
+  }
+}

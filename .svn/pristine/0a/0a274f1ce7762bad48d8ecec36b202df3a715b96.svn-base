@@ -1,0 +1,60 @@
+<?php
+
+defined('BASEPATH') OR exit('No direct script access allowed');
+
+class Welcome extends CI_Controller {
+
+    public function __construct() {
+        parent::__construct();
+        //cargamos la libreria html2pdf
+        $this->load->library('html2pdf');
+        //cargamos el modelo pdf_model
+        $this->load->model('reportes_model');
+    }
+
+    public function index() {
+        $this->load->view('Reportes/ejemplo_grafica_bar_chartjs');
+    }
+
+    public function obtener_datos_para_grafica($grupo_busqueda) {
+        for ($i = 1; $i <= 17; $i++) {
+
+            $arreglo_by_grupo_calificacion[] = $this->obtener_promedio_por_respuesta($grupo_busqueda, "respuesta_" . $i);
+        }
+        echo json_encode($arreglo_by_grupo_calificacion);
+    }
+
+    public function obtener_promedio_por_respuesta($grupo, $respuesta) {
+        $calificacion = 0;
+        $arre_respuesta = $this->reportes_model->get_respuestas_1_by_grupo($grupo, $respuesta);
+        foreach ($arre_respuesta as $resp) {
+            $nuevo_prom[] = ['respuesta' => $resp[$respuesta], 'promedio' => $this->obtener_promedio_by_letra($resp[$respuesta])];
+        }
+        foreach ($nuevo_prom as $value) {
+            $calificacion += $value['promedio'];
+        }
+        return $calificacion = $calificacion / count($nuevo_prom);
+    }
+
+    public function obtener_promedio_by_letra($letra) {
+
+
+        switch ($letra) {
+            case 'a':
+                return $letra = 10.00;
+                break;
+
+            case 'b':
+                return $letra = 8.00;
+                break;
+            case 'c':
+                return $letra = 6.00;
+                break;
+
+            case 'd':
+                return $letra = 5.00;
+                break;
+        }//fin switch
+    }
+
+}

@@ -1,0 +1,824 @@
+$(document).ready(function () {
+
+
+//     ------------- F U N C I O N E S      G E N E R A L E S-------------------------
+    //funcion que habilita el caledario para los formularios 
+    $.datepicker.setDefaults($.datepicker.regional["es"]);
+    $(".calendario_fecha").datepicker({
+        firstDay: 1
+    });
+//funcion que habilita el reloj para los formularios
+
+
+//funcion que valida que la fecha de incio sea menor a la fecha de termino
+    var check_fecha_inicio_menor_que_fecha_termino = function (fecha_inicio, fecha_termino) {
+        var fecha_inicio_split = fecha_inicio.split('/');
+        var fecha_termino_split = fecha_termino.split('/');
+        var fecha_inicio = new Date(fecha_inicio_split[2], fecha_inicio_split[1], fecha_inicio_split[0]).getTime();
+        var fecha_termino = new Date(fecha_termino_split[2], fecha_termino_split[1], fecha_termino_split[0]).getTime();
+        if (fecha_termino <= fecha_inicio) {
+            return false;
+        } else {
+            return true;
+        }
+    };
+
+
+
+
+//---------------------------M O D  U L O    P R O F E S O R E S--------------------------------------------
+
+//funcion que almacena los datos del nuevo profesor
+    $("#formulario_profesor").submit(function (e) {
+        //validamos que ningun campo venga vacio
+        if ($('input[name=rfc_profesor]').val() !== "" && $('input[name=nombre_profesor]').val() !== "") {
+            $datos_materia = $("#formulario_profesor").serialize();
+            $.ajax({
+                type: "POST",
+                url: "profesores/insert_profesor",
+                data: $datos_materia,
+                success:
+                        function (data) {
+                            swal(data, "click en el boton para continuar", "success");//mandamos el mensaje de la validacion y  lo mandamos 
+                            muestra_lista_profesores_ajax();
+                            $("input[name=rfc_profesor").val("");
+                            $("input[name=nombre_profesor]").val("");
+                        },
+                error: function (errorThrown) {
+                    alert('Error');
+                    console.log(errorThrown);
+                }
+//
+            });// you have missed this bracket
+
+        } else {
+            swal("Todos los campos deben de estar llenos", "", "error");//mandamos el mensaje de la validacion y  lo mandamos 
+        }
+        return false;
+    });
+
+//   funcion que muestra la lista de profesores al hacer click 
+    $('#muestra_lista_de_profesores').on("click", function () {
+        //funcion que muestra la lista de profesores
+        muestra_lista_profesores_ajax();
+    });
+
+//funcion que trae los datos de la base de datos con ajaX
+    function muestra_lista_profesores_ajax() {
+        $.ajax({
+            type: "ajax",
+            url: "profesores/lista_profesores",
+            async: true,
+            dataType: 'json',
+            success:
+                    function (data) {
+                        var html = '';
+                        var i;
+                        for (i = 0; i < data.length; i++) {
+                            html += '<tr>' +
+                                    '<td>' + data[i].nombre + '</td>' +
+                                    '<td>' + data[i].rfc + '</td>' +
+                                    '<td style="text-align:right;">' +
+                                    '<a href="javascript:void(0);" class="item_edit" name="' + data[i].idprofesor + '">Editar</a>' + ' ' +
+                                    '</td>' +
+                                    '<td style="text-align:right;">' +
+                                    '<a href="javascript:void(0);" class="item_delete" name="' + data[i].idprofesor + '">Borrar</a>' +
+                                    '</td>' +
+                                    '</tr>';
+                        }
+                        $('#show_data').html(html);
+                    },
+            error: function (errorThrown) {
+                alert('Error');
+                console.log(errorThrown);
+            }
+//
+        });// you have missed this bracket
+
+    }
+//funcion que elimina un registro de la  base de datos con mensaje de confirmacion 
+    $('#show_data').on('click', '.item_delete', function () {
+        const swalWithBootstrapButtons = swal.mixin({
+            cancelButtonClass: 'btn btn-danger',
+            confirmButtonClass: 'btn btn-success',
+            buttonsStyling: false,
+        })
+
+        swalWithBootstrapButtons({
+            title: '¿Estas seguro de eliminar este registro?',
+            text: "",
+            type: 'warning',
+            showCancelButton: true,
+            cancelButtonText: 'No, cancelar!',
+            confirmButtonText: 'Si,eliminar!',
+            reverseButtons: false//invierte el sentido de los botoness
+        }).then((result) => {//si si queremos eliminar entonces eliminamos y mandamos a traer el ajax que elimna el registro de la bd
+            if (result.value) {
+                var idprofesor = $(this).attr('name');
+                $.ajax({
+
+                    type: "POST",
+                    url: "profesores/eliminar_profesor",
+                    data: {idprofesor: idprofesor},
+                    success: function (data) {
+//                        swal(data,"Profdesor eliminado", "succes");//mandamos el mensaje de la validacion y  lo mandamos 
+                        swal("Registro Eliminado", "", "success");//mandamos el mensaje de la validacion y  lo mandamos 
+                        muestra_lista_profesores_ajax();
+
+                    },
+                    error: function (errorThrown) {
+                        alert('Error');
+                        console.log(errorThrown);
+                    }
+//
+                });// you have missed this bracket
+//                        muestra_lista_materias_ajax();
+
+            } else if (
+                    // Read more about handling dismissals
+                    result.dismiss === swal.DismissReason.cancel
+                    ) {
+                swalWithBootstrapButtons(
+                        'Calcelado',
+                        '',
+                        ''
+                        )
+            }
+        })
+
+
+    });
+
+    //funcion que se pasan los datos para la edicion  del profesor
+    $('#show_data').on('click', '.item_edit', function () {
+        var idprofesor = $(this).attr('name');
+        $.ajax({
+
+            type: "POST",
+            url: "profesores/obtener_datos_profesor",
+            data: {idprofesor: idprofesor},
+            dataType: 'json',
+            success: function (data) {
+                $.each(data, function (i, field) {//recorremos los datos para ingresarlos
+                    $("input[name=rfc_profesor_edit]").val(data[i].rfc);
+                    $("input[name=nombre_profesor_edit]").val(data[i].nombre);
+                });
+                $("#formulario_profesor_edit").submit(function (e) {
+                    if ($('input[name=rfc_profesor_edit]').val() !== "" && $('input[name=nombre_profesor_edit]').val() !== "") {
+
+                        $datos_profesor_edit = $("#formulario_profesor_edit").serialize();
+
+                        $.ajax({
+
+                            type: "POST",
+                            url: "profesores/update_profesor",
+                            data: {idprofesor: idprofesor, nombre_profesor_edit: $("input[name=nombre_profesor_edit]").val(), rfc_profesor_edit: $("input[name=rfc_profesor_edit]").val()},
+                            success:
+                                    function (data) {
+//                           
+                                        swal(data, "click en el boton para continuar", "success");//mandamos el mensaje de la validacion y  lo mandamos 
+                                        muestra_lista_profesores_ajax();//mostramos la lista automaticamente para ver los cambios 
+                                        $("input[name=rfc_profesor_edit]").val("");//borramos el valor del imput
+
+                                    },
+                            error: function (errorThrown) {
+                                alert('Error');
+                                console.log(errorThrown);
+                            }
+//
+                        });// you have missed this bracket
+
+                    } else {
+                        swal("Todos los campos deben de estar llenos", "", "error");//mandamos el mensaje de la validacion y  lo mandamos 
+                    }
+                    return false;
+
+                });
+            },
+            error: function (errorThrown) {
+                alert('Error');
+                console.log(errorThrown);
+            }
+        });// you have missed this bracket
+
+    });
+
+
+//funcion que limpia los campos del formulario para ingresar datos del profesor
+    $('#limpiar_form_ingre_dat_prof').on("click", function () {
+        $("input[name=rfc_profesor").val("");
+        $("input[name=nombre_profesor]").val("");
+    });
+//funcion que limpia los campos del formulario de edicion para ingresar datos del profesor
+    $('#limpiar_form_edit_ingre_dat_prof').on("click", function () {
+        $("input[name=rfc_profesor_edit").val("");
+        $("input[name=nombre_profesor_edit]").val("");
+    });
+//---------------------------------------   M  A T E R I A S ---------------------------------------------
+
+//controlador para el modulo de materias
+
+//funcion que almacena los datos de la nueva materia
+    $("#formulario_materia").submit(function (e) {
+        //validamos que ningun campo venga vacio
+        if ($('input[name=clave_materia]').val() !== "" && $('input[name=nombre_materia]').val() !== "" & $('input[name=semestre_materia]').val() !== "") {
+            $datos_materia = $("#formulario_materia").serialize();
+            $.ajax({
+                type: "POST",
+                url: "materias/insert_materia",
+                data: $datos_materia,
+                success:
+                        function (data) {
+                            swal(data, "click en el boton para continuar", "success");//mandamos el mensaje de la validacion y  lo mandamos 
+                            muestra_lista_materias_ajax();
+                            $("input[name=clave_materia").val("");
+                            $("input[name=nombre_materia]").val("");
+                            $("input[name=semestre_materia]").val("");
+                        },
+                error: function (errorThrown) {
+                    alert('Error');
+                    console.log(errorThrown);
+                }
+//
+            });// you have missed this bracket
+
+        } else {
+            swal("Todos los campos deben de estar llenos", "", "error");//mandamos el mensaje de la validacion y  lo mandamos 
+        }
+        return false;
+    });
+    //funcion que trae los datos de la base de datos con ajaz 
+    function muestra_lista_materias_ajax() {
+        $.ajax({
+            type: "ajax",
+            url: "materias/lista_materias",
+            async: true,
+            dataType: 'json',
+            success:
+                    function (data) {
+                        var html = '';
+                        var i;
+                        for (i = 0; i < data.length; i++) {
+                            html += '<tr>' +
+                                    '<td>' + data[i].clave_materia + '</td>' +
+                                    '<td>' + data[i].materia + '</td>' +
+                                    '<td>' + data[i].semestre + '</td>' +
+                                    '<td style="text-align:right;">' +
+                                    '<a href="javascript:void(0);" class="item_edit_materia" name="' + data[i].idmateria + '">Editar</a>' + ' ' +
+                                    '</td>' +
+                                    '<td style="text-align:right;">' +
+                                    '<a href="javascript:void(0);" class="item_delete_materia" name="' + data[i].idmateria + '">Borrar</a>' +
+                                    '</td>' +
+                                    '</tr>';
+                        }
+                        $('#show_datos_materias').html(html);
+                    },
+            error: function (errorThrown) {
+                alert('Error');
+                console.log(errorThrown);
+            }
+//
+        });// you have missed this bracket
+
+    }
+//   funcion que muestra la lista de materias al hacer click al boton
+    $('#muestra_lista_de_materias').on("click", function () {
+        //funcion que muestra la lista de profesores
+        muestra_lista_materias_ajax();
+    });
+
+//funcion que limpia los campos del formulario para ingresar datos de la materia
+    $('#limpiar_form_ingre_dat_materia').on("click", function () {
+        $("input[name=clave_materia").val("");
+        $("input[name=nombre_materia]").val("");
+        $("input[name=semestre_materia]").val("");
+        id_materia = "";
+    });
+//funcion que limpia los campos del formulario de edicion para ingresar datos de la materia
+    $('#limpiar_form_edit_ingre_dat_materia').on("click", function () {
+        $("input[name=clave_materia_edit").val("");
+        $("input[name=nombre_materia_edit]").val("");
+        $("input[name=semestre_materia_edit]").val("");
+        id_materia = "";
+    });
+//funcion que elimina un registro de la  base de datos con mensaje de confirmacion 
+    $('#show_datos_materias').on('click', '.item_delete_materia', function () {
+        const swalWithBootstrapButtons = swal.mixin({
+            cancelButtonClass: 'btn btn-danger',
+            confirmButtonClass: 'btn btn-success',
+            buttonsStyling: false,
+        })
+
+        swalWithBootstrapButtons({
+            title: '¿Estas seguro de eliminar este registro? <br>',
+            text: "",
+            type: 'warning',
+            showCancelButton: true,
+            cancelButtonText: 'No, cancelar!',
+            confirmButtonText: 'Si,eliminar!',
+            reverseButtons: false//invierte el sentido de los botoness
+        }).then((result) => {//si si queremos eliminar entonces eliminamos y mandamos a traer el ajax que elimna el registro de la bd
+            if (result.value) {
+                var id_materia = $(this).attr('name');
+                $.ajax({
+
+                    type: "POST",
+                    url: "materias/eliminar_materia",
+                    data: {id_materia: id_materia},
+                    success: function (data) {
+//                        swal(data,"Profdesor eliminado", "succes");//mandamos el mensaje de la validacion y  lo mandamos 
+                        swal("Registro Eliminado", "", "success");//mandamos el mensaje de la validacion y  lo mandamos 
+                        muestra_lista_materias_ajax();
+
+                    },
+                    error: function (errorThrown) {
+                        alert('Error');
+                        console.log(errorThrown);
+                    }
+//
+                });// you have missed this bracket
+//                        muestra_lista_materias_ajax();
+
+            } else if (
+                    // Read more about handling dismissals
+                    result.dismiss === swal.DismissReason.cancel
+                    ) {
+                swalWithBootstrapButtons(
+                        'Calcelado',
+                        '',
+                        ''
+                        )
+            }
+        });
+    });
+    //funcion que se pasan los datos para la edicion  del materia
+    $('#show_datos_materias').on('click', '.item_edit_materia', function () {
+        var id_materia = $(this).attr('name');
+        $.ajax({
+
+            type: "POST",
+            url: "materias/obtener_datos_materia",
+            data: {id_materia: id_materia},
+            dataType: 'json',
+            success: function (data) {
+                $.each(data, function (i, field) {//recorremos los datos para ingresarlos
+                    //los pintamos en los imputs de educion
+                    $("input[name=clave_materia_edit").val(data[i].clave_materia);
+                    $("input[name=nombre_materia_edit]").val(data[i].materia);
+                    $("input[name=semestre_materia_edit]").val(data[i].semestre);
+                });
+                $("#formulario_materia_edit").submit(function (e) {
+                    if ($('input[name=clave_materia_edit]').val() !== "" && $('input[name=nombre_materia_edit]').val() !== "" && $('input[name=semestre_materia_edit]').val() !== "") {
+
+                        $datos_materia_edit = $("#formulario_materia_edit").serialize();
+
+                        $.ajax({
+
+                            type: "POST",
+                            url: "materias/update_materia",
+                            data: {id_materia: id_materia, nombre_materia_edit: $("input[name=nombre_materia_edit]").val(), clave_materia_edit: $("input[name=clave_materia_edit]").val(), semestre_materia_edit: $("input[name=semestre_materia_edit]").val()},
+                            success:
+                                    function (data) {
+//                           
+                                        swal(data, "click en el boton para continuar", "success");//mandamos el mensaje de la validacion y  lo mandamos 
+                                        muestra_lista_materias_ajax();//mostramos la lista automaticamente para ver los cambios 
+                                        $("input[name=clave_materia_edit").val("");
+                                        $("input[name=nombre_materia_edit]").val("");
+                                        $("input[name=semestre_materia_edit]").val("");
+                                        id_materia = "";
+                                    },
+                            error: function (errorThrown) {
+                                alert('Error');
+                                console.log(errorThrown);
+                            }
+//
+                        });// you have missed this bracket
+
+                    } else {
+                        swal("Todos los campos deben de estar llenos", "", "error");//mandamos el mensaje de la validacion y  lo mandamos 
+                    }
+                    return false;
+
+                });
+            },
+            error: function (errorThrown) {
+                alert('Error');
+                console.log(errorThrown);
+            }
+        });// you have missed this bracket
+
+    });
+//----------------------------------------M O D U L O   D E   E V A L U A C I O N E S--------------------------------------------- 
+//
+//    $('#profesores_id_evaluacion_edit').on('click', function () {
+    function seleccionar_el_valor_lista_de_profesores(value) {
+        $.ajax({
+            type: "ajax",
+            url: "evaluaciones/lista_profesores",
+            async: true,
+            dataType: 'json',
+            success:
+                    function (data) {
+                        var html = '<option  disabled>Seleccione a un profesor</option>';
+                        var i;
+                        for (i = 0; i < data.length; i++) {
+                            if (data[i].idprofesor === value) {
+                                html += '<option selected value="' + data[i].idprofesor + '">' +
+                                        data[i].nombre +
+                                        '</option>';
+
+                            } else {
+                                html += '<option value="' + data[i].idprofesor + '">' +
+                                        data[i].nombre +
+                                        '</option>';
+
+                            }
+                        }
+//                    $('#profesores_id_evaluacion').append(html);
+                        $('#profesores_id_evaluacion_edit').html(html);
+                    },
+            error: function (errorThrown) {
+                alert('Error');
+                console.log(errorThrown);
+            }
+
+        });
+    }
+//    });
+    //
+    //funcion qeue selecciona la opcion correspondiente de la base de datos
+    function seleccionar_el_valor_lista_de_materias(value) {
+        $.ajax({
+            type: "ajax",
+            url: "evaluaciones/lista_materias",
+            async: true,
+            dataType: 'json',
+            success:
+                    function (data) {
+                        var html = '<option  selected disabled>Seleccione una materia</option>';
+                        var i;
+                        for (i = 0; i < data.length; i++) {
+                            if (data[i].idmateria === value) {
+                                html += '<option  selected value="' + data[i].idmateria + '">' +
+                                        data[i].materia +
+                                        '</option>';
+                            } else {
+                                html += '<option   value="' + data[i].idmateria + '">' +
+                                        data[i].materia +
+                                        '</option>';
+                            }
+                        }
+//                    $('#materias_id_evaluacion').append(html);
+                        $('#materias_id_evaluacion_edit').html(html);
+                    },
+            error: function (errorThrown) {
+                alert('Error');
+                console.log(errorThrown);
+            }
+
+        });
+    }
+//funcion que muestra la lista de profesores
+
+    $.ajax({
+        type: "ajax",
+        url: "evaluaciones/lista_profesores",
+        async: true,
+        dataType: 'json',
+        success:
+                function (data) {
+                    var html = '<option  selected disabled>Seleccione a un profesor</option>';
+                    var i;
+                    for (i = 0; i < data.length; i++) {
+                        html += '<option value="' + data[i].idprofesor + '">' +
+                                data[i].nombre +
+                                '</option>';
+                    }
+                    $('#profesores_id_evaluacion').html(html);
+//                    $('#profesores_id_evaluacion_edit').append(html);
+                },
+        error: function (errorThrown) {
+            alert('Error');
+            console.log(errorThrown);
+        }
+
+    });
+//funcion que muestra la lista de materias
+    $.ajax({
+        type: "GET",
+        url: "evaluaciones/lista_materias",
+        async: true,
+        dataType: 'json',
+        success:
+                function (data) {
+                    var html = '<option  selected disabled>Seleccione una materia</option>';
+                    var i;
+                    for (i = 0; i < data.length; i++) {
+                        html += '<option value="' + data[i].idmateria + '">' +
+                                data[i].materia +
+                                '</option>';
+                    }
+                    $('#materias_id_evaluacion').html(html);
+//                    $('#materias_id_evaluacion_edit').append(html);
+                },
+        error: function (errorThrown) {
+            alert('Error');
+            console.log(errorThrown);
+        }
+
+    });
+//funcion que almacena los datos de la nueva evaluacion
+    $("#formulario_evaluaciones").submit(function (e) {
+        //validamos que ningun campo venga vacio
+        if ($('input[name=grupo_evaluacion]').val() !== "" &&
+                $('input[name=materias_id_evaluacion]').val() !== "" &&
+                $('input[name=profesores_id_evaluacion]').val() !== "" &&
+                $('input[name=fecha_inicio_evaluacion]').val() !== "" &&
+                $('input[name=fecha_fin_evaluacion]').val() !== "" &&
+                $('input[name=hora_inicio_evaluacion]').val() !== "" &&
+                $('input[name=hora_fin_evaluacion]').val() !== "") {
+
+            if (!check_fecha_inicio_menor_que_fecha_termino($('input[name=fecha_inicio_evaluacion]').val(), $('input[name=fecha_fin_evaluacion]').val())) {
+                //    swal("La fecha de inicio debe ser menor que la de termino ", "", "error");//mandamos el mensaje de la validacion y  lo mandamos 
+                alert("error");
+            } else {
+//                alert("todo bien");
+                $datos_evaluacion = $("#formulario_evaluaciones").serialize();
+                $.ajax({
+                    type: "POST",
+                    url: "evaluaciones/insert_evaluacion",
+                    data: $datos_evaluacion,
+                    success:
+                            function (data) {
+//                                alert("bien se guardo bien");
+                                muestra_lista_evaluaciones_ajax();
+                                limpia_valores_form_evaluacion();
+                                swal(data, "click en el boton para continuar", "success");//mandamos el mensaje de la validacion y  lo mandamos 
+
+                            },
+                    error: function (errorThrown) {
+                        alert('Error');
+                        console.log(errorThrown);
+                    }
+//
+                });// you have missed this bracket
+
+            }
+        } else {
+            swal("Todos los campos deben de estar llenos", "", "error");//mandamos el mensaje de la validacion y  lo mandamos 
+        }
+        return false;
+    });
+    //   funcion que muestra la lista de evaluaciones al hacer click al boton
+    $('#muestra_lista_de_evaluaciones').on("click", function () {
+        //funcion que muestra la lista de profesores
+        muestra_lista_evaluaciones_ajax();
+    });
+
+    //funcion que trae los datos de la base de datos  de evaluaciones con ajax
+    function muestra_lista_evaluaciones_ajax() {
+        $.ajax({
+            type: "ajax",
+            url: "evaluaciones/lista_evaluaciones",
+            async: true,
+            dataType: 'json',
+            success:
+                    function (data) {
+                        var html = '';
+                        var i;
+                        for (i = 0; i < data.length; i++) {
+                            html += '<tr>' +
+                                    '<td>' + data[i].grupo + '</td>' +
+                                    '<td>' + data[i].materia + '</td>' +
+                                    '<td>' + data[i].nombre + '</td>' +
+                                    '<td>' + data[i].fecha_inicio + '</td>' +
+                                    '<td>' + data[i].fecha_fin + '</td>' +
+                                    '<td>' + data[i].hora_inicio + '</td>' +
+                                    '<td>' + data[i].hora_fin + '</td>' +
+                                    '<td style="text-align:right;">' +
+                                    '<a href="javascript:void(0);" class="item_edit_evaluacion" name="' + data[i].idevaluacion + '">Editar</a>' + ' ' +
+                                    '</td>' +
+                                    '<td style="text-align:right;">' +
+                                    '<a href="javascript:void(0);" class="item_delete_evaluacion" name="' + data[i].idevaluacion + '">Borrar</a>' +
+                                    '</td>' +
+                                    '</tr>';
+                        }
+                        $('#show_datos_evaluaciones').html(html);
+                    },
+            error: function (errorThrown) {
+                alert('Error');
+                console.log(errorThrown);
+            }
+//
+        });// you have missed this bracket
+
+    }
+
+//funcion que elimina un registro evaluacion de la  base de datos con mensaje de confirmacion 
+    $('#show_datos_evaluaciones').on('click', '.item_delete_evaluacion', function () {
+        const swalWithBootstrapButtons = swal.mixin({
+            cancelButtonClass: 'btn btn-danger',
+            confirmButtonClass: 'btn btn-success',
+            buttonsStyling: false,
+        })
+
+        swalWithBootstrapButtons({
+            title: '¿Estas seguro de eliminar este registro? <br>',
+            text: "",
+            type: 'warning',
+            showCancelButton: true,
+            cancelButtonText: 'No, cancelar!',
+            confirmButtonText: 'Si,eliminar!',
+            reverseButtons: false//invierte el sentido de los botoness
+        }).then((result) => {//si si queremos eliminar entonces eliminamos y mandamos a traer el ajax que elimna el registro de la bd
+            if (result.value) {
+                var id_evaluacion = $(this).attr('name');
+                $.ajax({
+
+                    type: "POST",
+                    url: "evaluaciones/eliminar_evaluacion",
+                    data: {idevaluacion: id_evaluacion},
+                    success: function (data) {
+//                        swal(data,"Profdesor eliminado", "succes");//mandamos el mensaje de la validacion y  lo mandamos 
+                        swal("Registro Eliminado", "", "success");//mandamos el mensaje de la validacion y  lo mandamos 
+                        muestra_lista_evaluaciones_ajax();
+
+                    },
+                    error: function (errorThrown) {
+                        alert('Error');
+                        console.log(errorThrown);
+                    }
+//
+                });// you have missed this bracket
+//                        muestra_lista_materias_ajax();
+
+            } else if (// si se cancela la opcion para a la ventana de canceladp
+                    // Read more about handling dismissals
+                    result.dismiss === swal.DismissReason.cancel
+                    ) {
+                swalWithBootstrapButtons(
+                        'Calcelado',
+                        '',
+                        ''
+                        )
+            }
+        });
+    });
+
+    function limpia_valores_form_evaluacion() {
+        $('input[name=grupo_evaluacion]').val('');
+//        $('input[name=materias_id_evaluacion]').val('');
+//        $('select option').remove();
+        muestra_lista_profesores_ajax();
+        muestra_lista_materias_ajax();
+        $('input[name=profesores_id_evaluacion]').val('');
+        $('input[name=fecha_inicio_evaluacion]').val('');
+        $('input[name=fecha_fin_evaluacion]').val('');
+        $('input[name=hora_inicio_evaluacion]').val('');
+        $('input[name=hora_fin_evaluacion]').val('');
+    }
+    function limpia_valores_form_edit_evaluacion() {
+        $('input[name=grupo_evaluacion_edit]').val('');
+        $('input[name=profesores_id_evaluacion_edit]').val('');
+        $('input[name=fecha_inicio_evaluacion_edit]').val('');
+        $('input[name=fecha_fin_evaluacion_edit]').val('');
+        $('input[name=hora_inicio_evaluacion_edit]').val('');
+        $('input[name=hora_fin_evaluacion_edit]').val('');
+    }
+     $('#limpiar_form_ingre_dat_evaluacion').on("click", function () {
+        limpia_valores_form_evaluacion();
+    });
+    //funcion que limpia los campos del formulario de edicion de  evaluacion (ingresar datos nuevos)
+    $('#limpiar_form_edit_ingre_dat_evaluacion').on("click", function () {
+        limpia_valores_form_edit_evaluacion();
+    });
+    //funcion que se pasan los datos para la edicion  de la evaluacions
+    $('#show_datos_evaluaciones').on('click', '.item_edit_evaluacion', function () {
+        var id_evaluacion = $(this).attr('name');
+        $.ajax({
+
+            type: "POST",
+            url: "evaluaciones/obtener_datos_evaluacion",
+            data: {id_evaluacion: id_evaluacion},
+            dataType: 'json',
+            success: function (data) {
+                $.each(data, function (i, field) {//recorremos los datos para ingresarlos
+                    //los pintamos en los imputs con los datos traidos de la  db de evaluaciones educion
+
+
+                    $('input[name=grupo_evaluacion_edit]').val(data[i].grupo);
+//                    $('input[name=materias_id_evaluacion_edit]').val(data[i].materia);
+//                    $('#profesores_id_evaluacion_edit').html("<option  value='" + data[i].idprofesor + "'>" + data[i].nombre + "</option>");
+//                    $('#materias_id_evaluacion_edit').html("<option  value='" + data[i].idmateria + "'>" + data[i].materia + "</option>");
+                    seleccionar_el_valor_lista_de_profesores(data[i].idprofesor);
+                    seleccionar_el_valor_lista_de_materias(data[i].idmateria);
+                    $('input[name=fecha_inicio_evaluacion_edit]').val(data[i].fecha_inicio);
+                    $('input[name=fecha_fin_evaluacion_edit]').val(data[i].fecha_fin);
+                    $('input[name=hora_inicio_evaluacion_edit]').val(data[i].hora_inicio);
+                    $('input[name=hora_fin_evaluacion_edit]').val(data[i].hora_fin);
+                });
+                $("#formulario_evaluacion_edit").submit(function (e) {
+                    if ($('input[name=grupo_evaluacion_edit]').val() !== "" &&
+                            $('input[name=materias_id_evaluacion_edit]').val() !== "" &&
+                            $('input[name=fecha_inicio_evaluacion_edit]').val() !== "" &&
+                            $('input[name=fecha_fin_evaluacion_edit]').val() !== "" &&
+                            $('input[name=hora_inicio_evaluacion_edit]').val() !== "" &&
+                            $('input[name=hora_fin_evaluacion_edit]').val() !== "")
+
+                    {
+//                        alert($('#profesores_id_evaluacion_edit').val());
+                        $.ajax({
+
+                            type: "POST",
+                            url: "evaluaciones/update_evaluacion",
+                            data: {id_evaluacion: id_evaluacion,
+                                grupo_evaluacion_edit: $("input[name=grupo_evaluacion_edit]").val(),
+                                materias_id_evaluacion_edit: $("#materias_id_evaluacion_edit").val(),
+                                profesores_id_evaluacion_edit: $("#profesores_id_evaluacion_edit").val(),
+                                fecha_inicio_evaluacion_edit: $("input[name=fecha_inicio_evaluacion_edit]").val(),
+                                fecha_fin_evaluacion_edit: $("input[name=fecha_fin_evaluacion_edit]").val(),
+                                hora_inicio_evaluacion_edit: $("input[name=hora_inicio_evaluacion_edit]").val(),
+                                hora_fin_evaluacion_edit: $("input[name=hora_fin_evaluacion_edit]").val()},
+                            success:
+                                    function (data) {
+                                        swal(data, "click en el boton para continuar", "success");//mandamos el mensaje de la validacion y  lo mandamos 
+                                        muestra_lista_evaluaciones_ajax();//mostramos la lista automaticamente para ver los cambios 
+                                        limpia_valores_form_edit_evaluacion();
+                                        id_evaluacion = "";
+                                    },
+                            error: function (errorThrown) {
+                                alert('Error');
+                                console.log(errorThrown);
+                            }
+                        });// you have missed this bracket
+
+                    } else {
+                        swal("Todos los campos deben de estar llenos", "", "error");//mandamos el mensaje de la validacion y  lo mandamos 
+                    }
+                    return false;
+
+                });
+            },
+            error: function (errorThrown) {
+                alert('Error');
+                console.log(errorThrown);
+            }
+        });// you have missed this bracket
+
+    });
+    //funcion que limpia los campos del formulario de evaluacion (ingresar datos nuevos)
+   
+
+}); //fin de jquery
+
+
+//function enviar_form() {
+////            // obtenemos e valor por el numero de elemento
+////
+////        var porElementos=document.forms["form1"].elements[0].value;
+////
+////        // Obtenemos el valor por el id
+////
+////        var porId=document.getElementById("nombre").value;
+////
+////        // Obtenemos el valor por el Nombre
+////
+////        var porNombre=document.getElementsByName("nombre")[0].value;
+////
+////        // Obtenemos el valor por el tipo de tag
+////
+////        var porTagName=document.getElementsByTagName("input")[0].value;
+////
+////        // Obtenemos el valor por el nombre de la clase
+////
+////        var porClassName=document.getElementsByClassName("formulario")[0].value;
+//    var nombre = document.getElementsByName('nombre')
+//    var pass = new Array;
+//    var pass_repet = new Array;
+//    pass = document.getElementsByName('pass')
+//    pass_repet = document.getElementsByName('pass_repet')
+////
+////    alert("que onda" + pass[0].value);
+////    alert("que onda" + nombre[0].value);
+////    alert("que onda" + pass_repet[0].value);
+//    if (pass[0].value !== '' && nombre[0].value !== '' && pass_repet[0].value !== '') {
+//        if ((pass[0].value).length === 8) {
+//            alert(typeof (pass[0].value));
+//            alert("bien" + (pass[0].value)[0]);
+//        } else {
+//            alert('la contrasena debe de contener 8 caraatceres');
+//        }
+//    } else {
+//        alert("ningun campo debe de estar vacio");
+//    }
+//}
+//function verifica_contenga_letra(contrasena) {
+//    var letras = 'abcdefghijklmnopqrstuvwxyz';
+//    for (i = 0; i < contrasena.length; i++) {
+//        if (letras.indexOf(contrasena.charAt(i), 0) !== -1) {
+//            return true;
+//        }
+//    }
+//    return false;
+//
+//}

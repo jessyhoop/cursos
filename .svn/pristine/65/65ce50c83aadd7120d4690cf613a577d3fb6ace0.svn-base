@@ -1,0 +1,429 @@
+<?php 
+function getFecha()
+{
+$meses['01']="enero";
+$meses['02']="febrero";
+$meses['03']="marzo";
+$meses['04']="abril";
+$meses['05']="mayo";
+$meses['06']="junio";
+$meses['07']="julio";
+$meses['08']="agosto";
+$meses['09']="septiembre";
+$meses['10']="octubre";
+$meses['11']="noviembre";
+$meses['12']="diciembre";
+
+$dias['01'] = "1";
+$dias['02'] = "2";
+$dias['03'] = "3";
+$dias['04'] = "4";
+$dias['05'] = "5";
+$dias['06'] = "6";
+$dias['07'] = "7";
+$dias['08'] = "8";
+$dias['09'] = "9";
+
+$dia = date("d");
+$mes = date("m");
+$mes = $meses[$mes];
+$anio = date("Y");
+
+if($dia < 10)
+$dia = $dias[$dia];
+
+$fecha =$dia." de ".$mes." del ".$anio;
+
+return $fecha;
+}
+?>
+<!DOCTYPE html>
+<html>
+<head>
+<title></title>
+<noscript><META HTTP-EQUIV="Refresh" CONTENT="1;URL=nojs.html"></noscript>   
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link rel="stylesheet" href="<?php echo base_url(); ?>/assets/css/bootstrap.css"  media="screen"/>    
+<link rel="stylesheet" href="<?php echo base_url(); ?>/assets/nuevoStyle.css"  media="all" />
+
+<script type="text/javascript" src="<?php echo base_url(); ?>/assets/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="<?php echo base_url(); ?>/assets/jquery-2.1.3.js"></script>
+<script type="text/javascript" src="<?php echo base_url(); ?>/assets/plugins/Equal-Height-Columns-Using-jQuery-Sameheight-Responsive-Plugin/jquery.sameheight.min.js"></script>
+
+<!--<link href="css/bootstrap.css" rel="stylesheet" media="screen">-->
+<!--<link href="nuevoStyle.css" rel="stylesheet" media="all"><!--ESTILOS UNAM-->
+<!--<script src="jquery-2.1.3.js"></script>-->
+<!--<script src="plugins/Equal-Height-Columns-Using-jQuery-Sameheight-Responsive-Plugin/jquery.sameheight.min.js"></script><!-- PLUGIN SAMEHEIGHT--> 
+<!--<script src="js/bootstrap.min.js"></script>-->
+    <script type="text/javascript">
+         
+     
+        
+      
+        function lista_materias(){
+             
+              $("#profesor").change(function(e)
+         {
+             
+              url = "<?php echo base_url('Formulario2/curso_profesor2') ?>";
+              
+              //$valor=$("#profesor").val();
+              $('#periodo').val(""); 
+              $('#horario').val("");          
+             //$valor=$("#formulario2").serialize();      
+             // alert("lista de cursos de profesores = "+$valor);
+              //alert("lista de url = "+url);
+              $.ajax({
+                 
+                 type: "POST",
+                 url: "<?php echo base_url('index.php/Formulario2/curso_profesor2') ?>",               
+                 data: {profesor: $("#profesor").val()},                          
+                 success: 
+                      function(data){                     
+
+                        //alert("ajax funcionando = "+data);  //as a debugging message.
+                        $('#materia').html(""); //limpiando
+                        $('#materia').append("<option value='' selected disabled style='display:none;'>Seleccione un curso</option> "); 
+                        //$('#materia').attr('selected',false);
+                        var obj = jQuery.parseJSON(data); //datos javascript                   
+                       $.each(obj.materia, function(index, value) {
+                           $('#materia').append("<option  value='"+obj.materia[index].grupo+"'>"+     obj.materia[index].grupo+"   "+obj.materia[index].nombreMateria+"</option>").attr('disabled',false);
+                           
+                        });                           
+                           
+                      },
+                  error: function(errorThrown){
+                       alert('error');
+                       console.log(errorThrown);
+                    }
+
+                  });// you have missed this bracket
+             return false;         
+           e.preventDefault();
+         });
+            
+            
+        }
+        
+        function horario_curso(){
+              
+              $("#materia").change(function(e)
+         {
+            
+              url = "<?php echo base_url('Formulario2/horario_curso') ?>";
+              
+              $valor=$("#profesor").val();      
+             //$valor=$("#formulario2").serialize();      
+             // alert("lista de cursos de profesores = "+$valor);
+              //alert("lista de url = "+url);
+              $.ajax({
+                 
+                 type: "POST",
+                 url: "<?php echo base_url('index.php/Formulario2/horario_curso') ?>",                 
+                 data: {profesor: $("#profesor").val(), curso: $("#materia").val()},                   
+                 success: 
+                      function(data){ 
+                         // alert("ajax funcionando = "+data);  //as a debugging message.
+                        var obj = jQuery.parseJSON(data); //datos javascript                     
+                          //alert("ajax funcionando = "+obj.horario[0].HORARIO); 
+                           $('#periodo').val(obj.horario[0].periodo).prop("disabled", true); 
+                           $('#horario').val(obj.horario[0].horario).prop("disabled", true);             $("#buttonSiguiente").show(300);   
+                      },
+                  error: function(errorThrown){
+                       alert('error');
+                       console.log(errorThrown);
+                    }
+
+                  });// you have missed this bracket
+             return false;         
+           e.preventDefault();
+         });
+            
+            
+        }
+        function formulario_full(){
+             
+        $("#formularioHorario").submit(function(e)
+         {
+         alert("formulario submit");    
+           
+              
+              //$valor=$("#profesor").val();
+             
+              $valor=$("#formularioHorario").serialize();      
+              alert("lista de cursos de profesores = "+$valor);
+              //alert("lista de url = "+url);
+              $.ajax({
+                 
+                 type: "POST",
+                 url: "<?php echo base_url('index.php/Cuestionario') ?>",                 
+                 //data: {profesor: $("#profesor").val(), curso: $("#materia").val()},                  
+                 data: $valor,                   
+                 success: 
+                      function(data){ 
+                          //alert("ajax funcionando = "+data);  //as a debugging message.
+                        var obj = jQuery.parseJSON(data); //datos javascript                     
+                          //alert("ajax funcionando = "+obj.horario[0].HORARIO); 
+                          //$('#periodo').val(obj.horario[0].PERIODO).prop("disabled", true); 
+                          //$('#horario').val(obj.horario[0].HORARIO).prop("disabled", true);                 
+                      },
+                  error: function(errorThrown){
+                       alert('error');
+                       console.log(errorThrown);
+                    }
+
+                  });// you have missed this bracket
+             return false;         
+           e.preventDefault();
+         });
+            
+            
+        }
+        
+        
+ $(document).ready(function(){
+    //formulario1();
+     $("#button_curso, #button_profesor, #buttonSiguiente ").hide();
+     lista_materias();
+     horario_curso();
+     formulario_full();
+ });
+</script>
+    
+        
+</head>
+<body>   
+<div class="container">
+<!-- HEADER -->
+ <div class="row marginBottom5" id="header">
+  <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" id=""><!--SE DEFINE REJILLA-->
+	 <a href="http://www.unam.mx"><img class="img-responsive img-rounded" alt="Imagen responsive" src="<?php echo base_url(); ?>/assets/img/encabezado-unamaz.jpg" border="0"  /></a>
+  </div><!-- rowHeader0 -->
+  
+  <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" role="navigation" id=""> <!--SE DEFINE REJILLA-->
+     <nav role="navigation" class="navbar navbar-default marginBottom colorAmarillo"><!-- MENU HEADER-->
+        <div class="navbar-header">	
+            <button type="button" data-target="#navbarCollapse" data-toggle="collapse" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                
+            </button>
+            <a href="http://www.aragon.unam.mx/unam/index.html"  class="navbar-brand"><img src="<?php echo base_url(); ?>/assets/img/house.gif" alt="Ir a página principal" title="Ir a página principal" width="17" height="18" border="0"/></a>
+            <a class="navbar-brand2 " id="fecha" name="fecha"><?php echo"".getFecha(); ?></a> <!-- IMPRESION DE LA FECHA DEL SERVIDOR-->
+        </div>
+ 
+        <div id="navbarCollapse" class="collapse navbar-collapse "> <!-- MENU QUE SE COLAPSA-->
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="http://www.aragon.unam.mx/unam/mapa_sitio.html" class="tituIcon"><img src="<?php echo base_url(); ?>/assets/img/sitemap_color.gif" width="16" height="16" alt="Sitemap" class="img-text" />
+                	  Mapa de sitio</a></li>
+                <li><a href="http://www.aragon.unam.mx/unam/contacto.html" class="tituIcon"><img   src="<?php echo base_url(); ?>/assets/img/email.gif"  width="18" height="14"alt="Contáctanos por e-mail" class="img-text" /> 
+                	  Contacto</a>                	  	
+                </li>
+                <li>
+                	<a href="http://www.aragon.unam.mx/unam/directorio.html" class="tituIcon"><img  src="<?php echo base_url(); ?>/assets/img/directorio.jpg" width="16" height="16" alt="Directorios" class="img-text" />
+                	  Directorio</a>
+                </li>
+                <li >
+                	 
+					  <form class="form-inline col-xs-12 col-sm-12 col-md-12 col-lg-12 styleBuscar " role="form">
+				        <div class="form-group">
+				         <input type="text" class="form-control  input-sm" placeholder="Buscar">
+				        </div>
+				        <button type="submit" name='grabar' id='grabar' class="btn btn-primary btn-sm tituIcon">BUSCAR</button>
+				      </form> 
+				          	
+                </li>
+            </ul>
+        </div> <!-- TERMINO MENU QUE SE COLAPSA-->
+  </nav><!-- TERMINO MENU HEADER-->
+</div>
+
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12  " id="">
+	  	 <a href="http://www.unam.mx"><img class="img-responsive img-rounded" alt="Imagen responsive" src="<?php echo base_url(); ?>/assets/img/fesaragon.jpg"  /></a>
+</div>
+
+</div><!--TERMINO HEADER-->
+
+
+
+ 
+ 
+<div class="row" id="menu"> <!-- MENU VERTICAL-->
+ <!--<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6  col-md-offset-3 " id="">
+ 	-->
+	<div class="col-xs-12 col-sm-6  col-md-6 col-lg-6  col-sm-offset-3 col-md-offset-3 col-lg-offset-3" id="">  
+	
+ <h2 class="text-center">CUESTIONARIO DE EVALUACIÓN
+CURSOS DEL CENTRO DE CÓMPUTO DE LA FES ARAGÓN  </h2>
+   <br>
+	<?php echo validation_errors(); ?>
+      <?php echo form_open('Formulario2/curso_profesor2'); //agregar direccion al metodo ?>
+     <form  role="form" id='formulario2' name='formulario2' method='post' action='Formulario2/curso_profesor2' >	 
+	   <div class="form-group">
+       <span class="glyphicon glyphicon-user"></span>
+	    <label for="">Nombre del profesor</label>
+        
+         <select class="form-control" id="profesor" name="profesor"  required="required" >
+		  <option value="" selected disabled style='display:none;' >Seleccione una opci&oacute;n</option>
+            
+            <?php  if (isset($profesor))
+        {
+                foreach ($profesor as $row)
+                    {
+                       echo "<option  value='".$row['nombre']."'>".$row['nombre']."</option>";
+                        
+                    }
+        }
+         ?>
+             
+        <!--<div class="modal-body">
+         
+          <?php //echo form_open(base_url('auth/login'), $attr) ?>
+           <p><input type="text" name="username"><span class='errorusername'></span></p>
+           <p><input type="password" name="password"><span class='errorpassword'></span></p>
+           <p><input type="submit" value="Entrar"></p>
+          <?php //echo form_close() ?>
+        </div>-->
+           
+		  <!--</-><option value="autor">Autor</option>
+		  <option value="coautor">Coautor</option>
+		  <option value="coordinador">Coordinador</option>
+		  <option value="editor">Editor</option>-->	  
+		</select>
+           <button type="submit" class="btn  btn-primary btn-block " id="button_profesor">Elegir</button>
+           <?php
+                 if($this->uri->segment(1)=="mensaje" and $this->uri->segment(2)=="enviado")
+                 {
+                 ?>
+                 <div class="correcto">El mensaje se envío correctamente</div>
+                 <?php
+                 }
+           ?>
+	  </div>
+        <?php echo form_close(); ?>
+        </form>
+        
+        
+       <form  role="form" name='formularioCurso'  method='post' action='verifica.php' >	 
+        <div class="form-group">
+        <span class="glyphicon glyphicon-user"></span>
+	    <label for="">Nombre del curso<?php//  echo''.var_dump($materia);?></label>
+	    <select class="form-control" id="materia" name="materia"  disabled  required="required" >
+		  <option value="" selected disabled style='display:none;' ></option>
+       
+		  <!--<option value="autor">Autor</option>
+		  <option value="coautor">Coautor</option>
+		  <option value="coordinador">Coordinador</option>
+		  <option value="editor">Editor</option>	-->  
+		</select>
+             <button type="submit" class="btn  btn-primary btn-block " id="button_curso" >Elegir</button>
+           <?php
+                 if($this->uri->segment(1)=="mensaje" and $this->uri->segment(2)=="enviado")
+                 {
+                 ?>
+                 <div class="correcto">El mensaje se envío correctamente</div>
+                 <?php
+                 }
+           ?>
+	  </div>
+         <?php echo form_close(); ?>            
+        </form>
+        
+        
+        <?php echo validation_errors(); ?>
+         <?php echo form_open('Cuestionario'); //agregar direccion al metodo ?>
+         <form  role="form" name="formularioHorario" id="formularioHorario"  method='post' action='Cuestionario' >	 
+	    <div class="form-group">
+        
+	    <label for=""></label>
+	    
+	  </div>
+	  <div class="form-group" >
+	    <label for="">Fecha inicio - Fecha término</label>
+	    <input type="text" class="form-control"  data-toggle="tooltip" required="required"   id="periodo" value="dd/mm/aaaa - dd/mm/aaaa" disabled>
+	  </div> 
+	 
+	    <div class="form-group" >
+	    <label for="">Horario</label>
+            
+	        <!--<input type="time" pattern="([01]?[0-9]|2[0-3]):[0-5][0-9]" class="form-control"  data-toggle="tooltip" title="M&aacute;ximo 100 caracteres. Puedes usar letras y n&uacute;meros" required="required"  step="1" min="2013-01-01" max="2013-12-31"  id="horaInicio">-->
+            <input type="text" format="dd" class="form-control"  data-toggle="tooltip"  required="required"  value='00:00  00:00'  disabled id="horario">
+	           
+	  </div>
+	  
+	  
+	  
+	  <button type="submit" class="btn  btn-primary btn-block " id="buttonSiguiente" name="buttonSiguiente" >SIGUIENTE</button>
+	  <?php
+                 if($this->uri->segment(1)=="mensaje" and $this->uri->segment(2)=="enviado")
+                 {
+                 ?>
+                 <div class="correcto">El mensaje se envío correctamente</div>
+                 <?php
+                 }
+           ?>
+	   <label>
+	     
+	    
+	    </label>             
+      <?php echo form_close(); ?>  
+	</form>	
+			
+  </div><!-- -->
+  
+ <!-- <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 " id="rightColumn">  
+  	<div class="panel panel-info">
+  <div class="panel-heading fontSizeLogin">COMO INGRESAR AL SITIO </div>
+  <div class="panel-body">
+     <p class='text-justify fontSizeLogin12'>
+     	Para acceder como academico, en el nombre 
+     	de usuario digite su RFC con homoclave.
+     	Y como contrase&ntilde;a la que fue proporcionada.
+	</p>
+  </div>
+</div> -->
+  
+ </div><!--ROW menu-->
+
+ 
+<div class="row footer" id="footer"> 
+	<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" id="rowFooter1">
+		    
+	 <nav class="navbar pie-banners ">
+	  
+	      <ul class="nav nav-justified">
+	        
+	         <li> 
+	        </li>
+	        
+		      <li >
+		      </li> 
+	          
+	        <li >
+	        </li>
+	                      
+	      </ul>
+	   
+	</nav>                             
+	 </div><!--TERMINO rowFooter1-->
+	 
+
+	<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 pie-derechos" id="rowFooter2">
+	           <p class='text-justify'>Hecho en M&eacute;xico, todos los derechos reservados 2014. Esta p&aacute;gina puede ser 
+		 		reproducida con fines no lucrativos, siempre y cuando no se mutile, se cite la 
+				fuente completa y su direcci&oacute;n electr&oacute;nica. De otra forma requiere permiso 
+				previo por escrito de la instituci&oacute;n.
+				</p>
+				<p class="textColorBlue ">
+			    Sitio web administrado por:<BR>Facultad de Estudios 
+			  	Superiores Arag&oacute;n. <A href="mailto:www@informatica.aragon.unam.mx">www@informatica.aragon.unam.mx</A>
+	
+	</div><!--TERMINO rowFooter2-->
+ 
+</div> <!-- footer-->
+
+</div> <!-- /container -->
+</body>
+</html>

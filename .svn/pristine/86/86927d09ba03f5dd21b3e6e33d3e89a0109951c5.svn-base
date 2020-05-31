@@ -1,0 +1,52 @@
+<?php 
+
+class ReporteModel extends CI_Model  {
+
+   function __construct(){  
+       parent::__construct();   
+       $this->load->database();
+   }
+
+
+
+function reporte_alumno(){
+        
+   //$query = $this->db->query('SELECT carrera.nombre AS carrera , alumno.nombre , alumno.direccion, alumno.cuenta, alumno.correo, alumno.promedio FROM alumno, carrera where alumno.carrera_idcarrera=carrera.idcarrera order by nombre ');
+   // $query = $this->db->query('SELECT * FROM alumno order by nombre ');
+   $query = $this->db->query('SELECT `nombre`, `cuenta`, `direccion`,`tel_celular`,`padecimiento`,`num_seguro_social`, `num_clinica_imss` , tipo_sanguineo.tipo as tipo_sanguineo FROM `alumno` , tipo_sanguineo WHERE alumno.tipo_sanguineo_idtipo_sanguineo=tipo_sanguineo.idtipo_sanguineo order by nombre');
+	   //echo"".$query; 
+        if($query){
+                $row = $query->result_array();
+                   return $row;
+        } else{ 
+               $error = $this->db->error();
+                return $error;
+              
+              }
+             
+   }
+   
+   
+   function comprobante_alumno(){
+        
+   //$query = $this->db->query('SELECT carrera.nombre AS carrera , alumno.nombre , alumno.direccion, alumno.cuenta, alumno.correo, alumno.promedio FROM alumno, carrera where alumno.carrera_idcarrera=carrera.idcarrera order by nombre ');
+   // $query = $this->db->query('SELECT * FROM alumno order by nombre ');
+   $query = $this->db->query('SELECT `nombre`, `cuenta`, `direccion`,`tel_celular`,`padecimiento`,`num_seguro_social`, `num_clinica_imss` FROM `alumno` where cuenta= "$cuenta" ');
+	   //echo"".$query; 
+        if($query){
+                $row = $query->result_array();
+                   return $row;
+        } else{ 
+               $error = $this->db->error();
+                return $error;
+              
+              }
+             
+   }
+   
+   
+   
+    
+}
+
+?>

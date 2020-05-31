@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+
+        <style type="text/css">
+
+
+            .ssstabsle {
+                font:11px/120% Verdana, Arial, Helvetica, sans-serif;
+                color:#777777;
+
+            }
+            .barrasv {
+                width:2.5em;
+                text-shadow:#CCCCCC 0.1em 0.1em 0.1em;
+                border-radius:5px;
+                -moz-border-radius:5px;
+                -webkit-border-radius:5px;
+                box-shadow:1px 1px 1px black;
+                -webkit-box-shadow:1px 1px 1px black;
+                -moz-box-shadow:1px 1px 1px black;
+                margin-bottom:3px;
+                background: gray;
+                margin-left: 5px;
+            }
+            .verticalmente {
+                position:relative; 
+                transform:rotate(-90deg);
+                -o-transform:rotate(-90deg);
+                -webkit-transform:rotate(-90deg);
+                -moz-transform:rotate(-90deg);
+                -ms-filter:progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
+                filter:progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
+                writing-mode:tb-rl;
+                filter:flipv fliph;
+                margin:0 -1em;
+            }
+            #etiq td {
+                height:7em;
+                width:3em;
+                font-weight:bold;
+            }
+            .bordetd {
+                border-top: 1px solid #777777;
+                border-bottom: 1px solid #777777;
+                margin-left: 1px;
+                margin-right: 1px;
+                padding-top:1px;
+                padding-bottom:1px;
+            }
+
+
+            /* estilos para el footer y el numero de pagina */
+            @page { margin: 40px 40px 50px 40px }
+            #footer {
+                position: fixed;
+                left: 0px;
+                bottom: -100px;
+                right: 0px;
+                height: 150px;
+                /*background-color: #333;*/
+                /*color: #fff;*/
+                text-align: center;
+            }
+            #footer .page:after {
+
+            }
+
+        </style>
+
+    </head>
+    <body>
+        <?php $pagina = 0; ?>
+        <?php foreach ($calificaciones as $key => $calificacion) { ?>
+            <!--header para cada pagina-->
+            <table width="100%" style=' vertical-align: bottom; font-family:serif ; font-size: 12pt;'>
+                <tr>
+                    <td  width="20%"><img src="images/unam.jpg"/></td>
+                    <td align='center' ><span ><strong > UNIVERSIDAD NACIONAL AUT&Oacute;NOMA DE M&Eacute;XICO<br/>
+                                FACULTAD DE ESTUDIOS SUPERIORES ARAG&Oacute;N<br/><br/>
+                                </br>
+                                CENTRO DE C&Oacute;MPUTO
+                                </br>
+                                </br>
+                                </br>
+                                <p> REPORTE DE EVALUACI&Oacute;N POR PROFESOR   </p> 
+                            </strong> </span></td>
+                    <td width="20%" align="right"> <img src="images/aragon.png"/></td>
+                </tr>
+            </table>
+            <table width="100%" style='border: 1px solid #00000C; vertical-align: bottom; font-family:serif ; font-size: 8pt;'>
+                <tr>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                </tr>
+                <tr>
+                    <td><strong>MATERIA: </strong><?php echo $calificacion['materia'] ?> </td>
+                    <td><strong>NUMERO DE CUESTIONARIOS: </strong><?php echo $calificacion['numero_de_cuestionarios'] ?></td>
+                    <td><strong>GRUPO: </strong><?php echo $calificacion['grupo'] ?></td>
+
+                </tr>
+                <tr>
+                    <td><strong>PROFESOR: </strong><?php echo $calificacion['profesor'] ?></td>
+                    <td><strong>CLAVE DE LA MATERIA: </strong><?php echo $calificacion['clave_materia'] ?></td>
+                    <td><strong>#REG: </strong><?php echo $calificacion['idevaluacion'] ?></td>
+
+                </tr>
+                <tr>
+                    <td><strong>PERIODO: </strong><?php echo $calificacion['fecha_inicio'] . "-" . $calificacion['fecha_fin']; ?></td>
+                    <td><strong>HORARIO: </strong><?php echo $calificacion['hora_inicio'] . "-" . $calificacion['hora_fin']; ?></td>
+
+                </tr>
+            </table>
+                                                    <!--<p>Calificaciones.</p>-->
+            <table width="100%" >
+                <thead style='border-bottom: 1px solid #00000C; font-size: 8pt; '>
+                    <tr>
+                        <th width="190">PREGUNTAS:</th>
+                        <th width="30">EVAL.<br>CUANT. </th>
+                        <th width="20">EVALUACI&Oacute;N<br>CUALITATIVA</th>
+                        <th width="20">CALIF<br>MAXIMA</th>
+                        <th width="20">CALIF<br>MINIMA</th>
+                    </tr>
+                </thead>
+                <p></p>
+                <p></p>
+                <tbody  style=' vertical-align: bottom; font-family:monospace; font-size: 8pt; margin: 14px;'>
+                    <?php
+                    if (is_array($calificacion)) {
+                        foreach ($calificacion as $calificacion_ind) {
+
+                            if (is_array($calificacion_ind) && isset($calificacion_ind['pregunta'])) { //si el arreglo es una pregunta y es un array entonces que imprima sus elementos 
+                                ?>
+                                <tr>
+                                    <td width="190" align='justify'><?php echo $calificacion_ind['pregunta'] ?><br><br></td>
+                                    <td width="30" align='center'><?php echo bcdiv($calificacion_ind['promedio'], '1', 2); ?><br><br></td>
+                                    <td width="20" align='center'><?php echo $calificacion_ind['calificacion_texto'] ?><br><br></td>
+                                    <td width="20" align='center'><?php echo bcdiv($calificacion_ind['min'], '1', 2); ?><br><br></td>
+                                    <td width="20" align='center'><?php echo bcdiv($calificacion_ind['max'], '1', 2); ?><br><br></td>
+                                    <!--<td width="50"  align='center'><?php //  echo $calificacion_ind[4]                 ?></td>-->
+                                </tr>  
+                                <?php if ($calificacion_ind['pregunta'] === '<p><strong>5.-INSTALACIONES.</strong></p>CONSIDERAS QUE EL N&Uacute;MERO DE EQUIPOS PARA EL CURSO FUERON.') {
+                                    ?>
+                                    <tr>
+                                        <td colspan="5" align='right'>PAGINA 1/1</td>
+                                    </tr>
+                                    <?php
+                                }
+                                ?>
+
+                                <?php
+                            }//si el arreglo es el promedio general de cada columna
+                            if (is_array($calificacion_ind) && isset($calificacion_ind['titulo'])) {
+                                ?>
+
+                                <tr >
+
+
+                                    <td  style='  border-bottom: 1px solid #00000C;  border-top: 1px solid #00000C; font-size: 8pt;  border-left: 1px solid #00000C; ' width="190" align='left'> <strong><?php echo $calificacion_ind['titulo'] ?></strong></td>
+                                    <td   style=' border-bottom: 1px solid #00000C;  border-top: 1px solid #00000C;' width="30" align='center'><strong><?php echo bcdiv($calificacion_ind['promedio'], '1', 2); ?></strong></td>
+                                    <td   style=' border-bottom: 1px solid #00000C;  border-top: 1px solid #00000C;' width="40" align='center'><strong><?php echo $calificacion_ind['calificacion_texto'] ?></strong></td>
+                                    <td  style=' border-bottom: 1px solid #00000C;  border-top: 1px solid #00000C;' width="20" align='left'><strong><?php echo bcdiv($calificacion_ind['min'], '1', 2); ?></strong></td>
+                                    <td   style=' border-bottom: 1px solid #00000C;  border-top: 1px solid #00000C; border-right:1px solid #00000C;'width="20" align='center'><strong><?php echo bcdiv($calificacion_ind['max'], '1', 2); ?></strong></td>
+                                    <!--<td width="50"  align='center'><?php //  echo $calificacion_ind[4]                 ?></td>-->
+                                </tr> 
+
+                                <?php
+                            }
+                        }
+                        ?>
+                    <?php } ?>
+                </tbody>
+            </table>
+            <!--DIV PARA LAS GRAFICAS--> 
+            <div width="50%" height="50%">
+                <table style='  font-size: 8pt;' width="100%" >
+
+                    <tr>
+                        <td>E=EXCELENTE<br>(10-9.4)</td>
+                        <td>MB=MUY BIEN<br>(9.39-8)</td>
+                        <td>B=BUENO<br>(7.99-7)</td>
+                        <td>D=DEFICIENTE<br>(6.99-0)</td>
+                        <td>N=NO VALIDO<br>NULO</td>
+                    </tr>
+                </table>
+
+                <p>  <?php $array_calificaciones = $calificacion['calificacionns']; ?> </p>
+                <table class="ssstabsle" align="center" cellpadding="0" cellspacing="0" border="0">
+                    <tbody align="center">
+                        <tr>
+                            <?php foreach ($array_calificaciones as $arreglo_med) { ?>
+
+                                <td valign="bottom"><div style="vertical-align:text-top"><?php echo $arreglo_med ?></div><div class="barrasv" style="height:<?php echo $arreglo_med * 9; ?>" >&nbsp;</div></td>
+                            <?php } ?>
+                        </tr>
+                        <tr>
+                            <?php for ($i = 0; $i <= count($array_calificaciones) - 1; $i++) { ?>
+                                <td class="bordetd"><?php echo $i + 1 ?></td>
+                            <?php } ?>
+
+                        </tr>
+
+                    </tbody>
+                </table>
+
+            </div>
+
+            <div id="footer">
+                <table style='vertical-align: bottom;  font-size: 8pt;'>
+                    <tr></tr>
+                </table>
+            </div>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <table width="100%" style='font-family:monospace; font-size: 8pt;'>
+                <tr>
+                    <td colspan="5" align='right'>
+                        PAGINA 2/2
+                    </td>
+                </tr>
+            </table>
+        <?php }
+        ?>
+
+    </body>
+
+</html>

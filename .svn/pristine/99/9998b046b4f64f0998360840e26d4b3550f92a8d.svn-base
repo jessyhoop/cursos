@@ -1,0 +1,113 @@
+<?php
+
+class Evaluaciones extends CI_Controller {
+
+    function __construct() {   //en el constructor cargamos nuestro modelo
+        parent::__construct();
+        $this->load->helper('url'); //agrega base_url
+        $this->load->helper('form');
+        //$this->load->helper(array('form', 'url'));
+        $this->load->library('form_validation');
+        $this->load->model('evaluaciones_model');
+        $this->load->model('materias_model');
+        $this->load->model('profesores_model');
+    }
+
+    public function index() {
+        $this->load->view('ccaragon/evaluaciones_view');
+    }
+
+    public function lista_profesores() {
+        $lista_pro = $this->profesores_model->get_profesores();
+
+        echo json_encode($lista_pro);
+    }
+
+    public function lista_materias() {
+        $lista_materias = $this->materias_model->get_materias();
+        echo json_encode($lista_materias);
+    }
+
+    public function insert_evaluacion() {
+
+        $this->form_validation->set_rules('grupo_evaluacion', 'nombre_materia', 'trim|required');
+        $this->form_validation->set_rules('materias_id_evaluacion', 'nombre_materia', 'trim|required');
+        $this->form_validation->set_rules('profesores_id_evaluacion', 'clave_materia', 'trim|required');
+        $this->form_validation->set_rules('fecha_incio_evaluacion', 'semestre_materia', 'trim|required');
+        $this->form_validation->set_rules('fecha_fin_evaluacion', 'semestre_materia', 'trim|required');
+        $this->form_validation->set_rules('hora_inicio_evaluacion', 'semestre_materia', 'trim|required');
+        $this->form_validation->set_rules('hora_fin_evaluacion', 'semestre_materia', 'trim|required');
+        if ($this->form_validation->run()) {
+            $bool_fecha_incio_evaluacion = $this->_format_date_mysql($this->post('fecha_incio_evaluacion'));
+            $bool_fecha_fin_evaluacion = $this->_format_date_mysql($this->post('fecha_fin_evaluacion'));
+            if ($bool_fecha_incio_evaluacion && $bool_fecha_fin_evaluacion) {
+                
+            } else {
+                echo 'La fecha no es una fecha valida o est&aacute; en el formato diferente al (dd/mm/aaaa) ';
+            }
+
+//consulta  al modelo
+            $materia_existente = $this->materias_model->get_clave_materia($this->input->post('clave_materia'));
+            if ($materia_existente) {//verificamos que la clave de la materia  no exista  en la bd  para poder  ingrasar los datos de la nueva materia
+                echo "la materia ya existe";
+            } else {
+                $this->materias_model->insert_datos_materia($this->input->post('nombre_materia'), $this->input->post('semestre_materia'), $this->input->post('clave_materia'), 1);
+                echo "formulario guardado con exito";
+            }
+//         print_r($profesores);
+//echo "bien".count($profesores);
+        } else {
+            echo "Campos invalidos";
+        }
+    }
+
+    public function update_materia() {
+
+        $this->form_validation->set_rules('nombre_materia_edit', 'nombre_materia_edit', 'trim|required');
+        $this->form_validation->set_rules('clave_materia_edit', 'clave_materia_edit', 'trim|required');
+        $this->form_validation->set_rules('semestre_materia_edit', 'nombre_profesor', 'trim|required');
+        if ($this->form_validation->run()) {
+
+            $this->materias_model->update_datos_materia(
+                    $this->input->post('id_materia'), $this->input->post('nombre_materia_edit'), $this->input->post('semestre_materia_edit'), $this->input->post('clave_materia_edit'));
+            echo "formulario editado con exito";
+
+//         print_r($profesores);
+//echo "bien".count($profesores);
+        } else {
+            echo "Campos invalidos";
+        }
+    }
+
+    public function eliminar_materia() {
+
+        $materia_eliminada = $this->materias_model->eliminar_materia($this->input->post('id_materia'));
+        echo json_encode($materia_eliminada);
+    }
+
+    public function obtener_datos_materia() {
+
+        $datos_materia = $this->materias_model->get_materia_by_id($this->input->post('id_materia'));
+        echo json_encode($datos_materia);
+    }
+
+    private function _format_date_mysql($fecha) {//changes format a date to mysql format
+        if ($fecha != "") {
+            $date = explode('/', $fecha);
+            if (count($date) === 3) {//valida que vengan los 3 datos separados por / array.length = 3
+                if (checkdate($date[1], $date[0], $date[2])) {
+                    return $date[2] . '-' . $date[1] . '-' . $date[0];
+                } else {
+                    return FALSE;
+                }
+            } else {
+                return FALSE;
+            }
+        } else {
+            return FALSE;
+        }
+    }
+
+}
+
+?>

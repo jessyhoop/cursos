@@ -1,0 +1,36 @@
+<?php
+
+class Blog extends CI_Controller {
+
+       public function index()
+        {
+         $data = array(
+            'title' => 'My Title',
+            'heading' => 'My Heading',
+            'message' => 'My Message'
+           );
+            //  echo 'echo desde el controlador';
+            // $this->load->view('blogview', $data);
+               /* $data['page_title'] = 'Your title';
+                $this->load->view('header');
+                $this->load->view('menu');
+                $this->load->view('content', $data);
+                $this->load->view('footer');*/
+            $this->load->view('blogview'); 
+        }
+
+}
+
+
+
+/*class Blog_controller extends CI_Controller {
+
+        public function blog()
+        {
+                $this->load->model('blog');
+
+                $data['query'] = $this->blog->get_last_ten_entries();
+
+                $this->load->view('blog', $data);
+        }
+}*/ 

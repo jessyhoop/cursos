@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="utf-8">
+<!--        <title>Provincias españolas en pdf</title>-->
+        <style type="text/css">
+
+            /* estilos para el footer y el numero de pagina */
+            @page { margin: 40px 40px 90px 40px }
+            #footer {
+                position: fixed;
+                left: 0px;
+                bottom: -180px;
+                right: 0px;
+                height: 150px;
+                /*background-color: #333;*/
+                /*color: #fff;*/
+                text-align: center;
+            }
+            #footer .page:after {
+                content: counter(page, upper-roman);
+            }
+        </style>
+    </head>
+    <body>
+        <!--header para cada pagina-->
+        <table width="100%" style=' vertical-align: bottom; font-family:serif ; font-size: 12pt;'>
+            <tr>
+                <td  width="20%"><img src="images/unam.jpg"/></td>
+                <td align='center' ><span ><strong > UNIVERSIDAD NACIONAL AUT&Oacute;NOMA DE M&Eacute;XICO<br/>
+                            FACULTAD DE ESTUDIOS SUPERIORES ARAG&Oacute;N<br/><br/>
+                            </br>
+                            CENTRO DE C&Oacute;MPUTO
+                            </br>
+                            </br>
+                            </br>
+                            <p> REPORTE DE EVALUACI&Oacute;N POR PROFESOR   </p> 
+                        </strong> </span></td>
+                <td width="20%" align="right"> <img src="images/aragon.png"/></td>
+            </tr>
+        </table>
+        <table width="100%" style='border: 1px solid #00000C; vertical-align: bottom; font-family:serif ; font-size: 6pt;'>
+            <tr>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+            <tr>
+                <td><strong>MATERIA:</strong></td>
+                <td><strong>NUMERO DE CUESTIONARIOS:</strong></td>
+                <td><strong>GRUPO:</strong></td>
+
+            </tr>
+            <tr>
+                <td><strong>PROFESOR:</strong></td>
+                <td><strong>CLAVE DE LA MATERIA:</strong></td>
+                <td><strong>#REG:</strong></td>
+
+            </tr>
+            <tr>
+                <td><strong>PERIODO:</strong></td>
+                <td><strong>HORARIO:</strong></td>
+
+            </tr>
+        </table>
+        <!--<p>Calificaciones.</p>-->
+        <table width="100%" >
+            <thead style='border-bottom: 1px solid #00000C; font-size: 8pt; '>
+                <tr>
+                    <th width="20">GRUPO</th>
+                    <th width="40">C.M.</th>
+                    <th width="150">MATERIA</th>
+                    <th width="100">PROFESOR</th>
+                    <th width="50">NC</th>
+                    <th width="50">PROM.</th>
+                    <th width="50">EVALUACI&Oacute;N</th>
+                    <th width="100">PERIODO</th>
+                    <th width="150">HORARIO</th>
+                    <!--<th width="100">PERIODO</th>-->
+                </tr>
+            </thead>
+            <tbody  style=' vertical-align: bottom; font-family:monospace; font-size: 8pt;'>
+                <?php foreach ($calificaciones as $calificacion) { ?>
+                    <tr>
+                        <td width="20" align='center'><?php echo $calificacion['grupo'] ?></td>
+                        <td width="40" align='center'><?php echo $calificacion['clave_materia'] ?></td>
+                        <td width="150" align='left'><?php echo $calificacion['materia'] ?></td>
+                        <td width="100" align='center'><?php echo $calificacion['profesor'] ?></td>
+                        <td width="50"  align='center'><?php echo $calificacion['numero_de_cuestionarios'] ?></td>
+                        <td width="50"  align='center'><?php echo bcdiv($calificacion['promedio'], '1', 2); ?></td>
+                        <td width="50" align='justify'><?php echo $calificacion['calificacion_texto'] ?></td>
+                        <td width="100" align='center'><?php echo $calificacion['fecha_inicio'] . "-" . $calificacion['fecha_fin']; ?></td>
+                        <td width="150" align='center'><?php echo $calificacion['hora_inicio'] . "-" . $calificacion['hora_fin']; ?></td>
+
+                    </tr>
+                    <?php ?>
+                <?php } ?>
+            </tbody>
+        </table>
+        </br>
+        </br>
+        </br>
+        <div id="footer">
+            <table style='vertical-align: bottom;  font-size: 8pt;'>
+                <tr>
+                    <td  align='center' width="250">
+                        <strong>UNIDAD DE SISTEMAS Y SERVICIOS EN C&Oacute;MPUTO </strong>
+                    </td>                   
+                    <td  align='LEFT' width="120">
+                        <p class="page">P&Aacute;GINA:</p>
+                    </td>                   
+                    <td  align='center' width="100">
+                        <strong>DEPARTAMENTO DE INFORM&Aacute;TICA </strong>
+                    </td>                   
+                </tr>
+            </table>
+        </div>
+    </body>
+</html>

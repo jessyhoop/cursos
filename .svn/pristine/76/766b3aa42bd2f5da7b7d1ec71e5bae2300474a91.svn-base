@@ -1,0 +1,119 @@
+<?php
+
+
+class Formulario extends CI_Controller {
+     function __construct() 
+ {   //en el constructor cargamos nuestro modelo
+ parent::__construct();
+  $this->load->helper('url'); //agrega base_url
+  $this->load->helper('form');
+  //$this->load->helper(array('form', 'url'));
+  $this->load->library('form_validation');
+  $this->load->model('Ccaragon2');
+         
+
+ }
+ /* public function nuevo_comentario()
+ {
+           //si se ha hecho submit en el formulario...
+ if(isset($_POST['grabar']))
+ {
+          //creamos nuestras reglas de validación, 
+          //required=campo obligatorio||valid_email=validar correo||xss_clean=evitamos inyecciones de código
+ $this->form_validation->set_rules('profesor', 'Profesor', 'required|xss_clean');
+
+     //comprobamos si los datos son correctos, el comodín %s nos mostrará el nombre del campo
+     //que ha fallado 
+ $this->form_validation->set_message('required', 'El  %s es requerido');
+       
+     
+            //si el formulario no pasa la validación lo devolvemos a la página
+            //pero esta vez le mostramos los errores al lado de cada campo
+ if($this->form_validation->run() == FALSE)
+ {
+ $this->index();
+              //en caso de que la validación sea correcta cogemos las variables y las envíamos
+              //al modelo
+ }else{
+ $nombre = $this->input->post("profesor");
+ 
+ $insert = $this->formulario_model->profesor_curso($nombre);
+              //si el modelo hace la inserción en la base de datos nos devolverá a la siguiente url
+              //en la que según nuestro formulario debe mostrarse el mensaje de confirmación.
+ redirect("http://localhost/formulario_cod_ajax/mensaje/enviado");
+ }
+ }
+ }
+       public function login()
+    {
+        $this->form_validation->set_rules('profesor', 'Profesor', 'required|xss_clean');        
+        $this->form_validation->set_message('required', 'El  %s es requerido');
+        if($this->form_validation->run() == FALSE)
+        {
+            $data = array(
+                'profesor' => form_error('profesor'),                
+                'res'      => "error"
+            );
+            echo json_encode($data);
+        }
+        else
+        {
+            $data = array(
+                'res'      => "success"
+            );
+            echo json_encode($data);
+            //aquí ya puedes procesar los datos de tu formulario
+        }
+    }*/
+       public function formulario1(){
+           $this->load->helper(array('Formulario', 'url'));
+
+           if ($this->form_validation->run() == FALSE)
+                {
+                        $this->load->view('ccaragon/formularioview');
+                }
+                else
+                {
+                        $this->load->view('ccaragon/formsuccess');
+                }
+           
+           
+       }
+       public function index()
+        {
+         /*$data = array(
+            'title' => 'My Title',
+            'heading' => 'My Heading',
+            'message' => 'My Message'
+           );*/
+            //  echo 'echo desde el controlador';
+            // $this->load->view('blogview', $data);
+               /* $data['page_title'] = 'Your title';
+                $this->load->view('header');
+                $this->load->view('menu');
+                $this->load->view('content', $data);
+                $this->load->view('footer');*/  
+          $this->load->model('Ccaragon2');
+           //consulta  al modelo
+          $profesores = $this->Ccaragon2->profesores();
+           $materias = $this->Ccaragon2->materias();
+
+
+          //creo el array con datos de configuración para la vista
+          $datos_profesores = array('profesor' =>  $profesores);
+          $datos_materias = array('materia' =>  $materias);
+          //echo''.var_dump($datos_materias);
+           //echo'<br><br>'. $datos_materias['MATERIA'];
+          //cargo la vista pasando los datos de configuacion
+         $this->load->view('ccaragon/formularioview', $datos_profesores+$datos_materias);
+         
+            
+          
+         // $this->load->view('ccaragon/formularioview'); 
+        }
+
+}
+
+
+
+?>

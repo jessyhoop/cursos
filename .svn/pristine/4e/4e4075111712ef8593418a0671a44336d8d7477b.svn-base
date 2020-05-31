@@ -1,0 +1,246 @@
+<?php 
+function getFecha()
+{
+$meses['01']="enero";
+$meses['02']="febrero";
+$meses['03']="marzo";
+$meses['04']="abril";
+$meses['05']="mayo";
+$meses['06']="junio";
+$meses['07']="julio";
+$meses['08']="agosto";
+$meses['09']="septiembre";
+$meses['10']="octubre";
+$meses['11']="noviembre";
+$meses['12']="diciembre";
+
+$dias['01'] = "1";
+$dias['02'] = "2";
+$dias['03'] = "3";
+$dias['04'] = "4";
+$dias['05'] = "5";
+$dias['06'] = "6";
+$dias['07'] = "7";
+$dias['08'] = "8";
+$dias['09'] = "9";
+
+$dia = date("d");
+$mes = date("m");
+$mes = $meses[$mes];
+$anio = date("Y");
+
+if($dia < 10)
+$dia = $dias[$dia];
+
+$fecha =$dia." de ".$mes." del ".$anio;
+
+return $fecha;
+}
+?>
+<!DOCTYPE html>
+<html>
+<head>
+<title></title>
+<noscript><META HTTP-EQUIV="Refresh" CONTENT="1;URL=nojs.html"></noscript>   
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="<?php echo base_url(); ?>/assets/css/bootstrap.css"  media="screen"/>    
+<link rel="stylesheet" href="<?php echo base_url(); ?>/assets/nuevoStyle.css" media="all"/> </head>
+
+<body>   
+<div class="container">
+<!-- HEADER -->
+ <div class="row marginBottom5" id="header">
+  <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" id=""><!--SE DEFINE REJILLA-->
+	 <a href="http://www.unam.mx"><img class="img-responsive img-rounded" alt="Imagen responsive" src="<?php echo base_url(); ?>/assets/img/encabezado-unamaz.jpg" border="0"  /></a>
+  </div><!-- rowHeader0 -->
+  
+  <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" role="navigation" id=""> <!--SE DEFINE REJILLA-->
+     <nav role="navigation" class="navbar navbar-default marginBottom colorAmarillo"><!-- MENU HEADER-->
+        <div class="navbar-header">	
+            <button type="button" data-target="#navbarCollapse" data-toggle="collapse" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                
+            </button>
+            <a href="http://www.aragon.unam.mx/unam/index.html"  class="navbar-brand"><img src="<?php echo base_url(); ?>/assets/img/house.gif" alt="Ir a página principal" title="Ir a página principal" width="17" height="18" border="0"/></a>
+            <a class="navbar-brand2 " id="fecha" name="fecha"><?php echo"".getFecha(); ?></a> <!-- IMPRESION DE LA FECHA DEL SERVIDOR-->
+        </div>
+ 
+        <div id="navbarCollapse" class="collapse navbar-collapse "> <!-- MENU QUE SE COLAPSA-->
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="http://www.aragon.unam.mx/unam/mapa_sitio.html" class="tituIcon"><img src="<?php echo base_url(); ?>/assets/img/sitemap_color.gif" width="16" height="16" alt="Sitemap" class="img-text" />
+                	  Mapa de sitio</a></li>
+                <li><a href="http://www.aragon.unam.mx/unam/contacto.html" class="tituIcon"><img   src="<?php echo base_url(); ?>/assets/img/email.gif"  width="18" height="14"alt="Contáctanos por e-mail" class="img-text" /> 
+                	  Contacto</a>                	  	
+                </li>
+                <li>
+                	<a href="http://www.aragon.unam.mx/unam/directorio.html" class="tituIcon"><img  src="<?php echo base_url(); ?>/assets/img/directorio.jpg" width="16" height="16" alt="Directorios" class="img-text" />
+                	  Directorio</a>
+                </li>
+                <li >
+                	 
+					  <form class="form-inline col-xs-12 col-sm-12 col-md-12 col-lg-12 styleBuscar " role="form">
+				        <div class="form-group">
+				         <input type="text" class="form-control  input-sm" placeholder="Buscar">
+				        </div>
+				        <button type="submit" name='grabar' id='grabar' class="btn btn-primary btn-sm tituIcon">BUSCAR</button>
+				      </form> 
+				          	
+                </li>
+            </ul>
+        </div> <!-- TERMINO MENU QUE SE COLAPSA-->
+  </nav><!-- TERMINO MENU HEADER-->
+</div>
+
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12  " id="">
+	  	 <a href="http://www.unam.mx"><img class="img-responsive img-rounded" alt="Imagen responsive" src="<?php echo base_url(); ?>/assets/img/fesaragon.jpg"  /></a>
+</div>
+
+</div><!--TERMINO HEADER-->
+
+
+
+ 
+ 
+<div class="row" id="menu"> <!-- MENU VERTICAL-->
+ <!--<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6  col-md-offset-3 " id="">
+ 	-->
+	<div class="col-xs-12 col-sm-6  col-md-6 col-lg-6  col-sm-offset-3 col-md-offset-3 col-lg-offset-3" id="">  
+	
+ <h3 class="text-center">Administracion de los Cursos de <br>Centro de Computo</h3>
+   <br>
+	<?php echo validation_errors(); ?>
+      <?php //echo form_open('Login/login_usuario'); //agregar direccion al metodo ?>
+     <form  id="formularioLogin" name="formularioLogin" method="post" >	 
+	   <div class="form-group">
+       <span class="glyphicon glyphicon-user"></span>
+	    <label for="" >Usuario</label>
+           <input type="text" required="required" name="inp_usuario" id="inp_usuario"  placeholder="Introduce tu usuario"   class="form-control" >
+        </div>
+       <div class="form-group">
+       <span class="glyphicon glyphicon-lock"></span>
+	    <label for="">Contraseña</label>
+           <input type="password" required="required" name="inp_contra" id="inp_contra" placeholder="************"   class="form-control">
+        </div>
+
+      <div class="row">
+        <div class="col-xs-8">
+      </div>
+        <!-- /.col -->
+        <div class="col-xs-4">
+          <button type="submit" class="btn btn-primary btn-block btn-flat"
+          id="enviar" name="enviar">INGRESAR</button>
+        </div>
+        <!-- /.col -->
+      </div>
+    </form>
+    
+      <?php
+        if($this->uri->segment(1)=="mensaje" and $this->uri->segment(2)=="enviado")
+          {
+        ?>
+         <div class="correcto">El mensaje se envío correctamente</div>
+      <?php
+          }
+         ?>
+	  
+        <?php echo form_close(); ?>
+        </form>      
+        	
+  </div><!-- -->
+  
+ <!-- <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 " id="rightColumn">  
+  	<div class="panel panel-info">
+  <div class="panel-heading fontSizeLogin">COMO INGRESAR AL SITIO </div>
+  <div class="panel-body">
+     <p class='text-justify fontSizeLogin12'>
+     	Para acceder como academico, en el nombre 
+     	de usuario digite su RFC con homoclave.
+     	Y como contrase&ntilde;a la que fue proporcionada.
+	</p>
+  </div>
+</div> -->
+  
+ </div><!--ROW menu-->
+<br><br><br>
+ 
+<div class="row footer" id="footer"> 
+	
+	 
+
+	<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 pie-derechos" id="rowFooter2">
+	      <p class='text-justify'>Hecho en M&eacute;xico, todos los derechos reservados 2014. Esta p&aacute;gina puede ser 
+		 		reproducida con fines no lucrativos, siempre y cuando no se mutile, se cite la 
+				fuente completa y su direcci&oacute;n electr&oacute;nica. De otra forma requiere permiso 
+				previo por escrito de la instituci&oacute;n.
+				</p>
+				<p class="textColorBlue ">
+			  Sitio web administrado por:<BR>Facultad de Estudios 
+			  Superiores Arag&oacute;n. <A href="mailto:www@informatica.aragon.unam.mx">www@informatica.aragon.unam.mx</A>
+	
+	</div><!--TERMINO rowFooter2-->
+ 
+</div> <!-- footer-->
+
+</div> <!-- /container -->
+
+<script type="text/javascript" src="<?php echo base_url(); ?>/assets/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="<?php echo base_url(); ?>/assets/jquery-2.1.3.js"></script>
+<script type="text/javascript" src="<?php echo base_url(); ?>/assets/plugins/Equal-Height-Columns-Using-jQuery-Sameheight-Responsive-Plugin/jquery.sameheight.min.js"></script>
+
+<!--<link href="css/bootstrap.css" rel="stylesheet" media="screen">-->
+<!--<link href="nuevoStyle.css" rel="stylesheet" media="all"><!--ESTILOS UNAM-->
+<!--<script src="jquery-2.1.3.js"></script>-->
+<!--<script src="plugins/Equal-Height-Columns-Using-jQuery-Sameheight-Responsive-Plugin/jquery.sameheight.min.js"></script><!-- PLUGIN SAMEHEIGHT--> 
+<!--<script src="js/bootstrap.min.js"></script>-->
+  <script type="text/javascript">      
+  
+function formulario_full(){
+             
+        $("#formularioLogin").submit(function(e)
+         {
+         alert("formulario submit");    
+             
+              $valor = $("#formularioLogin").serialize();      
+              
+              alert("Iniciando Sesion = "+ $valor);
+              
+              $.ajax({
+                 
+              type: "POST",
+              url: "<?php echo base_url('index.php/Login/login_admin') ?>",         
+              data: $valor,                   
+                 success: 
+                      function(data){ 
+                          //alert("ajax funcionando = "+data);  //as a debugging message.
+                        //var obj = jQuery.parseJSON(data); //datos javascript                     
+                          //alert("ajax funcionando = "+obj.horario[0].HORARIO); 
+                          //$('#periodo').val(obj.horario[0].PERIODO).prop("disabled", true); 
+                          //$('#horario').val(obj.horario[0].HORARIO).prop("disabled", true);  
+                       // window.location.href= '<?php //echo base_url('index.php/Gestion') ?>';
+                        window.location.href= '<?php echo base_url('index.php/Gestion/gestion') ?>';               
+                      },
+                  error: function(errorThrown){
+                       alert('Error');
+                       console.log(errorThrown);
+                    }
+
+                  });// you have missed this bracket
+             return false;       
+           e.preventDefault();
+         });
+            
+            
+        }
+        
+        
+ $(document).ready(function(){
+     
+     alert("gfhgfhfhfghf");
+     formulario_full();
+     
+ });
+</script>
+</body>
+</html>

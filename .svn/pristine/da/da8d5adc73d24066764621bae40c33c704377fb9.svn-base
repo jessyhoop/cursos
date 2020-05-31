@@ -1,0 +1,302 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>¿Que hacer en caso de sismo?</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="HTML5 plantilla libre" />
+	<meta name="keywords" content="mobile first, responsive" />
+	<meta name="author" content="Jonathan J.P.V" />
+
+	<!-- 
+	//////////////////////////////////////////////////////
+
+	FREE HTML5 TEMPLATE 
+	
+	//////////////////////////////////////////////////////
+	 -->
+
+  	<!-- Facebook and Twitter integration -->
+	<meta property="og:title" content=""/>
+	<meta property="og:image" content=""/>
+	<meta property="og:url" content=""/>
+	<meta property="og:site_name" content=""/>
+	<meta property="og:description" content=""/>
+	<meta name="twitter:title" content="" />
+	<meta name="twitter:image" content="" />
+	<meta name="twitter:url" content="" />
+	<meta name="twitter:card" content="" />
+
+	<link href="https://fonts.googleapis.com/css?family=Work+Sans:300,400,500,700,800" rel="stylesheet">
+	
+	<!-- Animate.css -->
+	<link rel="stylesheet" href="css/animate.css">
+	<!-- Icomoon Icon Fonts-->
+	<link rel="stylesheet" href="css/icomoon.css">
+	<!-- Bootstrap  -->
+	<link rel="stylesheet" href="css/bootstrap.css">
+	<link href="//netdna.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet">
+
+	<!-- Magnific Popup -->
+	<link rel="stylesheet" href="css/magnific-popup.css">
+
+	<!-- Owl Carousel  -->
+	<link rel="stylesheet" href="css/owl.carousel.min.css">
+	<link rel="stylesheet" href="css/owl.theme.default.min.css">
+
+	<!-- Theme style  -->
+	<link rel="stylesheet" href="css/style.css">
+
+	<!-- Modernizr JS -->
+	<script src="js/modernizr-2.6.2.min.js"></script>
+	<!-- FOR IE9 below -->
+	<!--[if lt IE 9]>
+	<script src="js/respond.min.js"></script>
+	<![endif]-->
+
+	</head>
+	<body>
+		
+	<div class="fh5co-loader"></div>
+	
+	<div id="page">
+	<nav class="fh5co-nav" role="navigation">
+		<!--<div class="top">
+			<div class="container">
+				<div class="row">
+					<div class="col-xs-12 text-right">
+						<p class="num">Call: +01 123 456 7890</p>
+						<ul class="fh5co-social">
+							<li><a href="#"><i class="icon-twitter"></i></a></li>
+							<li><a href="#"><i class="icon-dribbble"></i></a></li>
+							<li><a href="#"><i class="icon-github"></i></a></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>-->
+		<!--INICA EL MENU CONTAINER -->
+		<div class="top-menu">
+			<div class="container">
+				<div class="row">
+					<!--<div class="col-xs-8">-->
+						<div id="fh5co-logo"><a href="href="http://www.aragon.unam.mx/aragon/">UNAM FES ARAGON</a></div>
+					<!--</div>-->
+					 <!--<div class="col-xs-10 text-right menu-1">
+						<ul>
+							<li class="active"><a href="index.html">Home</a></li>
+							<li><a href="gallery.html">Gallery</a></li>
+							<li><a href="about.html">Trainer</a></li>
+							<li><a href="pricing.html">Pricing</a></li>
+							<li class="has-dropdown">
+								<a href="blog.html">Blog</a>
+								<ul class="dropdown">
+									<li><a href="#">Web Design</a></li>
+									<li><a href="#">eCommerce</a></li>
+									<li><a href="#">Branding</a></li>
+									<li><a href="#">API</a></li>
+								</ul>
+							</li>
+							<li><a href="contact.html">Contact</a></li>
+						</ul>
+					</div>-->
+				</div>
+			</div>
+		</div>
+		<!--TERMINA EL MENU CONTAINER -->
+	  </nav> <!--TERMINA LA NAVEGACION -->
+
+	<header id="fh5co-header" class="fh5co-cover" role="banner" style="background-image:url(images/img_bg_1.jpg);" data-stellar-background-ratio="0.5">
+		<div class="overlay"></div>
+		<div class="container">
+			<div class="row">
+				<div class="col-md-8 col-md-offset-2 text-center">
+					<div class="display-t">
+						<div class="display-tc animate-box" data-animate-effect="fadeIn">
+							<h1>¿Que hacer?...En caso de Alerta Sismica</h1>
+							<h2>Recomendasiones a tomar en cuenta</h2>
+							<p><a href="" class="btn btn-primary">Regresar</a></p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</header> <!--TERMINA PRIMERA SECCION -->
+
+	<div id="fh5co-services" class="fh5co-bg-section">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-4 text-center animate-box">
+					<div class="services">
+						<span style="font-size: 40px" class="glyphicon glyphicon-warning-sign fa-lg"></span>
+						<h3>Antes</h3>
+						<p>Recomendasiones para estar preparado para este tipo de casos.</p>
+						<!--<p><a href="#" class="btn btn-primary btn-outline btn-sm">More <i class="icon-arrow-right"></i></a></p>-->
+					</div>
+				</div>
+				<div class="col-md-4 text-center animate-box">
+					<div class="services">
+						<span style="font-size: 40px" class="glyphicon glyphicon-warning-sign fa-lg"></span>
+						<h3>Durante</h3>
+						<p>Recomendasiones a seguir para disminuir los accidentes y si fuera el caso como respoder.</p>
+						<!--<p><a href="#" class="btn btn-primary btn-outline btn-sm">More <i class="icon-arrow-right"></i></a></p>-->
+					</div>
+				</div>
+				<div class="col-md-4 text-center animate-box">
+					<div class="services">
+						<span style="font-size: 40px" class="glyphicon glyphicon-warning-sign fa-lg"></span>
+						<h3>Despues</h3>
+						<p>Recomendasiones a seguir para evitar accidentes y estar preparado.</p>
+						<!--<p><a href="#" class="btn btn-primary btn-outline btn-sm">More <i class="icon-arrow-right"></i></a></p>-->
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div id="fh5co-trainer">
+		<div class="container">
+			<div class="row animate-box">
+				<div class="col-md-8 col-md-offset-2 text-center fh5co-heading">
+					<h2>ANTES... ¿COMO PREPARARSE?</h2>
+				      <ul style="list-style: circle" class="text-justify">
+				         <li>PREPARE, ESTUDIE, CON SU FAMILIA O SUS COMPAÑEROS PLAN EN CASO DE SISMO.</li>
+				         <li>TENGA ALA MANO LOS NÚMEROS TELEFONICOS DE EMERGENCIA DE LA CRUZ ROJA, PROTECCION CIVIL, 
+				         HOSPITALES, BOMBEROS, POLICÍA, ETC.</li>
+				         <li>UBICAR LAS ZONAS SEGURAS DENTRO DEL PLANTEL.</li> 
+				         <li>IDENTIFIQUE LAS RUTAS DE EVACUACIÓN.</li>
+				         <li>IDENTIFIQUE LOS LUGARES PELIGROSOS DENTRO DEL PLANTEL, TALES COMO VENTANAS,
+				         MUEBLES PESADOS, PLAFONES QUE PUEDAN CAER.</li>
+				      </ul>
+				</div>
+			</div>	
+			  <div class="fh5co-cover" role="banner" style="background-image:url(images/IMG_8583.JPG);" data-stellar-background-ratio="0.5"></div>
+		 </div>	
+			<br>
+
+	    <div class="container">
+			<div class="row animate-box">
+				<div class="col-md-8 col-md-offset-2 text-center fh5co-heading">
+					<h2>DURANTE... ¿QUE HACER?</h2>
+				      <ul style="list-style: circle" class="text-justify">
+				         <li>No grite, No corra, No empuje</li>
+                         <li>Ubíquese en las zonas de seguridad del lugar en que usted se encuentre al momento del sismo</li>
+                         <li>Mantenga la calma</li>
+                         <li>Párese bajo un marco de puerta con trabe o de espaldas a un muro de carga.</li>
+                         <li>Manténgase alejado de ventanas  y artículos de vidrio que puedan quebrarse.</li>
+                         <li>Evite estar bajo objetos colgantes.</li>
+                         <li>Manténgase de muebles pesados que podrían caerse o dejar caer su contenido</li>
+                         <li>En el exterior mantengase alejado de árbole, cables y postes.</li>
+    			     </ul> 
+				</div>
+			</div>
+			<div class="fh5co-cover" role="banner" style="background-image:url(images/IMG_4486.JPG);" data-stellar-background-ratio="0.5"></div>
+		</div>
+		
+		<br>
+		
+		<div class="container">
+			<div class="row animate-box">
+				<div class="col-md-8 col-md-offset-2 text-center fh5co-heading">
+					<h2>DESPUES... ¿QUE HACER?</h2>
+				      <ul style="list-style: circle" class="text-justify">
+				        <li>En caso de haber quedado atrapado, conserve la calma y trate de comunicarse al exterior golpeando con algún objeto.</li>
+                        <li>Verifique si hay lesionados y, de ser necesario, busque ayuda médica.</li>
+                        <li>Sea cauteloso con las escaleras; podrían haberse debilitado con el sismo.</li>
+                        <li>Evite pisar o tocar cualquier cable caído o suelto.</li>
+						<li>En caso de fuga de gas o agua, repórtelas inmediatamente.</li>
+						<li>Atienda las indicaciones de las autoridades o de las brigadas de auxilio.</li>
+    			     </ul>
+				</div>
+			</div>
+			<div class="fh5co-cover" role="banner" style="background-image:url(images/IMG_5020.JPG);" data-stellar-background-ratio="0.5"></div>
+		</div>
+	</div>
+	
+	
+	<div id="fh5co-pricing">
+		<div class="container">
+			<div class="row animate-box">
+				<div class="col-md-8 col-md-offset-2 text-center fh5co-heading">
+					<h2><strong>Si es necesario evacuar</strong></h2>
+					<ul style="list-style: circle" class="text-justify">
+				         <li>Al salir, hágalo con cuidado y orden; siga las instrucciones de las autoridades o de las brigadas de auxilio.</li>
+    			         <li>Esté preparado para futuros sismos, también llamados réplicas.</li>
+    			         <li>Generalmente son más débiles, pero pueden ocasionar daños adicionales. </li>
+    			     </ul>
+			   </div>
+			</div>
+			
+			<div class="fh5co-cover" role="banner" style="background-image:url(images/IMG_2488.JPG);" data-stellar-background-ratio="0.5"></div>
+
+		</div>
+	</div>
+
+	<div class="">
+	  <div id="fh5co-started" class="fh5co-bg" style="background-image: url(images/fes5.jpg);" data-stellar-background-ratio="0.5">
+		<div class="overlay"></div>
+		<div class="container">
+			<div class="row animate-box">
+				<div class="col-md-8 col-md-offset-2 text-center">
+					<h2>TU SEGURIDAD ES PRIMERO</h2>
+				</div>
+			</div>
+		</div>
+	  </div>
+	  <br><br>
+    </div>
+	
+	<br><br>
+	
+	<footer id="fh5co-footer" class="fh5co-bg" style="background-image: url(images/img_bg_1.jpg);" role="contentinfo">
+		<div class="overlay"></div>
+		<div class="container">
+			<div class="row copyright">
+				<div class="col-md-12 text-center">
+					<p>
+					<small class="block">2017 &copy; <a href="http://www.aragon.unam.mx/aragon/" target="_blank">UNAM FES Aragon. Todos los derechos reservados</small> 
+					<small class="block">| Imagenes por el Depto. de Difusión | Sitio Creado por la Unidad de Sistemas FES Aragon</small>
+					</p>
+					  <p>
+						<ul class="fh5co-social-icons">
+							<li><a href="#"><i class="icon-twitter"></i></a></li>
+							<li><a href="#"><i class="icon-facebook"></i></a></li>
+						</ul>
+					 </p>
+				</div>
+			</div>
+
+		</div>
+	</footer>
+	</div>
+
+	<div class="gototop js-top">
+		<a href="#" class="js-gotop"><i class="icon-arrow-up"></i></a>
+	</div>
+	
+	<!-- jQuery -->
+	<script src="js/jquery.min.js"></script>
+	<!-- jQuery Easing -->
+	<script src="js/jquery.easing.1.3.js"></script>
+	<!-- Bootstrap -->
+	<script src="js/bootstrap.min.js"></script>
+	<!-- Waypoints -->
+	<script src="js/jquery.waypoints.min.js"></script>
+	<!-- Stellar Parallax ESTA ES LA BUENA-->
+	<script src="js/jquery.stellar.min.js"></script>
+	<!-- Carousel -->
+	<script src="js/owl.carousel.min.js"></script>
+	<!-- countTo -->
+	<script src="js/jquery.countTo.js"></script>
+	<!-- Magnific Popup -->
+	<script src="js/jquery.magnific-popup.min.js"></script>
+	<script src="js/magnific-popup-options.js"></script>
+	<!-- Main -->
+	<script src="js/main.js"></script>
+
+	
+
+	</body>
+</html>
+

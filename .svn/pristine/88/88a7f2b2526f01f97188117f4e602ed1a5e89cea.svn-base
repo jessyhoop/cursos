@@ -1,0 +1,73 @@
+<?php
+
+class Profesores extends CI_Controller {
+
+    function __construct() {   //en el constructor cargamos nuestro modelo
+        parent::__construct();
+        $this->load->helper('url'); //agrega base_url
+        $this->load->helper('form');
+        //$this->load->helper(array('form', 'url'));
+        $this->load->library('form_validation');
+        $this->load->model('profesores_model');
+    }
+
+    public function index() {
+        $this->load->view('ccaragon/profesores_view');
+    }
+
+    public function insert_profesor() {
+
+        $this->form_validation->set_rules('rfc_profesor', 'rfc profesor', 'trim|required|exact_length[13]|alpha_numeric');
+        $this->form_validation->set_rules('nombre_profesor', 'nombre_profesor', 'trim|required');
+        if ($this->form_validation->run()) {
+            //consulta  al modelo
+            $profesores = $this->profesores_model->get_rfc($this->input->post('rfc_profesor'));
+            if ($profesores) {//verificamos que el rfc no exista para poder  ingrasar los datos
+                echo "rfc ya existe";
+            } else {
+                //procedemos a la inserccion de datos
+                $this->profesores_model->insert_datos_profesor($this->input->post('nombre_profesor'), $this->input->post('rfc_profesor'), 1);
+                echo "formulario guardado con exito";
+            }
+        } else {
+            echo "Campos invalidos";
+        }
+    }
+
+    public function update_profesor() {
+
+        $this->form_validation->set_rules('rfc_profesor_edit', 'rfc profesor', 'trim|required|exact_length[13]|alpha_numeric');
+        $this->form_validation->set_rules('nombre_profesor_edit', 'nombre_profesor', 'trim|required');
+        if ($this->form_validation->run()) {
+
+            $this->profesores_model->update_datos_profesor($this->input->post('idprofesor'), $this->input->post('nombre_profesor_edit'), $this->input->post('rfc_profesor_edit'));
+            echo "formulario editado con exito";
+
+//         print_r($profesores);
+//echo "bien".count($profesores);
+        } else {
+            echo "Campos invalidos";
+        }
+    }
+
+    public function lista_profesores() {
+        $lista_pro = $this->profesores_model->get_profesores();
+
+        echo json_encode($lista_pro);
+    }
+
+    public function eliminar_profesor() {
+
+        $profesor_eliminado = $this->profesores_model->elimina_profesor($this->input->post('idprofesor'));
+        echo json_encode($profesor_eliminado);
+    }
+
+    public function obtener_datos_profesor() {
+
+        $datos_profesor = $this->profesores_model->get_profesor($this->input->post('idprofesor'));
+        echo json_encode($datos_profesor);
+    }
+
+}
+
+?>

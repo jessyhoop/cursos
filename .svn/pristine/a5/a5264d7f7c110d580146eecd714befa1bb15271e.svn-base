@@ -1,0 +1,80 @@
+<?php
+
+defined("BASEPATH") OR die("El acceso al script no está permitido");
+
+class reportes_model extends CI_Model {
+
+    public function __construct() {
+        parent::__construct();
+        $this->load->database();
+    }
+
+// testing ghjhj
+    public function total_profesores() {
+        $query = $this->db->select('nombre');
+        $query = $this->db->order_by('nombre');
+        $query = $this->db->get('profesor');
+        return $query->num_rows() > 0 ? $query->result_array() : false;
+    }
+
+    public function total_ids_profesores() {
+        $query = $this->db->select('idprofesor');
+        $query = $this->db->get('profesor');
+        return $query->num_rows() > 0 ? $query->result_array() : false;
+    }
+
+    public function comentarios_by_profesor($arreglo_ids) {
+        $query = $this->db->select('captura.comentarios,
+profesor.nombre,
+evaluacion.grupo,
+materia.materia');
+        $query = $this->db->join('evaluacion', 'captura.idevaluacion = evaluacion.idevaluacion');
+        $query = $this->db->join('profesor', 'profesor_idprofesor= profesor.idprofesor');
+        $query = $this->db->join('materia', 'evaluacion.materia_idmateria = materia.idmateria');
+        $query = $this->db->where_in('evaluacion.profesor_idprofesor', $arreglo_ids);
+        $query = $this->db->order_by('profesor.nombre');
+        $query = $this->db->get('captura');
+//        echo '<pre>';
+//        print_r($this->db->last_query());
+//        echo '</pre>';
+        return $query->num_rows() > 0 ? $query->result_array() : false;
+    }
+
+//hh
+    function get_elementos_captura() {
+        $this->db->select('captura.respuesta_1,profesor.nombre,evaluacion.fecha_fin,evaluacion.fecha_inicio,evaluacion.hora_inicio,evaluacion.hora_fin,materia.clave_materia,captura.fecham,materia.materia,captura.respuestas,evaluacion.grupo,MONTH(captura.fecham) AS mes,
+YEAR(captura.fecham) as anio');
+        $this->db->join('evaluacion', 'captura.idevaluacion = evaluacion.idevaluacion');
+        $this->db->join('profesor', 'evaluacion.profesor_idprofesor = profesor.idprofesor');
+        $this->db->join('materia', 'evaluacion.materia_idmateria = materia.idmateria');
+        $this->db->order_by('profesor.nombre');
+        $query = $this->db->get('captura');
+
+//        echo '<pre>';
+//        print_r($this->db->last_query());
+//        echo '</pre>';
+        return $query->num_rows() > 0 ? $query->result_array() : false;
+    }
+
+    function get_respuestas_1_by_grupo($grupo,$respuesta) {
+        $this->db->select($respuesta);
+        $this->db->join('evaluacion', 'captura.idevaluacion = evaluacion.idevaluacion');
+        $this->db->where('evaluacion.grupo', $grupo);
+        $query = $this->db->get('captura');
+//
+//        echo '<pre>';
+//        print_r($this->db->last_query());
+//        echo '</pre>';
+        return $query->num_rows() > 0 ? $query->result_array() : false;
+    }
+
+    function total_de_grupos() {
+        $this->db->select('evaluacion.grupo');
+        $query = $this->db->get('evaluacion');
+        return $query->num_rows() > 0 ? $query->result_array() : false;
+    }
+
+}
+
+/* End of file pdf_model.php */
+/* Location: ./application/models/pdf_model.php */

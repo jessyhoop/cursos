@@ -1,0 +1,518 @@
+-- phpMyAdmin SQL Dump
+-- version 4.5.1
+-- http://www.phpmyadmin.net
+--
+-- Servidor: 127.0.0.1
+-- Tiempo de generación: 05-04-2017 a las 21:52:24
+-- Versión del servidor: 10.1.9-MariaDB
+-- Versión de PHP: 5.6.15
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET time_zone = "+00:00";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+
+--
+-- Base de datos: `ccaragon2`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `capacidad`
+--
+
+CREATE TABLE `capacidad` (
+  `idcapacidad` int(11) NOT NULL,
+  `idevaluacion` int(11) NOT NULL,
+  `alumno` int(11) NOT NULL DEFAULT '0'
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `captura`
+--
+
+CREATE TABLE `captura` (
+  `idcaptura` int(11) NOT NULL,
+  `idevaluacion` int(11) NOT NULL,
+  `respuestas` varchar(17) COLLATE utf8_spanish_ci NOT NULL,
+  `comentarios` varchar(255) COLLATE utf8_spanish_ci NOT NULL,
+  `calificaciones` varchar(7) COLLATE utf8_spanish_ci NOT NULL,
+  `fecham` datetime NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+--
+-- Volcado de datos para la tabla `captura`
+--
+
+INSERT INTO `captura` (`idcaptura`, `idevaluacion`, `respuestas`, `comentarios`, `calificaciones`, `fecham`) VALUES
+(2, 1, 'fghgfh', 'gfhgfhfgh', '405', '0000-00-00 00:00:00'),
+(3, 0, 'baaaababbbbbbbbb', 'dfsfsdfdf', '405', '0000-00-00 00:00:00'),
+(4, 0, 'ababbabaabbbabab', 'edsdfsdfdsf', '405', '0000-00-00 00:00:00'),
+(5, 1, 'bbaabbabbbbbbbbb', 'sdfsdf', '405', '0000-00-00 00:00:00'),
+(6, 1, 'bbabbabaaabbbabb', 'COMENTARIO DB CCARAGON2', '405', '2017-02-27 10:29:27'),
+(7, 1, 'abbbbbbbabbbaaab', 'gbngnvbnbv', '405', '2017-02-27 22:33:45'),
+(8, 1, 'aaaaaaaaaaaaaaaa', 'GHJJGHJHGH', '405', '2017-02-27 22:42:09'),
+(9, 1, 'aaaaaaaaaaaaaaaa', 'GHJJGHJHGH', '405', '2017-02-27 22:44:35'),
+(10, 1, 'babbababccbaabba', 'bnvbnvbnbvvbbvnbvn', '405', '2017-03-29 22:34:42');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `evaluacion`
+--
+
+CREATE TABLE `evaluacion` (
+  `idevaluacion` int(11) NOT NULL,
+  `grupo` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `materia_idmateria` int(11) NOT NULL,
+  `profesor_idprofesor` int(11) NOT NULL,
+  `periodo` varchar(21) COLLATE utf8_spanish_ci NOT NULL,
+  `horario` varchar(11) COLLATE utf8_spanish_ci NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+--
+-- Volcado de datos para la tabla `evaluacion`
+--
+
+INSERT INTO `evaluacion` (`idevaluacion`, `grupo`, `materia_idmateria`, `profesor_idprofesor`, `periodo`, `horario`) VALUES
+(1, '04', 1, 1, '24/08/2015-04/09/2015', '12:00-14:00');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `evaluada`
+--
+
+CREATE TABLE `evaluada` (
+  `idevaluada` int(11) NOT NULL,
+  `evaluacion_idevaluacion` int(11) NOT NULL,
+  `evaluada1` varchar(5) COLLATE utf8_spanish_ci NOT NULL DEFAULT '0',
+  `evaluada2` varchar(5) COLLATE utf8_spanish_ci NOT NULL DEFAULT '0',
+  `evaluada3` varchar(5) COLLATE utf8_spanish_ci NOT NULL DEFAULT '0',
+  `evaluada4` varchar(5) COLLATE utf8_spanish_ci NOT NULL DEFAULT '0',
+  `evaluada5` varchar(5) COLLATE utf8_spanish_ci DEFAULT '0',
+  `evaluada6` varchar(5) COLLATE utf8_spanish_ci NOT NULL DEFAULT '0',
+  `evaluada7` varchar(5) COLLATE utf8_spanish_ci NOT NULL DEFAULT '0',
+  `evaluada8` varchar(5) COLLATE utf8_spanish_ci NOT NULL DEFAULT '0',
+  `evaluada9` varchar(5) COLLATE utf8_spanish_ci NOT NULL DEFAULT '0',
+  `evaluada10` varchar(5) COLLATE utf8_spanish_ci NOT NULL DEFAULT '0',
+  `evaluada11` varchar(5) COLLATE utf8_spanish_ci NOT NULL DEFAULT '0',
+  `evaluada12` varchar(5) COLLATE utf8_spanish_ci NOT NULL DEFAULT '0',
+  `evaluada13` varchar(5) COLLATE utf8_spanish_ci NOT NULL DEFAULT '0',
+  `evaluada14` varchar(5) COLLATE utf8_spanish_ci NOT NULL DEFAULT '0',
+  `evaluada15` varchar(5) COLLATE utf8_spanish_ci DEFAULT '0',
+  `evaluada16` varchar(5) COLLATE utf8_spanish_ci NOT NULL DEFAULT '0',
+  `evaluada17` varchar(5) COLLATE utf8_spanish_ci NOT NULL DEFAULT '0',
+  `evaluada18` varchar(5) COLLATE utf8_spanish_ci NOT NULL DEFAULT '0',
+  `evaluada19` varchar(5) COLLATE utf8_spanish_ci NOT NULL DEFAULT '0',
+  `evaluada20` varchar(5) COLLATE utf8_spanish_ci NOT NULL DEFAULT '0',
+  `evaluada21` varchar(5) COLLATE utf8_spanish_ci NOT NULL DEFAULT '0',
+  `evaluada22` varchar(5) COLLATE utf8_spanish_ci NOT NULL DEFAULT '0',
+  `evaluada23` varchar(5) COLLATE utf8_spanish_ci NOT NULL DEFAULT '0',
+  `evaluada24` varchar(5) COLLATE utf8_spanish_ci NOT NULL DEFAULT '0',
+  `evaluada25` varchar(5) COLLATE utf8_spanish_ci NOT NULL DEFAULT '0',
+  `evaluada26` varchar(5) COLLATE utf8_spanish_ci NOT NULL DEFAULT '0',
+  `evaluada27` varchar(5) COLLATE utf8_spanish_ci NOT NULL DEFAULT '0',
+  `evaluada28` varchar(5) COLLATE utf8_spanish_ci NOT NULL DEFAULT '0'
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `grupo`
+--
+
+CREATE TABLE `grupo` (
+  `idgrupo` int(10) UNSIGNED NOT NULL,
+  `grupo` varchar(5) COLLATE utf8_spanish_ci NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `materia`
+--
+
+CREATE TABLE `materia` (
+  `idmateria` int(11) NOT NULL,
+  `clave_materia` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `materia` varchar(70) COLLATE utf8_spanish_ci NOT NULL,
+  `semestre` varchar(6) COLLATE utf8_spanish_ci DEFAULT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+--
+-- Volcado de datos para la tabla `materia`
+--
+
+INSERT INTO `materia` (`idmateria`, `clave_materia`, `materia`, `semestre`) VALUES
+(1, '0001', 'INTRO. A LA COMPUTAC. Y PROC. DE TEXTOS  WORD', '2017');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `maximos_minimos`
+--
+
+CREATE TABLE `maximos_minimos` (
+  `idmaximos_minimos` int(11) NOT NULL,
+  `calificacion_maxima` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `numero` char(1) COLLATE utf8_spanish_ci NOT NULL,
+  `maximo1` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `maximo2` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `maximo3` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `maximo4` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `maximo5` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `maximo6` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `maximo7` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `maximo8` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `maximo9` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `maximo10` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `maximo11` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `maximo12` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `maximo13` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `maximo14` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `maximo15` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `maximo16` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `maximo17` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `maximo18` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `maximo19` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `maximo20` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `maximo21` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `maximo22` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `maximo23` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `maximo24` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `maximo25` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `maximo26` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `maximo27` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `maximo28` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `minimo1` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `minimo2` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `minimo3` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `minimo4` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `minimo5` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `minimo6` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `minimo7` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `minimo8` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `minimo9` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `minimo10` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `minimo11` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `minimo12` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `minimo13` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `minimo14` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `minimo15` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `minimo16` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `maximo17_copy1` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `minimo18` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `minimo19` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `minimo20` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `minimo21` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `minimo22` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `minimo23` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `minimo24` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `minimo25` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `minimo26` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `minimo27` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `minimo28` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `maximo_plantel` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `minimo_plantel` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `maximo_alumno` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `minimo_alumno` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `calificacion_minima` varchar(5) COLLATE utf8_spanish_ci NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `no_evaluada`
+--
+
+CREATE TABLE `no_evaluada` (
+  `idno_evalauda` int(11) NOT NULL,
+  `no_evaluada1` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `no_evaluada2` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `no_evaluada3` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `no_evaluada4` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `no_evaluada5` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `no_evaluada6` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `no_evaluada7` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `no_evaluada8` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `no_evaluada9` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `no_evaluada10` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `no_evaluada11` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `no_evaluada12` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `no_evaluada13` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `no_evaluada14` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `no_evaluada15` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `no_evaluada16` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `no_evaluada17` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `no_evaluada18` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `no_evaluada19` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `no_evaluada20` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `no_evaluada21` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `no_evaluada22` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `no_evaluada23` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `no_evaluada24` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `no_evaluada25` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `no_evaluada26` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `no_evaluada27` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `no_evaluada28` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `no_evaluadacol` varchar(45) COLLATE utf8_spanish_ci DEFAULT NULL,
+  `evaluacion_idevaluacion` int(11) NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `profesor`
+--
+
+CREATE TABLE `profesor` (
+  `idprofesor` int(11) NOT NULL,
+  `rfc` varchar(13) COLLATE utf8_spanish_ci NOT NULL,
+  `nombre` varchar(45) COLLATE utf8_spanish_ci NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+--
+-- Volcado de datos para la tabla `profesor`
+--
+
+INSERT INTO `profesor` (`idprofesor`, `rfc`, `nombre`) VALUES
+(1, 'ewrfd241415', 'GOMEZ RODRIGUEZ MARIA GUADALUPE');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `promedio`
+--
+
+CREATE TABLE `promedio` (
+  `idpromedio` int(11) NOT NULL,
+  `calificacion1` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `calificacion2` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `calificacion3` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `calificacion4` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `calificacion5` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `calificacion6` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `calificacion7` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `calificacion8` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `calificacion9` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `calificacion10` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `calificacion11` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `calificacion12` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `calificacion13` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `calificacion14` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `calificacion15` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `calificacion16` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `calificacion17` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `calificacion18` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `calificacion19` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `calificacion20` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `calificacion21` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `calificacion22` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `calificacion23` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `calificacion24` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `calificacion25` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `calificacion26` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `calificacion27` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `calificacion28` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `cal_profespr` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `cal_plantel` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `cal_alumnos` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
+  `clave_evaluacion` varchar(7) COLLATE utf8_spanish_ci NOT NULL,
+  `num_cuestionarios` char(3) COLLATE utf8_spanish_ci NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `reg_usuarios`
+--
+
+CREATE TABLE `reg_usuarios` (
+  `idreg_usuarios` int(11) NOT NULL,
+  `usuario` varchar(20) COLLATE utf8_spanish_ci NOT NULL,
+  `passwd` varchar(8) COLLATE utf8_spanish_ci NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `usuarios`
+--
+
+CREATE TABLE `usuarios` (
+  `idusuario` int(11) NOT NULL,
+  `perfil` varchar(30) COLLATE utf8_spanish_ci NOT NULL,
+  `username` varchar(100) COLLATE utf8_spanish_ci NOT NULL,
+  `password` varchar(100) COLLATE utf8_spanish_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+--
+-- Volcado de datos para la tabla `usuarios`
+--
+
+INSERT INTO `usuarios` (`idusuario`, `perfil`, `username`, `password`) VALUES
+(1, 'administrador', 'israel965', '21232f297a57a5a743894a0e4a801fc3');
+
+--
+-- Índices para tablas volcadas
+--
+
+--
+-- Indices de la tabla `capacidad`
+--
+ALTER TABLE `capacidad`
+  ADD PRIMARY KEY (`idcapacidad`),
+  ADD UNIQUE KEY `idcapacidad_UNIQUE` (`idcapacidad`),
+  ADD KEY `fk_capacidad_evaluacion1_idx` (`idevaluacion`);
+
+--
+-- Indices de la tabla `captura`
+--
+ALTER TABLE `captura`
+  ADD PRIMARY KEY (`idcaptura`),
+  ADD UNIQUE KEY `idcaptura_UNIQUE` (`idcaptura`),
+  ADD KEY `fk_captura_evaluacion1_idx` (`idevaluacion`);
+
+--
+-- Indices de la tabla `evaluacion`
+--
+ALTER TABLE `evaluacion`
+  ADD PRIMARY KEY (`idevaluacion`),
+  ADD UNIQUE KEY `idevaluacion_UNIQUE` (`idevaluacion`),
+  ADD KEY `fk_evaluacion_materia_idx` (`materia_idmateria`),
+  ADD KEY `fk_evaluacion_profesor1_idx` (`profesor_idprofesor`);
+
+--
+-- Indices de la tabla `evaluada`
+--
+ALTER TABLE `evaluada`
+  ADD PRIMARY KEY (`idevaluada`),
+  ADD UNIQUE KEY `idevaluadas_UNIQUE` (`idevaluada`),
+  ADD KEY `fk_evaluadas_evaluacion1_idx` (`evaluacion_idevaluacion`);
+
+--
+-- Indices de la tabla `grupo`
+--
+ALTER TABLE `grupo`
+  ADD PRIMARY KEY (`idgrupo`),
+  ADD UNIQUE KEY `idgrupo_UNIQUE` (`idgrupo`);
+
+--
+-- Indices de la tabla `materia`
+--
+ALTER TABLE `materia`
+  ADD PRIMARY KEY (`idmateria`),
+  ADD UNIQUE KEY `idmateria_UNIQUE` (`idmateria`);
+
+--
+-- Indices de la tabla `maximos_minimos`
+--
+ALTER TABLE `maximos_minimos`
+  ADD PRIMARY KEY (`idmaximos_minimos`),
+  ADD UNIQUE KEY `idmaximos_minimos_UNIQUE` (`idmaximos_minimos`);
+
+--
+-- Indices de la tabla `no_evaluada`
+--
+ALTER TABLE `no_evaluada`
+  ADD PRIMARY KEY (`idno_evalauda`),
+  ADD UNIQUE KEY `idno_evalauda_UNIQUE` (`idno_evalauda`),
+  ADD KEY `fk_no_evaluada_evaluacion1_idx` (`evaluacion_idevaluacion`);
+
+--
+-- Indices de la tabla `profesor`
+--
+ALTER TABLE `profesor`
+  ADD PRIMARY KEY (`idprofesor`),
+  ADD UNIQUE KEY `clave_profesor_UNIQUE` (`idprofesor`);
+
+--
+-- Indices de la tabla `promedio`
+--
+ALTER TABLE `promedio`
+  ADD PRIMARY KEY (`idpromedio`),
+  ADD UNIQUE KEY `idpromedio_UNIQUE` (`idpromedio`);
+
+--
+-- Indices de la tabla `reg_usuarios`
+--
+ALTER TABLE `reg_usuarios`
+  ADD PRIMARY KEY (`idreg_usuarios`),
+  ADD UNIQUE KEY `idreg_usuarios_UNIQUE` (`idreg_usuarios`);
+
+--
+-- Indices de la tabla `usuarios`
+--
+ALTER TABLE `usuarios`
+  ADD PRIMARY KEY (`idusuario`);
+
+--
+-- AUTO_INCREMENT de las tablas volcadas
+--
+
+--
+-- AUTO_INCREMENT de la tabla `capacidad`
+--
+ALTER TABLE `capacidad`
+  MODIFY `idcapacidad` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT de la tabla `captura`
+--
+ALTER TABLE `captura`
+  MODIFY `idcaptura` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+--
+-- AUTO_INCREMENT de la tabla `evaluacion`
+--
+ALTER TABLE `evaluacion`
+  MODIFY `idevaluacion` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+--
+-- AUTO_INCREMENT de la tabla `evaluada`
+--
+ALTER TABLE `evaluada`
+  MODIFY `idevaluada` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT de la tabla `materia`
+--
+ALTER TABLE `materia`
+  MODIFY `idmateria` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+--
+-- AUTO_INCREMENT de la tabla `maximos_minimos`
+--
+ALTER TABLE `maximos_minimos`
+  MODIFY `idmaximos_minimos` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT de la tabla `no_evaluada`
+--
+ALTER TABLE `no_evaluada`
+  MODIFY `idno_evalauda` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT de la tabla `profesor`
+--
+ALTER TABLE `profesor`
+  MODIFY `idprofesor` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+--
+-- AUTO_INCREMENT de la tabla `promedio`
+--
+ALTER TABLE `promedio`
+  MODIFY `idpromedio` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT de la tabla `reg_usuarios`
+--
+ALTER TABLE `reg_usuarios`
+  MODIFY `idreg_usuarios` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT de la tabla `usuarios`
+--
+ALTER TABLE `usuarios`
+  MODIFY `idusuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

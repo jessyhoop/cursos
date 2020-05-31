@@ -1,0 +1,165 @@
+/*
+.color-white {
+  color: white; }
+
+header {
+  background-color: #293e6b; }
+  header .logo-aragon {
+    height: 90px;
+    width: 90px; }
+  header .nav-item:hover, header .nav-item:focus {
+    background-color: #b6985e; }
+  header .nav-link {
+    color: #fff; }
+
+.section-questions .title-question {
+  font-weight: bold; }
+
+.section-actions h2.gray {
+  color: #404040; }
+.section-actions h2.blue {
+  color: #293e6b; }
+.section-actions h2.pink {
+  color: #c71585 }
+.section-actions h2.orange {
+  color: #ff9900 }
+
+.section-actions h2.ocre {
+  color: #b6985e; }
+.section-actions .icons-seleccion {
+  width: 150px;
+  height: 150px;
+  padding: 30px; }
+
+.section-admin-users h2.gray {
+  color: #404040; }
+.section-admin-users .actions-ancors a {
+  color: #293e6b; }
+  .section-admin-users .actions-ancors a:hover, .section-admin-users .actions-ancors a:focus {
+    color: #b6985e; }
+
+footer {
+  background-color: #3b4042; }
+  footer p {
+    color: #fff;
+    font-size: 1rem; }
+  footer .nav-link {
+    color: #fff; }
+  footer .icon-access {
+    color: #fff; }*/
+
+.color-white {
+  color: white; }
+
+.color-gray-light {
+  color: #a4a4a4; }
+
+@font-face {
+  font-family: 'poppins';
+  src: url("fonts/Poppins-Regular.eot");
+  /* IE9 Compat Modes */
+  src: url("fonts/Poppins-Regular.eot?#iefix") format("embedded-opentype"), url("fonts/Poppins-Regular.woff2") format("woff2"), url("fonts/Poppins-Regular.woff") format("woff"), url("fonts/Poppins-Regular.ttf") format("truetype"), url("fonts/Poppins-Regular.svg#svgFontName") format("svg");
+  /* Legacy iOS */ }
+@font-face {
+  font-family: 'josefin';
+  src: url("fonts/JosefinSans-Regular.eot");
+  /* IE9 Compat Modes */
+  src: url("fonts/JosefinSans-Regular.eot?#iefix") format("embedded-opentype"), url("fonts/JosefinSans-Regular.woff2") format("woff2"), url("fonts/JosefinSans-Regular.woff") format("woff"), url("fonts/JosefinSans-Regular.ttf") format("truetype"), url("fonts/JosefinSans-Regular.svg#svgFontName") format("svg");
+  /* Legacy iOS */ }
+h2.gray, p.gray, a.gray {
+  color: #404040; }
+h2.blue, p.blue, a.blue {
+  color: #293e6b; }
+h2.ocre, p.ocre, a.ocre {
+  color: #b6985e; }
+h2.red, p.red, a.red {
+  color: #701e45; }
+h2.gray-l, p.gray-l, a.gray-l {
+  color: #a4a4a4; }
+
+div.back-light-gray-l {
+  background-color: #eaeaea; }
+div.back-light-blue {
+  background-color: #e9edf7; }
+div.back-light-gold {
+  background-color: #f2ece2; }
+div.back-light-red {
+  background-color: #faecf3; }
+div.back-light-gray {
+  background-color: #dfdfdf; }
+
+/*Estilos del body*/
+/*Estilos del header */
+header {
+  background-color: #fff; }
+  header .logo-aragon {
+    height: 90px;
+    width: 90px; }
+  header .logo-unam {
+    height: 96px;
+    width: 85px; }
+  header .nav-item {
+    border-radius: 5px 25px; }
+    header .nav-item:hover, header .nav-item:focus {
+      background-color: #D4D2D2; }
+  header .nav-link {
+    color: #404040; }
+  header .navbar-toggler-icon {
+    color: #404040; }
+  header .button-menu {
+    color: #404040; }
+
+.section-questions .title-question {
+  font-weight: bold; }
+
+.section-actions a p {
+  text-decoration: none; }
+.section-actions a:hover, .section-actions a:focus {
+  text-decoration: none; }
+.section-actions .icons-seleccion {
+  width: 150px;
+  height: 150px;
+  padding: 30px; }
+
+.section-admin-users .actions-ancors a,
+.section-admin-test .actions-ancors a,
+.section-admin-repo .actions-ancors a {
+  color: #293e6b; }
+  .section-admin-users .actions-ancors a:hover, .section-admin-users .actions-ancors a:focus,
+  .section-admin-test .actions-ancors a:hover,
+  .section-admin-test .actions-ancors a:focus,
+  .section-admin-repo .actions-ancors a:hover,
+  .section-admin-repo .actions-ancors a:focus {
+    color: #b6985e; }
+.section-admin-users .grand-table,
+.section-admin-test .grand-table,
+.section-admin-repo .grand-table {
+  font-size: .7rem; }
+
+.section-admin-reports table tbody th {
+  text-align: left; }
+.section-admin-reports table th {
+  font-size: .7rem;
+  line-height: 1; }
+
+footer {
+  background-color: #3b4042;
+  bottom: 10;
+    position: absolute;
+    width: 100%;
+
+}
+  footer p {
+    color: #fff;
+    font-size: 1rem; }
+  footer .nav-link {
+    color: #fff; }
+  footer .icon-access {
+    color: #fff; }
+
+@media (max-width: 800px) {
+  .w-100-container {
+    max-width: 100%; } }
+@media (max-width: 767.98px) {
+  .w-100-sm {
+    width: 100%; } }

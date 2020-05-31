@@ -1,0 +1,360 @@
+                    <?php
+
+if (!defined('BASEPATH'))
+    exit('No direct script access allowed');
+
+class Evaluacion_por_profesor extends CI_Controller {
+
+    public function __construct() {
+        parent::__construct();
+        //cargamos la libreria html2pdf
+        $this->load->library('html2pdf');
+        //cargamos el modelo pdf_model
+        $this->load->model('reportes_model');
+    }
+
+    private function createFolder() {
+        if (!is_dir("./files")) {
+            mkdir("./files", 0777);
+            mkdir("./files/pdfs", 0777);
+        }
+    }
+
+    public function index() {
+
+        $suma = 0;
+        $profesor = "";
+        $nuevo = array();
+        $arreglo_respuesta = array();
+        $elementos = array();
+        $elemento_respuesta1 = array();
+        $calificacion = 0;
+        $respuesta1 = "respuesta_1";
+        $respuesta2 = "respuesta_2";
+        $respuesta3 = "respuesta_3";
+        $respuesta4 = "respuesta_4";
+        $respuesta5 = "respuesta_5";
+        $respuesta6 = "respuesta_6";
+        $respuesta7 = "respuesta_7";
+        $respuesta8 = "respuesta_8";
+        $respuesta9 = "respuesta_9";
+        $respuesta10 = "respuesta_10";
+        $respuesta11 = "respuesta_11";
+        $respuesta12 = "respuesta_12";
+        $respuesta13 = "respuesta_13";
+        $respuesta14 = "respuesta_14";
+        $respuesta15 = "respuesta_15";
+        $respuesta16 = "respuesta_16";
+        $respuesta17 = "respuesta_17";
+        $ele = array();
+        //establecemos la carpeta en la que queremos guardar los pdfs,
+        //si no existen las creamos y damos permisos
+        $this->createFolder();
+
+        //importante el slash del final o no funcionará correctamente
+        $this->html2pdf->folder('./files/pdfs/');
+
+        //establecemos el nombre del archivo
+        $this->html2pdf->filename('test.pdf');
+
+        //establecemos el tipo de papel
+        $this->html2pdf->paper('a4', 'portrait'); //vertical
+//        $this->html2pdf->paper('a4', 'landscape'); //horizontal
+
+        $elementos = $this->reportes_model->get_elementos_captura();
+        foreach ($elementos as $elemento) {
+            $arreglo_promedio[] = ["calif_profesor" => 0,
+                "hora_fin" => $elemento["hora_fin"],
+                "hora_inicio" => $elemento["hora_inicio"],
+                "fecha_inicio" => $this->convertir_fecha_formato_sql_a_diagonal($elemento["fecha_inicio"]),
+                "fecha_fin" => $this->convertir_fecha_formato_sql_a_diagonal($elemento["fecha_fin"]),
+                "calificacion_texto" => $this->obtener_calificacion_texto_by_calificacion($elemento['respuestas']),
+                "clave_materia" => $elemento["clave_materia"],
+                "materia" => $elemento['materia'],
+                "grupo" => $elemento['grupo'],
+                "idevaluacion" => $elemento['idevaluacion'],
+                "nombre" => $elemento['nombre'],
+                "reg" => $elemento['idevaluacion'],
+//                "respuesta_1" => $this->reportes_model->get_respuestas_1_by_grupo($elemento['grupo'],$respuesta1) //trae el arreglo de respuesta de la pregunta en un array con las letras
+//                "promedio" => $this->obtener_promedio_by_id($elemento['respuestas'])
+            ];
+        }
+        $arreglo_prom = array();
+        //obtenemos todos los grupos del array $arreglo_promedio  para iniciar la busqueda
+        foreach ($arreglo_promedio as $parte) {
+            $idevaluacion[] = $parte["idevaluacion"];
+        }
+        $id_evaluacion_unico = array_unique($idevaluacion);
+
+        foreach ($id_evaluacion_unico as $id_evaluacion_busqueda) {
+            $contador = 0;
+            foreach ($arreglo_promedio as $original) {
+                if ($id_evaluacion_busqueda == $original["idevaluacion"]) {
+//                    $suma = $suma + $original['promedio'];
+                    $profesor = $original['nombre'];
+                    $hora_fin = $original['hora_fin'];
+                    $hora_inicio = $original['hora_inicio'];
+                    $fecha_inicio = $original['fecha_inicio'];
+                    $fecha_fin = $original['fecha_fin'];
+//                    $respuesta_1 = $original['respuesta_1'];
+                    $clave_materia = $original['clave_materia'];
+                    $materia = $original['materia'];
+                    $reg = $original['reg'];
+//                    $grupo = $original['grupo'];
+                    $contador++;
+                }
+            }
+            $ele['grupo'] = $id_evaluacion_busqueda;
+            $ele['calificacionns'] = $this->obtener_datos_para_grafica($id_evaluacion_busqueda);
+            
+//            $ele['promedio'] = ($suma);
+//            $ele['promedio'] = ($suma) / $contador;
+            $ele['profesor'] = $profesor;
+            $ele['hora_fin'] = date("H:i",strtotime($hora_fin)); //solo mostramos hora y minutos de  la hora completa hh:mm:ss
+            $ele['hora_inicio'] = date("H:i",strtotime($hora_inicio)); //solo mostramos hora y minutos de  la hora completa hh:mm:ss
+            $ele['fecha_inicio'] = $fecha_inicio;
+            $ele['fecha_fin'] = $fecha_fin;
+//            $ele['calificacion_texto'] = $this->obtener_calificacion_texto_by_calificacion($ele['promedio']);
+            $ele['clave_materia'] = $clave_materia;
+            $ele['materia'] = $materia;
+            $ele['idevaluacion'] = $reg;
+//            $ele['respuesta_1'] = $respuesta_1;
+
+            $ele['respuesta_1_promedio'] = ["pregunta" => "<p><strong>1.-OBJETIVOS Y CONTENIDOS DEL CURSO.</strong></p>EL PROFESOR DI&Oacute; UN PANORAMA GENERAL DE LOS CONTENIDOS Y PLANTE&Oacute; LOS OBJETIVOS DEL CURSO.", "calificacion_texto" => $this->obtener_calificacion_texto_by_calificacion($this->obtener_promedio_por_respuesta($id_evaluacion_busqueda, $respuesta1)), "promedio" => $this->obtener_promedio_por_respuesta($id_evaluacion_busqueda, $respuesta1), "min" => $this->obtener_el_minimo_promedio($id_evaluacion_busqueda, $respuesta1), "max" => $this->obtener_el_maximo_promedio($id_evaluacion_busqueda, $respuesta1)];
+            $ele['respuesta_2_promedio'] = ["pregunta" => "SE ALCANZARON LOS OBJETIVOS PLANTEADOS EN EL CURSO.", "calificacion_texto" => $this->obtener_calificacion_texto_by_calificacion($this->obtener_promedio_por_respuesta($id_evaluacion_busqueda, $respuesta2)), "promedio" => $this->obtener_promedio_por_respuesta($id_evaluacion_busqueda, $respuesta2), "min" => $this->obtener_el_minimo_promedio($id_evaluacion_busqueda, $respuesta2), "max" => $this->obtener_el_maximo_promedio($id_evaluacion_busqueda, $respuesta2)];
+            $ele['respuesta_3_promedio'] = ["pregunta" => "CONSIDERAS QUE LOS OBJETIVOS Y CONTENIDOS DEL CURSO CUBREN LOS REQUISITOS PARA DESEMPE&ntilde;AR TU LABOR EDUCATIVA O PROFESIONAL.", "calificacion_texto" => $this->obtener_calificacion_texto_by_calificacion($this->obtener_promedio_por_respuesta($id_evaluacion_busqueda, $respuesta3)), "promedio" => $this->obtener_promedio_por_respuesta($id_evaluacion_busqueda, $respuesta3), "min" => $this->obtener_el_minimo_promedio($id_evaluacion_busqueda, $respuesta3), "max" => $this->obtener_el_maximo_promedio($id_evaluacion_busqueda, $respuesta3)];
+            $ele['respuesta_4_promedio'] = ["pregunta" => "EXISTI&Oacute; CONTINUIDAD Y COHERENCIA EN EL DESARROLLO DE LOS CONTENIDOS DEL CURSO.", "calificacion_texto" => $this->obtener_calificacion_texto_by_calificacion($this->obtener_promedio_por_respuesta($id_evaluacion_busqueda, $respuesta4)), "promedio" => $this->obtener_promedio_por_respuesta($id_evaluacion_busqueda, $respuesta4), "min" => $this->obtener_el_minimo_promedio($id_evaluacion_busqueda, $respuesta4), "max" => $this->obtener_el_maximo_promedio($id_evaluacion_busqueda, $respuesta4)];
+            $ele['respuesta_5_promedio'] = ["pregunta" => "<p><strong>2.-METODOS DE ENSE&Ntilde;ANZA.</strong></p>LOS M&Eacute;TODOS DE ENSE&ntilde;ANZA UTILIZADOS FAVORECIERON EL APRENDIZAJE DE LOS CONTENIDOS DEL CURSO.", "calificacion_texto" => $this->obtener_calificacion_texto_by_calificacion($this->obtener_promedio_por_respuesta($id_evaluacion_busqueda, $respuesta5)), "promedio" => $this->obtener_promedio_por_respuesta($id_evaluacion_busqueda, $respuesta5), "min" => $this->obtener_el_minimo_promedio($id_evaluacion_busqueda, $respuesta5), "max" => $this->obtener_el_maximo_promedio($id_evaluacion_busqueda, $respuesta5)];
+            $ele['respuesta_6_promedio'] = ["pregunta" => "LAS DUDAS PRESENTADAS AL PROFESOR DURANTE EL CURSO SE ACLARARON.", "calificacion_texto" => $this->obtener_calificacion_texto_by_calificacion($this->obtener_promedio_por_respuesta($id_evaluacion_busqueda, $respuesta6)), "promedio" => $this->obtener_promedio_por_respuesta($id_evaluacion_busqueda, $respuesta6), "min" => $this->obtener_el_minimo_promedio($id_evaluacion_busqueda, $respuesta6), "max" => $this->obtener_el_maximo_promedio($id_evaluacion_busqueda, $respuesta6)];
+            $ele['respuesta_7_promedio'] = ["pregunta" => "<p><strong>3.-METODOS DE EVALUACI&Oacute;N.</strong></p>EL PROFESOR EXPLIC&Oacute; LOS CRITERIOS DE EVALUACI&Oacute;N DEL CURSO.", "calificacion_texto" => $this->obtener_calificacion_texto_by_calificacion($this->obtener_promedio_por_respuesta($id_evaluacion_busqueda, $respuesta7)), "promedio" => $this->obtener_promedio_por_respuesta($id_evaluacion_busqueda, $respuesta7), "min" => $this->obtener_el_minimo_promedio($id_evaluacion_busqueda, $respuesta7), "max" => $this->obtener_el_maximo_promedio($id_evaluacion_busqueda, $respuesta7)];
+            $ele['respuesta_8_promedio'] = ["pregunta" => " <p><strong>4.-CONOCIMIENTOS DEL PROFESOR.</strong></p>EL CONOCIMIENTO QUE EL PROFESOR MOSTR&Oacute; SOBRE LOS CONTENIDOS DEL CURSO.", "calificacion_texto" => $this->obtener_calificacion_texto_by_calificacion($this->obtener_promedio_por_respuesta($id_evaluacion_busqueda, $respuesta8)), "promedio" => $this->obtener_promedio_por_respuesta($id_evaluacion_busqueda, $respuesta8), "min" => $this->obtener_el_minimo_promedio($id_evaluacion_busqueda, $respuesta8), "max" => $this->obtener_el_maximo_promedio($id_evaluacion_busqueda, $respuesta8)];
+            $ele['respuesta_9_promedio'] = ["pregunta" => "LAS EXPLICACIONES DEL PROFESOR Y LAS PR&Aacute;CTICAS REALIZADAS PERMITEN APLICAR LO APRENDIDO EN EL CURSO.", "calificacion_texto" => $this->obtener_calificacion_texto_by_calificacion($this->obtener_promedio_por_respuesta($id_evaluacion_busqueda, $respuesta9)), "promedio" => $this->obtener_promedio_por_respuesta($id_evaluacion_busqueda, $respuesta9), "min" => $this->obtener_el_minimo_promedio($id_evaluacion_busqueda, $respuesta9), "max" => $this->obtener_el_maximo_promedio($id_evaluacion_busqueda, $respuesta9)];
+            $ele['respuesta_10_promedio'] = ["pregunta" => "EL PROFESOR MOSTR&Oacute; INTERÉS PARA QUE EL ALUMNO LOGRARA EL DOMINIO DE LOS CONTENIDOS DEL CURSO.", "calificacion_texto" => $this->obtener_calificacion_texto_by_calificacion($this->obtener_promedio_por_respuesta($id_evaluacion_busqueda, $respuesta10)), "promedio" => $this->obtener_promedio_por_respuesta($id_evaluacion_busqueda, $respuesta10), "min" => $this->obtener_el_minimo_promedio($id_evaluacion_busqueda, $respuesta10), "max" => $this->obtener_el_maximo_promedio($id_evaluacion_busqueda, $respuesta10)];
+            $ele['respuesta_11_promedio'] = ["pregunta" => "EL PROFESOR RESOLVI&Oacute; LAS DUDAS DEL CURSO.", "calificacion_texto" => $this->obtener_calificacion_texto_by_calificacion($this->obtener_promedio_por_respuesta($id_evaluacion_busqueda, $respuesta11)), "promedio" => $this->obtener_promedio_por_respuesta($id_evaluacion_busqueda, $respuesta11), "min" => $this->obtener_el_minimo_promedio($id_evaluacion_busqueda, $respuesta11), "max" => $this->obtener_el_maximo_promedio($id_evaluacion_busqueda, $respuesta11)];
+            $ele['respuesta_12_promedio'] = ["pregunta" => "LA RELACI&Oacute;N PROFESOR-ALUMNO SE ESTABLECI&Oacute; EN UN MARCO DE RESPETO.", "calificacion_texto" => $this->obtener_calificacion_texto_by_calificacion($this->obtener_promedio_por_respuesta($id_evaluacion_busqueda, $respuesta12)), "promedio" => $this->obtener_promedio_por_respuesta($id_evaluacion_busqueda, $respuesta12), "min" => $this->obtener_el_minimo_promedio($id_evaluacion_busqueda, $respuesta12), "max" => $this->obtener_el_maximo_promedio($id_evaluacion_busqueda, $respuesta12)];
+            $ele['respuesta_13_promedio'] = ["pregunta" => "EL PROFESOR INICI&Oacute; LAS CLASES.", "calificacion_texto" => $this->obtener_calificacion_texto_by_calificacion($this->obtener_promedio_por_respuesta($id_evaluacion_busqueda, $respuesta13)), "promedio" => $this->obtener_promedio_por_respuesta($id_evaluacion_busqueda, $respuesta13), "min" => $this->obtener_el_minimo_promedio($id_evaluacion_busqueda, $respuesta13), "max" => $this->obtener_el_maximo_promedio($id_evaluacion_busqueda, $respuesta13)];
+            $ele['promedio_de_la_evaluacion_del_profesor'] = ['titulo' => 'PROMEDIO GENERAL DE LA EVALUACI&Oacute;N DEL PROFESOR', 'promedio' => $this->obtener_promedio_columna_calif_por_columna(1, 13, $ele, "promedio"), 'calificacion_texto' => $this->obtener_calificacion_texto_by_calificacion($this->obtener_promedio_columna_calif_por_columna(1, 13, $ele, "promedio")), 'min' => $this->obtener_promedio_columna_calif_por_columna(1, 13, $ele, "min"), 'max' => $this->obtener_promedio_columna_calif_por_columna(1, 13, $ele, "max")];
+            $ele['respuesta_14_promedio'] = ["pregunta" => "<p><strong>5.-INSTALACIONES.</strong></p>CONSIDERAS QUE EL N&Uacute;MERO DE EQUIPOS PARA EL CURSO FUERON.", "calificacion_texto" => $this->obtener_calificacion_texto_by_calificacion($this->obtener_promedio_por_respuesta($id_evaluacion_busqueda, $respuesta14)), "promedio" => $this->obtener_promedio_por_respuesta($id_evaluacion_busqueda, $respuesta14), "min" => $this->obtener_el_minimo_promedio($id_evaluacion_busqueda, $respuesta14), "max" => $this->obtener_el_maximo_promedio($id_evaluacion_busqueda, $respuesta14)];
+            $ele['respuesta_15_promedio'] = ["pregunta" => "LOS EQUIPOS CUENTAN CON LA TECNOLOG&Iacute;A PARA REALIZAR LAS PR&Aacute;CTICAS.", "calificacion_texto" => $this->obtener_calificacion_texto_by_calificacion($this->obtener_promedio_por_respuesta($id_evaluacion_busqueda, $respuesta15)), "promedio" => $this->obtener_promedio_por_respuesta($id_evaluacion_busqueda, $respuesta15), "min" => $this->obtener_el_minimo_promedio($id_evaluacion_busqueda, $respuesta15), "max" => $this->obtener_el_maximo_promedio($id_evaluacion_busqueda, $respuesta15)];
+            $ele['promedio_general_sobre_las_instalaciones'] = ['titulo' => 'PROMEDIO GENERAL SOBRE LAS INSTALACIONES', 'promedio' => $this->obtener_promedio_columna_calif_por_columna(14, 15, $ele, "promedio"), 'calificacion_texto' => $this->obtener_calificacion_texto_by_calificacion($this->obtener_promedio_columna_calif_por_columna(14, 15, $ele, "promedio")), 'min' => $this->obtener_promedio_columna_calif_por_columna(14, 15, $ele, "min"), 'max' => $this->obtener_promedio_columna_calif_por_columna(14, 15, $ele, "max")];
+            $ele['respuesta_16_promedio'] = ["pregunta" => "<p><strong>6.-SOBRE EL ALUMNO.</strong></p>EL NIVEL DE COMPRENSI&Oacute;N QUE ALCANZASTE SOBRE LOS CONTENIDOS REVISADOS EN EL CURSO.", "calificacion_texto" => $this->obtener_calificacion_texto_by_calificacion($this->obtener_promedio_por_respuesta($id_evaluacion_busqueda, $respuesta16)), "promedio" => $this->obtener_promedio_por_respuesta($id_evaluacion_busqueda, $respuesta16), "min" => $this->obtener_el_minimo_promedio($id_evaluacion_busqueda, $respuesta16), "max" => $this->obtener_el_maximo_promedio($id_evaluacion_busqueda, $respuesta16)];
+            $ele['respuesta_17_promedio'] = ["pregunta" => "EL PORCENTAJE DE HORAS AL QUE ASISTISTE FUE.", "calificacion_texto" => $this->obtener_calificacion_texto_by_calificacion($this->obtener_promedio_por_respuesta($id_evaluacion_busqueda, $respuesta17)), "promedio" => $this->obtener_promedio_por_respuesta($id_evaluacion_busqueda, $respuesta17), "min" => $this->obtener_el_minimo_promedio($id_evaluacion_busqueda, $respuesta17), "max" => $this->obtener_el_maximo_promedio($id_evaluacion_busqueda, $respuesta17)];
+            $ele['promedio_general_sobre_los_alumnos'] = ['titulo' => 'PROMEDIO GENERAL SOBRE LOS ALUMNOS', 'promedio' => $this->obtener_promedio_columna_calif_por_columna(16, 17, $ele, "promedio"), 'calificacion_texto' => $this->obtener_calificacion_texto_by_calificacion($this->obtener_promedio_columna_calif_por_columna(16, 17, $ele, "promedio")), 'min' => $this->obtener_promedio_columna_calif_por_columna(16, 17, $ele, "min"), 'max' => $this->obtener_promedio_columna_calif_por_columna(16, 17, $ele, "max")];
+            $ele['numero_de_cuestionarios'] = $contador;
+
+            array_push($nuevo, $ele);
+//            array_push($arreglo_re
+//            spuesta, $ele_res);
+//            array_push($nuevo_cali, $elem_res);
+            $suma = 0;
+        }
+
+//        $this->recorro($frases);
+
+//        echo '<pre>';
+//        print_r($nuevo);
+//        echo '</pre>';
+//        echo '<pre>';
+//        print_r($elem_res);
+//        echo '</pre>';
+        $data = array(
+            'calificaciones' => $nuevo);
+       // para ver en html simple 
+        //$this->load->view('Reportes/reporte_evaluacion_por_profesor', $data);
+      $this->html2pdf->html($this->load->view('Reportes/reporte_evaluacion_por_profesor', $data, true));
+        //si el pdf se guarda correctamente lo mostramos en pantalla
+       if ($this->html2pdf->create('save')) {
+            $this->show();
+        }
+    }
+
+//obtener el promedio  de la columna de minimos
+    public function obtener_promedio_columna_calif_por_columna($inicio, $cantidad, $arreglo, $columna) {
+        $promedio = 0;
+        $contador = 0;
+        for ($i = $inicio; $i <= $cantidad; $i++) {
+            $promedio += $arreglo['respuesta_' . $i . '_promedio'][$columna];
+            $contador++;
+        }
+        return $promedio = ($promedio / $contador);
+    }
+//funcion que imprime los datos para la grafica
+  public function obtener_datos_para_grafica($id_evaluacion) {
+        for ($i = 1; $i <= 17; $i++) {
+            $arreglo_by_grupo_calificacion[] = bcdiv($this->obtener_promedio_por_respuesta($id_evaluacion, "respuesta_" . $i), '1', 2);
+        }
+        return ($arreglo_by_grupo_calificacion);
+    }
+
+//funcion que calcula el promedio por respuesta
+    public function obtener_promedio_por_respuesta($id_evaluacion, $respuesta) {
+        $calificacion = 0;
+        $arre_respuesta = $this->reportes_model->get_respuestas_1_by_grupo($id_evaluacion, $respuesta);
+        foreach ($arre_respuesta as $resp) {
+            $nuevo_prom[] = ['respuesta' => $resp[$respuesta], 'promedio' => $this->obtener_promedio_by_letra($resp[$respuesta])];
+        }
+        foreach ($nuevo_prom as $value) {
+            $calificacion += $value['promedio'];
+        }
+        return $calificacion = $calificacion / count($nuevo_prom);
+    }
+
+// funcion que obtiene el minimo de calificacion
+    public function obtener_el_minimo_promedio($id_evaluacion, $respuesta) {
+        $calificacion = 0;
+        $arre_respuesta = $this->reportes_model->get_respuestas_1_by_grupo($id_evaluacion, $respuesta);
+        foreach ($arre_respuesta as $resp) {
+            $nuevo_prom[] = $this->obtener_promedio_by_letra($resp[$respuesta]);
+        }
+//
+//        print_r($nuevo_prom);
+//         echo min($nuevo_prom);
+        return min($nuevo_prom);
+    }
+
+    // funcion que obtiene el maximo  de calificacion
+    public function obtener_el_maximo_promedio($id_evaluacion, $respuesta) {
+        $calificacion = 0;
+
+        $arre_respuesta = $this->reportes_model->get_respuestas_1_by_grupo($id_evaluacion, $respuesta);
+
+        foreach ($arre_respuesta as $resp) {
+
+            $nuevo_prom[] = $this->obtener_promedio_by_letra($resp[$respuesta]);
+        }
+//
+//        print_r($nuevo_prom);
+//         echo min($nuevo_prom);
+        return max($nuevo_prom);
+    }
+
+//funcion que ordena un array multi con base a un elemento del mismo
+    function ordenar_array_asc_by_elemento($array_nuevo, $elemento_a_ordenar) {
+        $ordenar = array($elemento_a_ordenar => array());
+
+        foreach ($array_nuevo as $clave => $nuevo_a) {
+            $ordenar[$elemento_a_ordenar][$clave] = $nuevo_a[$elemento_a_ordenar];
+        }
+
+        array_multisort($ordenar[$elemento_a_ordenar], SORT_DESC, $array_nuevo);
+        return $array_nuevo;
+    }
+
+    public function obtener_promedio_by_id($respuesta) {
+        $strtempo = $respuesta;
+        //print_r($split[0]["respuestas"]);
+        $arraytempo = str_split($strtempo);
+
+        // var_dump($arraytempo);
+        //print_r($arraytempo[0]);
+        for ($x = 0; $x < count($arraytempo); $x++) {
+            switch ($arraytempo[$x]) {
+                case 'a':
+                    $arraytempo[$x] = 10.00;
+                    break;
+
+                case 'b':
+                    $arraytempo[$x] = 8.00;
+                    break;
+                case 'c':
+                    $arraytempo[$x] = 6.00;
+                    break;
+
+                case 'd':
+                    $arraytempo[$x] = 5.00;
+                    break;
+            }//fin switch
+        }//fin for
+
+        $average = array_sum($arraytempo) / count($arraytempo);
+        return $average;
+    }
+
+    public function obtener_promedio_by_letra($letra) {
+
+
+        switch ($letra) {
+            case 'a':
+                return $letra = 10.00;
+                break;
+
+            case 'b':
+                return $letra = 8.00;
+                break;
+            case 'c':
+                return $letra = 6.00;
+                break;
+
+            case 'd':
+                return $letra = 5.00;
+                break;
+        }//fin switch
+    }
+
+    public function obtener_calificacion_texto_by_calificacion($calificacion) {
+
+//       $calificacion= $this->obtener_promedio_by_id($calificacion_respuesta);
+
+        if ($calificacion <= 10 && $calificacion >= 9.4) {
+            return "EXCELENTE";
+        } elseif ($calificacion <= 9.39 && $calificacion >= 8) {
+            return "MUY BIEN";
+        } elseif ($calificacion <= 7.99 && $calificacion >= 7) {
+            return "BIEN";
+        } elseif ($calificacion <= 6.99 ) {
+            return "DEFICIENTE";
+        }
+    }
+
+    public function convertir_fecha_formato_sql_a_diagonal($fecha) {
+        $valores = explode('-', $fecha);
+        if (count($valores) == 3 && checkdate($valores[1], $valores[2], $valores[0])) {
+            return $valores[2] . '/' . $valores[1] . '/' . $valores[0];
+        }
+        return FALSE;
+    }
+
+    //funcion que ejecuta la descarga del pdf
+    public function downloadPdf() {
+        //si existe el directorio
+        if (is_dir("./files/pdfs")) {
+            //ruta completa al archivo
+            $route = ("http://localhost/ccaragon/codeigniter/files/pdfs/test.pdf");
+
+//            $route = base_url("files/pdfs/test.pdf");
+            //nombre del archivo
+            $filename = "test.pdf";
+            //si existe el archivo empezamos la descarga del pdf
+            if (file_exists("./files/pdfs/" . $filename)) {
+                header("Cache-Control: public");
+                header("Content-Description: File Transfer");
+                header('Content-disposition: attachment; filename=' . basename($route));
+                header("Content-Type: application/pdf");
+                header("Content-Transfer-Encoding: binary");
+                header('Content-Length: ' . filesize($route));
+                readfile($route);
+            }
+        }
+    }
+
+    //esta función muestra el pdf en el navegador siempre que existan
+    //tanto la carpeta como el archivo pdf
+    public function show() {
+        if (is_dir("./files/pdfs")) {
+            $filename = "test.pdf";
+//            $route = base_url("files/pdfs/test.pdf");
+            $route = ("http://localhost/ccaragon/codeigniter/files/pdfs/test.pdf");
+
+            if (file_exists("./files/pdfs/" . $filename)) {
+                header('Content-type: application/pdf');
+                readfile($route);
+            }
+        }
+    }
+
+    //función para crear y enviar el pdf por email
+    //ejemplo de la libreria sin modificar
+}
+
+/* End of file pdf_ci.php */
+/* Location: ./application/controllers/pdf_ci.php */

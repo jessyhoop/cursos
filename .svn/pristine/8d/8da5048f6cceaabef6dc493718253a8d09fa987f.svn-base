@@ -1,0 +1,101 @@
+<?php
+
+defined("BASEPATH") OR die("El acceso al script no está permitido");
+
+class evaluaciones_model extends CI_Model {
+
+    public function __construct() {
+        parent::__construct();
+        $this->load->database();
+    }
+
+    function get_evaluaciones() {
+        $this->db->select("
+                        evaluacion.idevaluacion,
+            evaluacion.grupo,
+            evaluacion.fecha_inicio,
+            evaluacion.fecha_fin,
+            evaluacion.hora_inicio,
+            evaluacion.hora_fin,
+            evaluacion.status,
+            profesor.nombre,
+            materia.materia");
+        $this->db->join("materia", 'evaluacion.materia_idmateria = materia.idmateria');
+        $this->db->join("profesor", 'evaluacion.profesor_idprofesor = profesor.idprofesor');
+        $this->db->where("evaluacion.status", 1);
+        $query = $this->db->get('evaluacion');
+//        $arreglo=$consulta->result_array();
+        return $query->num_rows() > 0 ? $query->result_array() : false;
+    }
+
+    function get_evaluacion_by_id($id_evaluaion) {
+        $this->db->select("evaluacion.idevaluacion,
+            evaluacion.grupo,
+            evaluacion.fecha_inicio,
+            evaluacion.fecha_fin,
+            evaluacion.hora_inicio,
+            evaluacion.hora_fin,
+            profesor.idprofesor,
+            profesor.nombre,
+            materia.idmateria,
+            materia.materia");
+         $this->db->join("materia", 'evaluacion.materia_idmateria = materia.idmateria');
+        $this->db->join("profesor", 'evaluacion.profesor_idprofesor = profesor.idprofesor');
+        
+        $this->db->where("idevaluacion", $id_evaluaion);
+        $query = $this->db->get('evaluacion');
+//        $arreglo=$consulta->result_array();
+
+        return $query->result_array();
+    }
+
+    function eliminar_evaluacion($id_evaluacions) {
+
+        $this->db->set('status', 0);
+        $this->db->where('idevaluacion', $id_evaluacions);
+        return $this->db->update('evaluacion');
+    }
+
+    function update_datos_evaluacion($id_evaluacion,
+            $id_materia,
+            $grupo_evaluacion,
+            $profesor_id,
+            $fecha_inicio,
+$fecha_fin,
+            $hora_inicio,
+            $hora_fin) {
+
+        $this->db->set('materia_idmateria', $id_materia);
+        $this->db->set('grupo', $grupo_evaluacion);
+        $this->db->set('profesor_idprofesor',$profesor_id);
+        $this->db->set('fecha_inicio', $fecha_inicio);
+        $this->db->set('fecha_fin', $fecha_fin);
+        $this->db->set('hora_inicio', $hora_inicio);
+        $this->db->set('hora_fin', $hora_fin);
+        $this->db->where('idevaluacion', $id_evaluacion);
+        return $this->db->update('evaluacion');
+    }
+
+    function insert_datos_evaluacion($id_materia, $grupo_evaluacion, $profesor_id, $fecha_inicio, $fecha_fin, $hora_inicio, $hora_fin, $status) {
+        $data = array(
+            'materia_idmateria' => $id_materia,
+            'grupo' => $grupo_evaluacion,
+            'profesor_idprofesor' => $profesor_id,
+            'fecha_inicio' => $fecha_inicio,
+            'fecha_fin' => $fecha_fin,
+            'hora_inicio' => $hora_inicio,
+            'hora_fin' => $hora_fin,
+            'status' => $status
+        );
+        $query = $this->db->insert('evaluacion', $data);
+
+        if ($query) {
+
+            return true;
+        } else {
+            $error = $this->db->error();
+            return $error;
+        }
+    }
+
+}

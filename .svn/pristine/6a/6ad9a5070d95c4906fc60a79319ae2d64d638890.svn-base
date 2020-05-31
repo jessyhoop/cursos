@@ -1,0 +1,143 @@
+<?php
+
+
+class Formulario2 extends CI_Controller {
+        function __construct() 
+ {   //en el constructor cargamos nuestro modelo
+ parent::__construct();
+  $this->load->helper('url'); //agrega base_url
+  $this->load->helper('form');
+  //$this->load->helper(array('form', 'url'));
+  $this->load->library('form_validation'); 
+         
+   $this->load->model('Ccaragon2');
+ }
+    public function curso_profesor()
+    {
+        /*$this->form_validation->set_rules('profesor', 'Profesor', 'required|xss_clean');        
+        $this->form_validation->set_message('required', 'El  %s es requerido');*/
+        if($this->form_validation->run() == FALSE)
+        {
+           
+              $materias = $this->Ccaragon2->materias();
+
+                  //creo el array con datos de configuración para la vista
+                 
+                  $datos_materias = array('materia' =>  $materias); 
+                   echo json_encode($datos_materias);
+                  //$this->load->view('ccaragon/formularioview',$datos_materias);               
+           
+        }
+        else
+        {
+              $this->load->view('ccaragon/formsuccess');
+             /*$data = array(
+                'res'      => "success"
+            );
+            echo json_encode($data);*/
+            //aquí ya puedes procesar los datos de tu formulario
+        }
+    }
+   public function curso_profesor2()
+    {
+        /*$this->form_validation->set_rules('profesor', 'Profesor', 'required|xss_clean');        
+        $this->form_validation->set_message('required', 'El  %s es requerido');*/
+        if($this->form_validation->run() == false)
+        {
+             //echo ''.$_POST['profesor'];
+              $profesor = $this->Ccaragon2->getProfesor($_POST['profesor']); 
+           // echo ''.$_POST['profesor'].''.$profesor->idprofesor;
+              $materias = $this->Ccaragon2->profesor_curso($profesor->idprofesor);
+
+                  //creo el array con datos de configuración para la vista
+                 
+                  $datos_materias = array('materia' =>  $materias); 
+                  echo json_encode($datos_materias);
+                  //$this->load->view('ccaragon/formularioview',$datos_materias);               
+           
+        }
+        else
+        {
+              $this->load->view('ccaragon/formsuccess');
+             /*$data = array(
+                'res'      => "success"
+            );
+            echo json_encode($data);*/
+            //aquí ya puedes procesar los datos de tu formulario
+        }
+    }
+    
+     public function horario_curso()
+    {
+        $this->form_validation->set_rules('profesor', 'Profesor', 'required'); 
+        $this->form_validation->set_rules('curso', 'Curso', 'required'); 
+        /*$this->form_validation->set_rules('profesor', 'Profesor', 'required|xss_clean');        
+        $this->form_validation->set_message('required', 'El  %s es requerido');*/
+        if($this->form_validation->run() == TRUE)
+        {
+           
+            
+              $profesor = $this->Ccaragon2->getProfesor($_POST['profesor']);
+            
+              $horario = $this->Ccaragon2->horario_curso($profesor->idprofesor, $_POST['curso']);
+                
+                 // echo ''.$_POST['profesor']. $_POST['curso']."<br><br>".$horario;
+                  //creo el array con datos de configuración para la vista 
+                 $this->load->library('session');
+                  //$this->session->set_userdata('profesor', $_POST['profesor']);                 
+                  //$this->session->set_userdata('curso', $_POST['curso']);*/
+                  //session_start();
+                  $_SESSION['profesor']= $_POST['profesor'];
+                  $_SESSION['curso']=  $_POST['curso'];
+                // echo ''.$_SESSION['profesor'].$_SESSION['curso']."<br><br>";
+                  $datos_horario = array('horario' => $horario); 
+                  echo json_encode($datos_horario);
+                              
+           
+        }
+        else
+        {
+              $this->load->view('ccaragon/formsuccess');
+             /*$data = array(
+                'res'      => "success"
+            );
+            echo json_encode($data);*/
+            //aquí ya puedes procesar los datos de tu formulario
+        }
+    }
+   
+   
+   public function index()
+    { 
+         
+         
+           if ($this->form_validation->run() == FALSE)
+                {
+                  
+                 // $this->load->model('Ccaragon2');
+                  //consulta  al modelo
+                  $profesores = $this->Ccaragon2->profesores();
+                  //$materias = $this->Ccaragon2->materias();
+
+                  //creo el array con datos de configuración para la vista
+                  $datos_profesores = array('profesor' =>  $profesores);
+                  //$datos_materias = array('materia' =>  $materias);
+                  //echo''.var_dump($datos_materias);
+                  //echo'<br><br>'. $datos_materias['MATERIA'];
+                  //cargo la vista pasando los datos de configuacion
+                  $this->load->view('ccaragon/formularioview', $datos_profesores);
+                               
+                         
+                }
+                else
+                {
+                        $this->load->view('ccaragon/formsuccess');
+                }
+   
+   
+   }
+       
+    
+}
+
+?>

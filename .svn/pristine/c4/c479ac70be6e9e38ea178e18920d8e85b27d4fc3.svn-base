@@ -1,0 +1,194 @@
+<?php
+//session_start();
+
+class Cuestionario extends CI_Controller {
+        function __construct() 
+ {   //en el constructor cargamos nuestro modelo
+ parent::__construct();
+  $this->load->helper('url'); //agrega base_url
+  $this->load->helper('form');
+  //$this->load->helper(array('form', 'url'));
+  $this->load->library('form_validation'); 
+      //fgfg   
+   $this->load->model('Ccaragon2');
+ }
+    
+    /* public function horario_curso()
+    {
+        /*$this->form_validation->set_rules('profesor', 'Profesor', 'required|xss_clean');        
+        $this->form_validation->set_message('required', 'El  %s es requerido');*/
+       /* if($this->form_validation->run() == FALSE)
+        {
+           
+              $horario = $this->Ccaragon2->horario_curso($_POST['profesor'], $_POST['curso']);
+                  //echo ''.$_POST['profesor']. $_POST['curso']."<br><br>";
+                  //creo el array con datos de configuración para la vista                 
+                  $datos_horario = array('horario' =>  $horario); 
+                  echo json_encode($datos_horario);
+                              
+           
+        }
+        else
+        {
+              $this->load->view('ccaragon/formsuccess');
+            
+        }
+    }*/
+   
+     public function inserta_captura()  //FUNCION DE PRUEBA
+    {
+         // echo("dfdsfsdfdsfdsfdsfdsfjhgbjkhjhjhjh");
+         // echo "".$this->session->userdata('profesor')."". $this->session->userdata('curso')."<br><br>";
+          $this->form_validation->set_rules('inp_1obje_1', 'Horario', 'required');
+          $this->form_validation->set_rules('inp_1obje_2', 'Horario', 'required');
+          $this->form_validation->set_rules('inp_1obje_3', 'Horario', 'required');
+          $this->form_validation->set_rules('inp_1obje_4', 'Horario', 'required');
+         
+          $this->form_validation->set_rules('inp_2met_1', 'Horario', 'required');
+          $this->form_validation->set_rules('inp_2met_2', 'Horario', 'required');
+         
+          $this->form_validation->set_rules('inp_3met_1', 'Horario', 'required');
+         
+          $this->form_validation->set_rules('inp_4con_1', 'Horario', 'required');
+          $this->form_validation->set_rules('inp_4con_2', 'Horario', 'required');
+          $this->form_validation->set_rules('inp_4con_3', 'Horario', 'required');
+          $this->form_validation->set_rules('inp_4con_4', 'Horario', 'required');
+          $this->form_validation->set_rules('inp_4con_5', 'Horario', 'required');
+          $this->form_validation->set_rules('inp_4con_6', 'Horario', 'required');
+         
+         $this->form_validation->set_rules('inp_5inst_1', 'Horario', 'required');        
+         $this->form_validation->set_rules('inp_5inst_2', 'Horario', 'required');
+         
+         $this->form_validation->set_rules('inp_6alum_1', 'Horario', 'required');
+         $this->form_validation->set_rules('inp_6alum_2', 'Horario', 'required');
+         
+         //$this->form_validation->set_rules('comentarios');
+         
+         
+           //$this->form_validation->set_rules('obje_conte2', 'Periodo', 'required');
+           //echo "".$this->session->userdata('profesor')."".$this->session->userdata('curso')."<br><br>";
+        if($this->form_validation->run() == true)
+        {
+             
+            // echo("dfdsfsdfdsfdsfdsfdsfjhgbjkhjhjhjh");
+            $this->load->library('session');
+  $respuestas= $_POST['inp_1obje_1'].$_POST['inp_1obje_2'].$_POST['inp_1obje_3'].$_POST['inp_1obje_4'].
+    $_POST['inp_2met_1']. $_POST['inp_2met_2'].$_POST['inp_3met_1'].$_POST['inp_4con_1'].
+    $_POST['inp_4con_2']. $_POST['inp_4con_3'].$_POST['inp_4con_4'].$_POST['inp_4con_5'].
+    $_POST['inp_4con_6']. $_POST['inp_5inst_1'].$_POST['inp_5inst_2'].$_POST['inp_6alum_1'].
+              $_POST['inp_6alum_2'];
+              // $this->session->set_userdata('profesor', "srssion profesor");     
+             //echo "".$this->session->profesor."<br><br>";
+             //echo "".$this->session->curso."<br><br>";
+             // $horario = $this->Ccaragon2->insertaEvaluacion($_POST[''], $_POST['curso']);
+             $profesor = $this->Ccaragon2->getProfesor($this->session->profesor);
+             $evaluacion = $this->Ccaragon2->getEvaluacion($profesor->idprofesor, $this->session->curso);
+            //$datos_evaluacion = array('CLAVE_EVALUACION' =>  $evaluacion);
+           
+            /*echo(var_dump( $evaluacion)); 
+            echo(var_dump( $respuestas));  */ 
+        
+       /* $flagCaptura = $this->Ccaragon2->insertaCaptura($evaluacion->idevaluacion,
+                       $_POST['comentarios'], $respuestas);*/
+
+        $flagCaptura = $this->Ccaragon2->insertaCaptura($evaluacion->idevaluacion, 
+                        $respuestas, $_POST['comentarios']);
+            
+            if($flagCaptura){
+                 
+                $mensaje='FORMULARIO GUARDADO CON EXITO'; echo $mensaje;  
+            
+               }else{ 
+                
+                $mensaje='ERROR EN EL REGISTRO';   echo $mensaje; 
+            }
+   // echo "".$this->session->userdata('profesor')."".$this->session->userdata('curso')."<br><br>";
+               //$horario = $this->Ccaragon2->insertaCaptura($evaluacion,'comentarios',$_POST['obje_conte1']);
+                  //echo ''.$_POST['profesor']. $_POST['curso']."<br><br>";
+            
+            
+            
+            
+                  //creo el array con datos de configuración para la vista                 
+                  //$datos_evaluacion = array('horario' =>  $horario); 
+                  //echo json_encode($datos_horario);
+                   //$this->load->view('ccaragon/cuestionario');            
+           
+        }else{
+              
+          $this->load->view('ccaragon/formsuccess');
+            /* $data = array(
+                'res'      => "success"
+            );
+            echo json_encode($data);*/
+            //aquí ya puedes procesar los datos de tu formulario
+        }
+    }
+    
+    
+   /* public function inserta_evaluacion()
+    {
+          $this->form_validation->set_rules('obje_conte1', 'Horario', 'required');
+           //$this->form_validation->set_rules('obje_conte2', 'Periodo', 'required');
+        
+        if($this->form_validation->run() == FALSE)
+        {
+           
+              $horario = $this->Ccaragon2->insertaEvaluacion($_POST[''], $_POST['curso']);
+                  //echo ''.$_POST['profesor']. $_POST['curso']."<br><br>";
+                  //creo el array con datos de configuración para la vista                 
+                  //$datos_evaluacion = array('horario' =>  $horario); 
+                  //echo json_encode($datos_horario);
+                   //$this->load->view('ccaragon/cuestionario');            
+           
+        }
+        else
+        {
+              $this->load->view('ccaragon/formsuccess');
+             /*$data = array(
+                'res'      => "success"
+            );
+            echo json_encode($data);*/
+            //aquí ya puedes procesar los datos de tu formulario
+       // }
+    //}*/
+   public function index()
+    { 
+           $this->form_validation->set_rules('horario', 'Horario', 'required');
+           $this->form_validation->set_rules('periodo', 'Periodo', 'required');
+       
+         
+           if ($this->form_validation->run() == false) //REVISAR EL ENVIO DE formularioveiw
+           {
+                  
+                 // $this->load->model('Ccaragon2');
+                  //consulta  al modelo
+                 // $profesores = $this->Ccaragon2->profesores();
+                  //$materias = $this->Ccaragon2->materias();
+
+                  //creo el array con datos de configuración para la vista
+                  //$datos_profesores = array('profesor' =>  $profesores);
+                  //$datos_materias = array('materia' =>  $materias);
+                  //echo''.var_dump($datos_materias);
+                  //echo'<br><br>'. $datos_materias['MATERIA'];
+                  //cargo la vista pasando los datos de configuacion
+                 
+                  //$data[''] = 'home/acerca_de';
+                  //$data['titulo'] = 'Acerca De';
+                  $this->load->view('ccaragon/cuestionario');
+                               
+                         
+                }
+                else
+                {
+                    $this->load->view('ccaragon/formularioview');    
+                    //$this->load->view('ccaragon/formsuccess');
+                }
+   
+   
+   }
+       
+    
+}
+
+?>

@@ -1,0 +1,275 @@
+<?php
+
+if (!defined('BASEPATH'))
+    exit('No direct script access allowed');
+
+class Calificacion_por_profesor_por_mes extends CI_Controller {
+
+    public function __construct() {
+        parent::__construct();
+        //cargamos la libreria html2pdf
+        $this->load->library('html2pdf');
+        //cargamos el modelo pdf_model
+        $this->load->model('reportes_model');
+    }
+
+    private function createFolder() {
+        if (!is_dir("./files")) {
+            mkdir("./files", 0777);
+            mkdir("./files/pdfs", 0777);
+        }
+    }
+
+    public function index() {
+
+        //establecemos la carpeta en la que queremos guardar los pdfs,
+        //si no existen las creamos y damos permisos
+        $this->createFolder();
+
+        //importante el slash del final o no funcionará correctamente
+        $this->html2pdf->folder('./files/pdfs/');
+
+        //establecemos el nombre del archivo
+        $this->html2pdf->filename('test.pdf');
+
+        //establecemos el tipo de papel
+        $this->html2pdf->paper('a4', 'portrait');
+
+        //datos que queremos enviar a la vista, lo mismo de siempre
+        
+       $total_respuesta_by_id = array();
+        $total_respuesta_by_id = $this->reportes_model->total_respuestas_by_id();
+//        $grupos = $this->reportes_model->total_de_grupos();
+        foreach ($total_respuesta_by_id as $id) {
+            $arreglo_promedio[] = ["fecha_mes" => $id['mes'], "fecha_mes_letra" => $this->get_mes_texto($id['mes']), "fecha_anio" => $id['anio'], "respuesta" => $id['respuestas'], "grupo" => $id['grupo'], "nombre" => $id['nombre'], "promedio" => $this->obtener_promedio_by_id($id['respuestas'])];
+        }
+//        echo '<pre>';
+//        print_r($arreglo_promedio);
+//        echo '</pre>';
+        $suma = 0;
+        $profesor = "";
+        $nuevo = array();
+        foreach ($arreglo_promedio as $parte) {
+            $clave[] = $parte["fecha_mes"];
+            $clave_profesor[] = $parte["grupo"];
+        }
+//        cima rellenar cart pa
+        $unico = array_unique($clave);
+        $clave_profesor_unico = array_unique($clave_profesor);
+        foreach ($clave_profesor_unico as $unica_clave_profesor) {
+            foreach ($unico as $un) {
+                $contador = 0;
+                foreach ($arreglo_promedio as $original) {
+                    if ($unica_clave_profesor === $original["grupo"]) {
+                        if ($un == $original["fecha_mes"]) {
+                            $suma = $suma + $original['promedio'];
+
+                            $profesor = $original['nombre'];
+                            $anio = $original['fecha_anio'];
+                            $grupo= $original['grupo'];
+                            $fecha_mes_letra = $original['fecha_mes_letra'];
+                            $contador++;
+                        }
+                    }
+                }
+                if ($suma > 0) {
+                    $ele['mes'] = $un;
+                    $ele['fecha_mes_letra'] = $fecha_mes_letra;
+                    $ele['fecha_anio'] = $anio;
+//            $ele['promedio'] = ($suma);
+                    $ele['promedio'] = ($suma) / $contador;
+                    $ele['profesor'] = $profesor;
+                    $ele['fecha_mes_letra'] = $fecha_mes_letra;
+                    $ele['grupo'] = $grupo;
+                    array_push($nuevo, $ele);
+                    $suma = 0;
+                }
+            }
+        }
+        $data = array(
+            'title' => 'Listado de calificaciones por profesor',
+            'respuestas' => $arreglo_promedio,
+            'calificaciones' => $nuevo);
+
+        
+        $this->html2pdf->html(utf8_decode($this->load->view('Reportes/reporte_calificacion_por_profesor_por_mes', $data, true)));
+        //$this->load->view('reporte_individual', $data, true);
+        //si el pdf se guarda correctamente lo mostramos en pantalla
+        if ($this->html2pdf->create('save')) {
+            $this->show();
+        }
+    }
+
+    public function obtener_promedio_by_id($respuesta) {
+        $strtempo = $respuesta;
+        //print_r($split[0]["respuestas"]);
+        $arraytempo = str_split($strtempo);
+
+        // var_dump($arraytempo);
+        //print_r($arraytempo[0]);
+        for ($x = 0; $x < count($arraytempo); $x++) {
+            switch ($arraytempo[$x]) {
+                case 'a':
+                    $arraytempo[$x] = 10;//EXCELENTE
+                    break;
+
+                case 'b':
+                    $arraytempo[$x] = 8;//MUY BIEN
+                    break;
+                case 'c':
+                    $arraytempo[$x] = 6;//BIEN
+                    break;
+
+                case 'd':
+                    $arraytempo[$x] = 5;//DEFICIENTE
+                    break;
+            }//fin switch
+        }//fin for
+        // var_dump($arraytempo);
+        //ARRAY CON PESO
+        // print_r($arraytempo[0]);
+        // PROMEDIO CON ARRAY*
+        //  $a = array_filter($a);
+        $average = array_sum($arraytempo) / count($arraytempo);
+        return $average;
+    } public function get_mes_texto($mes_numero) {
+//                $arreglo_meses = ["01" => "ENERO", "02" => "FEBRERO", "03" => "MARZO", "04" => "ABRIL", "05" => "MAYO", "06" => "JUNIO", "07" => "JULIO", "08" => "AGOSTO", "09" => "SEPTIEMBRE", "10" => "OCTUBRE", "11" => "NOVIEMBRE", "12" => "DICIEMBRE"];
+
+
+        switch ($mes_numero) {
+            case '01':
+                $mes_numero = "ENERO";
+                break;
+            case '02':
+                $mes_numero = "FEBRERO";
+                break;
+            case '03':
+                $mes_numero = "MARZO";
+                break;
+            case '04':
+                $mes_numero = "ABRIL";
+                break;
+            case '05':
+                $mes_numero = "MAYO";
+                break;
+            case '06':
+                $mes_numero = "JUNIO";
+                break;
+            case '07':
+                $mes_numero = "JULIO";
+                break;
+            case '08':
+                $mes_numero = "AGOSTO";
+                break;
+
+            case '09':
+                $mes_numero = "SEPTIEMBRE";
+                break;
+
+            case '10':
+                $mes_numero = "OCTUBRE";
+                break;
+
+            case '11':
+                $mes_numero = "NOVIEMBRE";
+                break;
+
+            case '12':
+                $mes_numero = "DICIEMBRE";
+                break;
+        }
+        return $mes_numero;
+
+
+//        $fecha= explode(' ', $fecha_completa);
+//        
+//        $fecha_com=  explode('-');
+//        return $fecha;
+    }
+
+
+    //funcion que ejecuta la descarga del pdf
+    public function downloadPdf() {
+        //si existe el directorio
+        if (is_dir("./files/pdfs")) {
+            //ruta completa al archivo
+            $route = base_url("files/pdfs/test.pdf");
+            //nombre del archivo
+            $filename = "test.pdf";
+            //si existe el archivo empezamos la descarga del pdf
+            if (file_exists("./files/pdfs/" . $filename)) {
+                header("Cache-Control: public");
+                header("Content-Description: File Transfer");
+                header('Content-disposition: attachment; filename=' . basename($route));
+                header("Content-Type: application/pdf");
+                header("Content-Transfer-Encoding: binary");
+                header('Content-Length: ' . filesize($route));
+                readfile($route);
+            }
+        }
+    }
+
+    //esta función muestra el pdf en el navegador siempre que existan
+    //tanto la carpeta como el archivo pdf
+    public function show() {
+        if (is_dir("./files/pdfs")) {
+            $filename = "test.pdf";
+                                   $route =("http://localhost/ccaragon/codeigniter/files/pdfs/test.pdf");
+            if (file_exists("./files/pdfs/" . $filename)) {
+                header('Content-type: application/pdf');
+                readfile($route);
+            }
+        }
+    }
+
+    //función para crear y enviar el pdf por email
+    //ejemplo de la libreria sin modificar
+    public function mail_pdf() {
+
+        //establecemos la carpeta en la que queremos guardar los pdfs,
+        //si no existen las creamos y damos permisos
+        $this->createFolder();
+
+        //importante el slash del final o no funcionará correctamente
+        $this->html2pdf->folder('./files/pdfs/');
+
+        //establecemos el nombre del archivo
+        $this->html2pdf->filename('test.pdf');
+
+        //establecemos el tipo de papel
+        $this->html2pdf->paper('a4', 'portrait');
+
+        //datos que queremos enviar a la vista, lo mismo de siempre
+        $data = array(
+            'title' => 'Listado de las provincias españolas en pdf',
+            'provincias' => $this->pdf_model->getProvincias()
+        );
+
+        //hacemos que coja la vista como datos a imprimir
+        //importante utf8_decode para mostrar bien las tildes, ñ y demás
+        $this->html2pdf->html(utf8_decode($this->load->view('reporte_individual', $data, true)));
+
+
+        //Check that the PDF was created before we send it
+        if ($path = $this->html2pdf->create('save')) {
+
+            $this->load->library('email');
+
+            $this->email->from('your@example.com', 'Your Name');
+            $this->email->to('israel965@yahoo.es');
+
+            $this->email->subject('Email PDF Test');
+            $this->email->message('Testing the email a freshly created PDF');
+
+            $this->email->attach($path);
+
+            $this->email->send();
+
+            echo "El email ha sido enviado correctamente";
+        }
+    }
+
+}
+
+/* End of file pdf_ci.php */
+/* Location: ./application/controllers/pdf_ci.php */

@@ -1,0 +1,132 @@
+<?php
+
+class Evaluaciones extends CI_Controller {
+
+    function __construct() {   //en el constructor cargamos nuestro modelo
+        parent::__construct();
+        $this->load->helper('url'); //agrega base_url
+        $this->load->helper('form');
+        //$this->load->helper(array('form', 'url'));
+        $this->load->library('form_validation');
+        $this->load->model('evaluaciones_model');
+        $this->load->model('materias_model');
+        $this->load->model('profesores_model');
+    }
+
+    public function index() {
+        $this->load->view('ccaragon/evaluaciones_view');
+    }
+
+    public function lista_profesores() {
+        $lista_pro = $this->profesores_model->get_profesores();
+
+        echo json_encode($lista_pro);
+    }
+
+    public function lista_materias() {
+        $lista_materias = $this->materias_model->get_materias();
+        echo json_encode($lista_materias);
+    }
+
+    public function lista_evaluaciones() {
+        $lista_evluaciones = $this->evaluaciones_model->get_evaluaciones();
+        echo json_encode($lista_evluaciones);
+    }
+
+    public function insert_evaluacion() {
+        $this->form_validation->set_rules('materias_id_evaluacion', 'materias_id_evaluacion', 'trim|required');
+        $this->form_validation->set_rules('grupo_evaluacion', 'grupo_evaluacion', 'trim|required');
+        $this->form_validation->set_rules('profesores_id_evaluacion', 'profesores_id_evaluacion', 'trim|required');
+        $this->form_validation->set_rules('fecha_inicio_evaluacion', 'fecha_inicio_evaluacion', 'trim|required');
+        $this->form_validation->set_rules('fecha_fin_evaluacion', 'fecha_inicio_evaluacion', 'trim|required');
+        $this->form_validation->set_rules('hora_inicio_evaluacion', 'hora_inicio_evaluacion', 'trim|required');
+        $this->form_validation->set_rules('hora_fin_evaluacion', 'hora_fin_evaluacion', 'trim|required');
+        if ($this->form_validation->run()) {
+            $bool_fecha_incio_evaluacion = $this->_format_date_mysql($this->input->post('fecha_inicio_evaluacion'));
+            $bool_fecha_fin_evaluacion = $this->_format_date_mysql($this->input->post('fecha_fin_evaluacion'));
+            if ($bool_fecha_incio_evaluacion && $bool_fecha_fin_evaluacion) {
+                $this->evaluaciones_model->insert_datos_evaluacion(
+                        $this->input->post('materias_id_evaluacion'), $this->input->post('grupo_evaluacion'), $this->input->post('profesores_id_evaluacion'), $bool_fecha_incio_evaluacion, $bool_fecha_fin_evaluacion, $this->input->post('hora_inicio_evaluacion'), $this->input->post('hora_fin_evaluacion'), 1);
+                echo 'formulario guardado con exito';
+            } else {
+                echo 'La fecha no es una fecha valida o est&aacute; en el formato diferente al (dd/mm/aaaa) ';
+            }
+
+////consulta  al modelo
+//            $materia_existente = $this->materias_model->get_clave_materia($this->input->post('clave_materia'));
+//            if ($materia_existente) {//verificamos que la clave de la materia  no exista  en la bd  para poder  ingrasar los datos de la nueva materia
+//                echo "la materia ya existe";
+//            } else {
+//                echo "formulario guardado con exito";
+//            }
+////         print_r($profesores);
+////echo "bien".count($profesores);
+        } else {
+            echo "Campos invalidos";
+        }
+    }
+
+    public function update_evaluacion() {
+        $fecha_inicio = '';
+        $fecha_fin = '';
+        $fecha_inicio = ($this->input->post('fecha_inicio_evaluacion_edit'));
+        $fecha_fin = ($this->input->post('fecha_fin_evaluacion_edit'));
+        $this->form_validation->set_rules('grupo_evaluacion_edit', 'grupo_evaluacion_edit', 'trim|required');
+        $this->form_validation->set_rules('materias_id_evaluacion_edit', 'materias_id_evaluacion_edit', 'trim|required');
+        $this->form_validation->set_rules('profesores_id_evaluacion_edit', 'profesores_id_evaluacion_edit', 'trim|required');
+        $this->form_validation->set_rules('fecha_inicio_evaluacion_edit', 'fecha_inicio_evaluacion_edit', 'trim|required');
+        $this->form_validation->set_rules('fecha_fin_evaluacion_edit', 'fecha_fin_evaluacion_edit', 'trim|required');
+        $this->form_validation->set_rules('hora_inicio_evaluacion_edit', 'hora_inicio_evaluacion_edit', 'trim|required');
+        $this->form_validation->set_rules('hora_fin_evaluacion_edit', 'hora_fin_evaluacion_edit', 'trim|required');
+        if ($this->form_validation->run()) {
+            if (!strpos($fecha_inicio, "-")) {
+                $fecha_inicio = $this->_format_date_mysql($this->input->post('fecha_inicio_evaluacion_edit'));
+            }
+            if (!strpos($fecha_fin, "-")) {
+                $fecha_fin = $this->_format_date_mysql($this->input->post('fecha_fin_evaluacion_edit'));
+            }
+
+            $this->evaluaciones_model->update_datos_evaluacion(
+                    $this->input->post('id_evaluacion'), $this->input->post('materias_id_evaluacion_edit'), $this->input->post('grupo_evaluacion_edit'), $this->input->post('profesores_id_evaluacion_edit'), $fecha_inicio, $fecha_fin, $this->input->post('hora_inicio_evaluacion_edit'), $this->input->post('hora_fin_evaluacion_edit'));
+            echo "formulario editado con exito";
+//         print_r($profesores);
+//echo "bien".count($profesores);
+        } else {
+            echo "Campos invalidos";
+        }
+    }
+
+    public function eliminar_evaluacion() {
+
+        $evaluacion_eliminada = $this->evaluaciones_model->eliminar_evaluacion($this->input->post('idevaluacion'));
+        echo json_encode($evaluacion_eliminada);
+    }
+
+    public function obtener_datos_evaluacion() {
+
+        $datos_evaluacion = $this->evaluaciones_model->get_evaluacion_by_id($this->input->post('id_evaluacion'));
+        echo json_encode($datos_evaluacion);
+    }
+
+    private function _format_date_mysql($fecha) {//changes format a date to mysql format
+        if ($fecha != "") {
+            $date = explode('/', $fecha);
+            if (count($date) === 3) {//valida que vengan los 3 datos separados por / array.length = 3
+                if (checkdate($date[0], $date[1], $date[2])) {
+                    //int $month , int $day , int $year
+                    //09/20/2018
+                    return $date[2] . '-' . $date[0] . '-' . $date[1];
+                } else {
+                    return FALSE;
+                }
+            } else {
+                return FALSE;
+            }
+        } else {
+            return FALSE;
+        }
+    }
+
+}
+
+?>

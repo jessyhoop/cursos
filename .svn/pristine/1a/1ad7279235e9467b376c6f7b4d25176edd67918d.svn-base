@@ -1,0 +1,71 @@
+<?php
+
+defined("BASEPATH") OR die("El acceso al script no está permitido");
+
+class materias_model extends CI_Model {
+
+    public function __construct() {
+        parent::__construct();
+        $this->load->database();
+    }
+
+    function get_clave_materia($clave_materia) {
+        $this->db->select("clave_materia");
+        $this->db->where('clave_materia', $clave_materia);
+        $query = $this->db->get('materia');
+//        $arreglo=$consulta->result_array();
+        return $query->num_rows() > 0 ? $query->result_array() : false;
+    }
+
+    function get_materias() {
+        $this->db->select("clave_materia,semestre,materia,idmateria");
+        $this->db->where("status", 1);
+        $query = $this->db->get('materia');
+//        $arreglo=$consulta->result_array();
+        return $query->num_rows() > 0 ? $query->result_array() : false;
+    }
+
+    function get_materia_by_id($id_materia) {
+        $this->db->select("clave_materia,semestre,materia");
+        $this->db->where("idmateria", $id_materia);
+        $query = $this->db->get('materia');
+//        $arreglo=$consulta->result_array();
+
+        return $query->result_array();
+    }
+
+    function eliminar_materia($id_materia) {
+
+        $this->db->set('status', 0);
+        $this->db->where('idmateria', $id_materia);
+        return $this->db->update('materia');
+    }
+
+    function update_datos_materia($id_materia, $materia, $semestre, $clave_materia) {
+
+        $this->db->set('materia', $materia);
+        $this->db->set('semestre', $semestre);
+        $this->db->set('clave_materia', $clave_materia);
+        $this->db->where('idmateria', $id_materia);
+        return $this->db->update('materia');
+    }
+
+    function insert_datos_materia($materia, $semestre, $clave_materia, $status) {
+        $data = array(
+            'materia' => $materia,
+            'clave_materia' => $clave_materia,
+            'semestre' => $semestre,
+            'status' => $status
+        );
+        $query = $this->db->insert('materia', $data);
+
+        if ($query) {
+
+            return true;
+        } else {
+            $error = $this->db->error();
+            return $error;
+        }
+    }
+
+}
