@@ -63,7 +63,7 @@ class Admin_reportes_generales extends CI_Controller {
         //establecemos el tipo de papel
 //        $html2pdf = new HTML2PDF('P','A4','da', true, 'UTF-8');
 //        $this->html2pdf->paper('a4', 'portrait', 'UTF-8');
-                $this->html2pdf->paper('a4', 'landscape', 'UTF-8');
+        $this->html2pdf->paper('a4', 'landscape', 'UTF-8');
 
         $alumnos_by_curso = array();
         //obtenemos los datos d ela bd 
@@ -121,8 +121,7 @@ class Admin_reportes_generales extends CI_Controller {
                     'carrera' => $carrera['carrera'],
                     'curso' => $curso['curso'],
                     'division' => $carrera['division'],
-                    'cantidad' =>
-                    $this->get_count_by_carrera_curso($carrera['idcarrera'], $curso['curso']));
+                    'cantidad' => $this->get_count_by_carrera_curso($carrera['idcarrera'], $curso['curso'], $this->input->get('fecha_inicio'), $this->input->get('fecha_fin')));
             }
         }
 
@@ -190,7 +189,7 @@ class Admin_reportes_generales extends CI_Controller {
             }
         }
 //---------------------tabla------------------
-        echo '<table style="border:1px solid #00000C">';
+        echo '<table style="border:1px solid #00000C" >';
         echo '<tr>';
         echo '<td>area</td>';
         foreach ($cursos as $curso) {
@@ -260,6 +259,167 @@ class Admin_reportes_generales extends CI_Controller {
 //        }
     }
 
+    public function reporte_por_division() {
+        $alumnos_by_division = array();
+        $carreras = $this->carreras_model->get_carreras();
+        $cursos = $this->cursos_model->get_distinc_curso();
+        $divisiones = $this->carreras_model->get_divisiones();
+//echo '<pre>';
+//        print_r($carreras);
+//echo '</pre>';
+        $nuevo = array();
+        $cant_cursos = array();
+        $cant_division = array();
+
+        foreach ($carreras as $carrera) {
+            foreach ($cursos as $curso) {
+
+                $datas[] = array(
+                    'id_carrera' => $carrera['idcarrera'],
+                    'carrera' => $carrera['carrera'],
+                    'curso' => $curso['curso'],
+                    'division' => $carrera['division'],
+                    'cantidad' => $this->get_count_by_carrera_curso($carrera['idcarrera'], $curso['curso'], $this->input->get('fecha_inicio'), $this->input->get('fecha_fin')
+                ));
+            }
+        }
+        $total = 0;
+        $subtotal = 0;
+        $subtotal_division = 0;
+        foreach ($carreras as $id_carrera_unica) {
+            $contador = 0;
+            foreach ($datas as $id_carrea) {
+                if ($id_carrera_unica['idcarrera'] == $id_carrea['id_carrera']) {
+                    $total = $total + $id_carrea['cantidad'];
+                    $carrerass = $id_carrea['carrera'];
+                    $contador++;
+                }
+            }
+            $ele['total'] = $total;
+            $ele['carrera'] = $carrerass;
+
+            array_push($nuevo, $ele);
+            $total = 0;
+        }
+//        ------------------------cursos-----------
+        foreach ($cursos as $curso) {
+            $cont = 0;
+            foreach ($datas as $id_carrea) {
+                if ($curso['curso'] == $id_carrea['curso']) {
+                    $subtotal = $subtotal + $id_carrea['cantidad'];
+                    $carrerass = $id_carrea['curso'];
+                    $cont++;
+                }
+            }
+            $curso_cant['total_curso'] = $subtotal;
+            $curso_cant['carrera'] = $carrerass;
+
+            array_push($cant_cursos, $curso_cant);
+            $subtotal = 0;
+        }
+//        --------------------division--------------
+        foreach ($cursos as $curso) {
+            $j = 0;
+            foreach ($divisiones as $division) {
+                foreach ($datas as $dato) {
+                    if (
+                            $division['division'] == $dato['division'] &&
+                            $curso['curso'] == $dato['curso']
+                    ) {
+                        $subtotal_division = $subtotal_division + $dato['cantidad'];
+                        $division_nombre = $dato['division'];
+                        $curso_nom = $dato['curso'];
+                        $j++;
+                    }
+                }
+                $division_cant['total_curso'] = $subtotal_division;
+                $division_cant['division'] = $division_nombre;
+                $division_cant['curso'] = $curso_nom;
+
+                array_push($cant_division, $division_cant);
+                $subtotal_division = 0;
+            }
+        }
+
+        $tabla = '';
+
+        $tabla .= '<table class="table table-striped text-left ">';
+        $tabla .= '<thead>';
+        $tabla .= '<tr>';
+//        $tabla.='<th rowspan="2"rowspan="2">carrera</th>';
+        $tabla .= '<th class="table-primary" style="vertical-align:top">Carrera\Curso  </th>';
+        foreach ($cursos as $curso) {
+            $tabla .= '<th  class="table-primary" style="vertical-align:top">' . $curso['curso'] . '</th>';
+        }
+        $tabla .= '<th class="table-primary" style="vertical-align:top">Total</th>';
+
+        $tabla .= '</tr>';
+        $tabla .= '</thead>';
+        $tabla .= '</tbody>';
+
+        $dato = 1;
+        $total_inscritos = 0;
+
+        for ($car = 0; $car < count($carreras); $car++) {
+//
+//                echo "<tr>";
+//                echo "<td colspan='4' style='text-align:right;'>" . $carreras[$car]['division'] . "</td>";
+//                echo "</tr>";
+//            }
+            $tabla .= '<tr>';
+            $tabla .= '<td class="table-primary">' . $carreras[$car]['carrera'] . '</td>';
+            for ($cur = 0; $cur < count($cursos); $cur++) {
+                for ($dat = 0; $dat < count($datas); $dat++) {
+                    if (($carreras[$car]['carrera'] == $datas[$dat]['carrera']) &&
+                            ($cursos[$cur]['curso'] == $datas[$dat]['curso'])) {
+                        $tabla .= '<td>' . $datas[$dat]['cantidad'] . '</td>';
+                    }
+                }
+            }
+
+
+//            for ($n = 0; $n < count($nuevo); $n++) {
+//                    echo '<td>' . 's' . '</td>';
+            if ($carreras[$car]['carrera'] == $nuevo[$car]['carrera']) {
+                $total_inscritos += $nuevo[$car]['total'];
+
+                $tabla .= '<td>';
+
+                $tabla .= $nuevo[$car]['total'];
+                $tabla .= '</td>';
+//            }
+            }
+        }
+        $tabla .= '</tr>';
+//        $tabla .= '<tr>';
+//
+//            for ($dat = 0; $dat < count($datas); $dat++) {
+//        for ($cur = 0; $cur < count($cursos); $cur++) {
+//                $total_inscritos += $datas[$dat]['cantidad'];
+//
+//                $tabla .= '<td>' .$total_inscritos . '</td>';   $tabla .= '<tr>';
+        $tabla .= ' <td colspan="6" style="text-align:right;   font-size: 12pt;"> <strong>TOTAL:</strong> </td>';
+        $tabla .= ' <td>';
+        $tabla .= $total_inscritos;
+        $tabla .= ' </td>';
+     
+//            }
+//        }
+//        $tabla .= '</tr>';
+//                        $tabla .= '<td>' .  $carreras[$car]['carrera']. '</td>';
+        $tabla .= '<tr>';
+        $tabla .= ' <td colspan="6" style="text-align:right;   font-size: 12pt;"> <strong>TOTAL:</strong> </td>';
+        $tabla .= ' <td>';
+        $tabla .= $total_inscritos;
+        $tabla .= ' </td>';
+        $tabla .= '</tr>';
+        $tabla .= '</tbody>';
+        $tabla .= '</table>';
+        echo $tabla;
+
+//---------------------tabla------------------
+    }
+
     public function generar_pdf_asistencia() {
         $alumnos_by_division = array();
 
@@ -276,7 +436,7 @@ class Admin_reportes_generales extends CI_Controller {
         if ($datas) {
 //            print_r($datas);
 //
-            $this->html2pdf->html(utf8_decode($this->load->view('reportes/pdf_reporte_por_asistencia', array('datas'=> $datas), true)));
+            $this->html2pdf->html(utf8_decode($this->load->view('reportes/pdf_reporte_por_asistencia', array('datas' => $datas), true)));
             //si el pdf se guarda correctamente lo mostramos en pantalla
             if ($this->html2pdf->create('save')) {
                 $this->show();
@@ -297,9 +457,9 @@ class Admin_reportes_generales extends CI_Controller {
         return FALSE;
     }
 
-    public function get_count_by_carrera_curso($idcarrera, $curso) {
+    public function get_count_by_carrera_curso($idcarrera, $curso, $fecha_inicio, $fecha_fin) {
         $cantidad = $this->cursos_alumno_model->get_count_by_carrera_curso(
-                $idcarrera, $curso);
+                $idcarrera, $curso, $fecha_inicio, $fecha_fin);
         if ($cantidad > 0) {
             return $cantidad[0]['cantidad'];
         } else {

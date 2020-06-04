@@ -21,31 +21,29 @@
                     <h2 class="gray">Reporte de Cursos</h2>
                 </div>
             </div>
-            <div class="row-col-sm-12 mt-5">
-                <div class="col-12 text-left">
+            <div class="row ">
+                <div class="col-10 text-left">
                     <div class="form-group">
                         <label for="cursos">Selecciona un Curso</label>
                         <select class="custom-select" id="cursos" name="cursos">
                         </select>
-
                     </div>
                 </div>
-
+                <div class="col-2 text-left mt-4">
+                    <div class="form-group">
+                        <button  id="boton_generar_reporte" type="button" class="btn btn-success">
+                            Mostrar reporte
+                            <i  class="fas fa-file-pdf"></i>
+                        </button>
+                    </div>
+                </div>
             </div>
 
             <div class="row">
                 <div class="col-10 d-flex justify-content-center align-items-center flex-column">
                     <h2 class="gray">Lista de Alumnos</h2>
                 </div>
-                <div class="col-2 text-right">
-                    <div class="form-group"  >
-                        <button  id="boton_generar_reporte" type="button" class="btn btn-success">
-                            Mostrar reporte
-                            <i  class="fas fa-file-pdf"></i>
-                        </button>
-                    </div>
 
-                </div>
             </div>
             <div class="row mt-4">
                 <div class="col-12">

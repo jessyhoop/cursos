@@ -2,10 +2,15 @@
 <!DOCTYPE html>
 <html lang="es" >
     <head>
-        <link rel="stylesheet" href="<?php echo base_url(); ?>/assets/nuevoStyle.css" media="all"/> </head>
+        <link rel="stylesheet" href="<?php echo base_url(); ?>/assets/nuevoStyle.css" media="all"/> 
     <!--SCRIPTS PARA SWEET-ALERT-->
-    <script src="<?php echo base_url(); ?>/assets/plugins/sweetalert-master/dist/sweetalert-dev.js"></script><link rel="stylesheet" href="<?php echo base_url(); ?>/assets/plugins/sweetalert-master/dist/sweetalert.css"> 
-    <script src="<?php echo base_url(); ?>assets/plugins/package/dist/sweetalert2.all.js" type="text/javascript"></script>
+    <script src="<?php echo base_url(); 
+    ?>/assets/plugins/sweetalert-master/dist/sweetalert-dev.js">
+    </script>
+    <link rel="stylesheet" href="<?php echo base_url(); 
+    ?>/assets/plugins/sweetalert-master/dist/sweetalert.css"> 
+    <script src="<?php echo base_url(); ?>assets/plugins/pac
+    kage/dist/sweetalert2.all.js" type="text/javascript"></script>
     <!--SCRIPTS PARA CALENDARIO-->
     <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.1/themes/base/jquery-ui.css" />
     <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
@@ -14,7 +19,6 @@
     <?php
     include('head.php');
     ?>
-</head>
 <style>
     .confirmacion{
         /*            background:#C6FFD5;
@@ -183,8 +187,8 @@
     </div>
 </div>
 
- ========================================MODAL PARA LA EDICION DE DATOS===============================
-    =====================================================================================================-->
+========================================MODAL PARA LA EDICION DE DATOS===============================
+=====================================================================================================-->
 <div class="modal fade" id="editEval" tabindex="-1" role="dialog"  aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
