@@ -455,7 +455,8 @@ class Admin_reportes_generales extends CI_Controller {
         $this->form_validation->set_rules('fecha_fin', 'fecha_fin', 'trim|required');
         if ($this->form_validation->run()
         ) {
-            $datas = $this->cursos_alumno_model->get_alumnos_by_asistencia_curso($this->input->get('fecha_inicio'), $this->input->get('fecha_fin'));
+            $datas = $this->cursos_alumno_model->get_alumnos_by_asistencia_curso($this->input->post('fecha_inicio'), $this->input->post('fecha_fin'));
+//            print_r($datas);
             if ($datas) {
                 echo json_encode(array("datos" =>
                     $datas, "codigo" => 200));

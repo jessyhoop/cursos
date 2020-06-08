@@ -106,7 +106,7 @@ $(document).ready(function () {
             buttonsStyling: false,
         })
         swalWithBootstrapButtons({
-            title: '¿Estas seguro de eliminar este registro?',
+            title: 'ï¿½Estas seguro de eliminar este registro?',
             text: "",
             type: 'warning',
             showCancelButton: true,

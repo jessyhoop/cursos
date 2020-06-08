@@ -5,14 +5,14 @@ var get_pdf = function (name_reporte, variables) {
 };
 $(document).ready(function () {
 //      $('#tabla_datos').DataTable();
-      
+
     get_cursos_by_profesor();
     $('#boton_generar_reporte').hide();
     function create_values_for_send_pdf(datos_formulario) {
         var data_get;
         var i = 0;// se usa para que el primer parametro no mande el & al primer valor
         for (var key in datos_formulario) {
-                if (i !== 0) {
+            if (i !== 0) {
                 data_get = data_get + '&' + key + '=' + datos_formulario[key];
             } else {
                 data_get = '?' + key + '=' + datos_formulario[key];
@@ -52,7 +52,7 @@ $(document).ready(function () {
         var id_curso = $(this).val();
         $.ajax({
             type: "GET",
-            url:base_url+ 'admin_cursos/get_alumnos_by_curso',
+            url: base_url + 'admin_cursos/get_alumnos_by_curso',
             data: {id_curso: $(this).val()},
             dataType: 'json',
             success:
@@ -70,15 +70,9 @@ $(document).ready(function () {
                             $('#datos_alumnos').html(html);
                             $('#boton_generar_reporte').show();
                             $('#boton_generar_reporte').on('click', function () {
-
                                 var values = create_values_for_send_pdf({id_curso: id_curso});
                                 get_pdf('', values);
-
                             });
-
-
-
-
                         } else {
                             swal("No hay alumnos inscritos en este curso", "no se encontraron datos", "warning");//mandamos el mensaje de la validacion y  lo mandamos 
                             $('#datos_alumnos').html('');

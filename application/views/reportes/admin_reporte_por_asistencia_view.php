@@ -8,15 +8,10 @@
         <script src="<?php echo base_url(); ?>assets/plugins/package/dist/sweetalert2.all.js" type="text/javascript"></script>
         <style>
             .confirmacion{
-                /*            background:#C6FFD5;
-                                      border:1px solid green;*/
                 color:green;
             }
             .negacion{
                 color:red;
-                /*            background:ref
-                ;
-                                  border:1px solid red;*/
             }
         </style>
     </head>
@@ -31,9 +26,6 @@
                 <div class="row ">
                     <div class="col-sm-12 d-flex justify-content-center align-items-center flex-column">
                         <h2 class="gray">Reporte por Asistencia</h2>
-                    </div>
-                    <div class="col-sm-12 d-flex justify-content-left align-items-left flex-column">
-                        <h5 class="gray"><strong></strong><?php echo $this->session->userdata('nombre_completo'); ?></h5>
                     </div>
                 </div>
                 <div class="row ">
@@ -62,27 +54,23 @@
                             </button>
                         </div>
                     </div>
-
                 </div>
                 <div class="dataTables_wrapper pt-4 ">
                     <table id="list_cursos" cellspacing="0" class="table
                            " style="width:100%">
                         <thead class="thead-dark">
                             <tr>
-                                </th>
-                                <th class="th-sm">Turno </th>
-                                <th class="th-sm">Curso </th>
-                                <th class="th-sm">Carrera </th>
-                                <th class="th-sm">Profesor</th>
-                                <th class="th-sm">Fecha Inicio</th>
-                                <th class="th-sm">Fecha Fin</th>
-                                <th class="th-sm">Hora Inicio</th>
-                                <th class="th-sm">Hora Fin</th>
-                                <th class="th-sm">Cupo</th>
-                                <th class="th-sm" colspan="2">Acciones</th>
+                                <th style="vertical-align:top" >No</th>
+                                <th  style="vertical-align:top">CURSO</th>
+                                <th  style="vertical-align:top">PROFESOR</th>
+                                <th  style="vertical-align:top">P&Eacute;RIODO</th>
+                                <th  style="vertical-align:top"> HORARIO</th>
+                                <th  style="vertical-align:top"> INSCRITOS</th>
+                                <th style="vertical-align:top">CURSARON</th>
+                                <!--<th width='5%'>NO <br>CURSARON</th>-->
                             </tr>
                         </thead>
-                        <tbody id="show_datos_cursos">
+                        <tbody id="show_datos">
                         </tbody>
                     </table>
                 </div>
@@ -94,7 +82,7 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="form-group col-12 text-center mt-3">
-                            <a href="<?php echo base_url(); ?>index.php/Login/home_user_adm" class="btn btn-primary ">Menu</a>
+                            <a href="<?php echo base_url(); ?>index.php/admin_reportes_generales" class="btn btn-primary ">Menu</a>
                             <a href="<?php echo base_url(); ?>index.php/Login/adminLogOut" class="btn btn-primary ">Finalizar</a>
                             <i class="fa fa-question-circle-o"></i>
                         </div>

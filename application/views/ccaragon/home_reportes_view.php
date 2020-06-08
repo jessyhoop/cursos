@@ -17,7 +17,7 @@
                     <ul class="list-group">
                         <li class="list-group-item">
                             <a style="text-decoration: none"  href="<?php echo base_url() ?>index.php/admin_reportes_generales/reporte_por_curso_view">
- <i class="fas fa-file-pdf"></i>&nbsp;Reporte por curso
+ <i class="fas fa-file-pdf"></i>&nbsp;Reporte por Curso
                             </a>
                         </li>
                         <li class="list-group-item">
@@ -30,7 +30,7 @@
 
                             <a href="<?php echo base_url()
             ?>index.php/admin_reportes_generales/reporte_por_asistencia_view">
-                                <i class="fas fa-file-pdf"></i>&nbsp;Reporte por asistencia</a>
+                                <i class="fas fa-file-pdf"></i>&nbsp;Reporte por Asistencia</a>
                         </li>
                     </ul>
 

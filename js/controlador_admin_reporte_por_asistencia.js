@@ -55,33 +55,57 @@ $(document).ready(function () {
                 ($('input[name=fecha_inicio_curso]').val(),
                         $('input[name=fecha_fin_curso]').val(),
                         $('#fechas_confirma_insert'))) {
-
-
             $.ajax({
                 type: "POST",
                 url: 'reporte_por_asistencia',
-                datType: 'json',
+                dataType: 'json',
                 asinc: true,
                 data: {fecha_inicio: $('#fecha_inicio_curso').val(), fecha_fin: $('#fecha_fin_curso').val()},
                 beforeSend: function () {
                     $('#cargando').show();
-
                 },
                 success:
                         function (data) {
                             if (data.codigo === 200) {
                                 $('#cargando').hide();
-                                alert(data);
-////                                alert(data);
-//                                $('#tabla').html(data);
-//                                $('#boton_generar_reporte').show();
-//                                $('#boton_generar_reporte').on('click', function () {
-//                                    var values = create_values_for_send_pdf({
-//                                        fecha_inicio: $('#fecha_inicio_curso').val(), fecha_fin: $('#fecha_fin_curso').val()});
-//                                    get_pdf('', values);
-//                                });
+                                var cont = 1;
+                                var total_cursaron = 0;
+                                var total_inscritos = 0;
+                                var html = '';
+                                var i;
+                                for (i = 0; i < data.datos.length; i++) {
+                                    total_inscritos += parseInt(data.datos[i].total_inscritos);
+                                    total_cursaron += parseInt(data.datos[i].cursaron);
+                                    html += '<tr>' +
+                                            '<td >' + cont + '</td>' +
+                                            '<td >' + data.datos[i].curso + '</td>' +
+                                            '<td >' + data.datos[i].nombre_profesor + '</td>' +
+                                            '<td >' + data.datos[i].periodo + '</td>' +
+                                            '<td >' + data.datos[i].horario + '</td>' +
+                                            '<td >' + data.datos[i].total_inscritos + '</td>' +
+                                            '<td >' + data.datos[i].cursaron + '</td>' +
+                                            '</tr>';
+                                    cont++;
+                                }
+                                html += '<tr style="background:#bdefe2">' +
+                                        '<td  colspan="5" style="text-align:right"> <strong>TOTAL:</strong> </td>'
+                                        +
+                                        '<td>' + (total_inscritos) + '</td>' +
+                                        '<td>' + (total_cursaron) + '</td>' +
+                                        '</tr>';
+                                $('#show_datos').html(html);
+                                $('#boton_generar_reporte').show();
+                                $('#boton_generar_reporte').on('click', function () {
+
+                                    var values = create_values_for_send_pdf({
+                                        fecha_inicio: $('#fecha_inicio_curso').val(), fecha_fin: $('#fecha_fin_curso').val()});
+                                    get_pdf('', values);
+
+                                });
+
+
                             } else {
-                                swal("No se encontraron datos", "no se encontraron datos", "warning");//mandamos el mensaje de la validacion y  lo mandamos e
+                                swal(data.mensaje, "no se encontraron datos", "warning");//mandamos el mensaje de la validacion y  lo mandamos e
                                 $('#cargando').hide();
                             }
                         },
@@ -94,9 +118,7 @@ $(document).ready(function () {
             });
         } else {
             swal("Ingresa una fecha correcta", "dd-mm-aaaa", "warning");//mandamos el mensaje de la validacion y  lo mandamos 
-
         }
-//            alert($('#fecha_inicio_curso').val() + 'mes:' + $('#fecha_fin_curso').val());
 
     });
 

@@ -36,7 +36,7 @@
                         <div class="col-sm-6 d-flex justify-content-center align-items-center flex-column">
                             <h2 class="ocre">Administraci&oacute;n de Reportes</h2>
                             <p>
-                                Da de alta, baja, o realiza cambios y consultas de reportes.
+                               Consultas de reportes.
                             </p>
                         </div>
                     </div>
