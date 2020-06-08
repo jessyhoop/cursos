@@ -9,7 +9,7 @@ class cursos_alumno_model extends CI_Model {
         $this->load->database();
     }
 
-    function get_alumnos_by_asistencia_curso() {
+    function get_alumnos_by_asistencia_curso($fecha_inicio, $fecha_fin) {
         $this->db->select("
                         curso.curso,
 CONCAT(nombre,' ',apellido_p,' ',apellido_m) AS nombre_profesor,
@@ -23,16 +23,18 @@ CONCAT(TIME_FORMAT(curso.hora_inicio, '%H:%i'),' a ',TIME_FORMAT(curso.hora_fin,
         $this->db->join("profesor", 'curso.profesor_idprofesor = profesor.idprofesor');
         $this->db->where("curso.status", 1);
         $this->db->where("profesor.status", 1);
+        $this->db->where('fecha_inicio BETWEEN "' . $fecha_inicio . '" and "' .
+                $fecha_fin . '"');
         $this->db->group_by('curso.idcurso');  // Produces: GROUP BY title, date
         $query = $this->db->get('alumno_curso');
 //        $arreglo=$consulta->result_array();
 //        echo '<pre>';
 //        print_r($this->db->last_query());
 //        echo '</pre>';
-        return $query->num_rows() > 0 ? $query->result_array() : false;
+        return $query->num_rows() > 0 ? $query->result_array() : FALSE;
     }
 
-    function get_count_by_carrera_curso($id_carrera, $curso,$fecha_inicio,$fecha_fin) {
+    function get_count_by_carrera_curso($id_carrera, $curso, $fecha_inicio, $fecha_fin) {
         $this->db->select("
             Count(alumno_curso.alumno_idalumno) as cantidad,
 curso.curso,
@@ -45,15 +47,15 @@ carrera.carrera");
         $this->db->where("alumno_curso.status", 1);
         $this->db->where("curso.curso", $curso);
         $this->db->where("carrera.idcarrera", $id_carrera);
-        $this->db->where('fecha_inicio BETWEEN "'.$fecha_inicio . '" and "'. 
-                $fecha_fin.'"');
+        $this->db->where('fecha_inicio BETWEEN "' . $fecha_inicio . '" and "' .
+                $fecha_fin . '"');
         $this->db->group_by(array("curso.curso"));  // Produces: GROUP BY title, date
         $query = $this->db->get('alumno_curso');
 //                        echo '<pre>';
 //        print_r($this->db->last_query());
 //        echo '</pre>';
 //        $arreglo=$consulta->result_array();
-        return $query->num_rows() > 0 ? $query->result_array() : false;
+        return $query->num_rows() > 0 ? $query->result_array() : FALSE;
     }
 
     function get_cursos_by_alumno($id_alumno) {

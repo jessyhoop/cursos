@@ -21,11 +21,11 @@
         </style>
     </head>
     <body>
-      <header>
-        <?php
-        $this->load->view('ccaragon/header.php');
-        ?>
-      </header>
+        <header>
+            <?php
+            $this->load->view('ccaragon/header.php');
+            ?>
+        </header>
         <section class="section-admin-test my-5">
             <div class="container ">
                 <div class="row ">
@@ -37,7 +37,7 @@
                     </div>
                 </div>
                 <div class="row ">
-                <div class="col-4">
+                    <div class="col-4">
                         <div class="form-group">
                             Per&iacute;odo:<input required="required" class="form-control calendario_fecha" id="fecha_inicio_curso" name="fecha_inicio_curso" type="date">
                         </div>
@@ -50,7 +50,7 @@
                     <div class="col-2 mt-4 text-right">
                         <div class="form-group" >
                             <button  id='mostrar_datos' type="button" class="btn btn-primary">
-                                Mostrar datos.
+                                Mostrar datos
                             </button>
                         </div>
                     </div>
@@ -63,26 +63,8 @@
                         </div>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-12 d-flex justify-content-center align-items-center flex-column">
-                        <h2 class="gray">Lista de Alumnos</h2>
-                    </div>
-                    
-                </div>
                 <div class="row mt-4">
                     <div class="col-12" id="tabla">
-<!--                        <table class="table text-center grand-table">
-                             REQUIERE  0.7 REM EN ESTILOS LA FUENTE
-                            <thead class="thead-dark">
-                                <tr>
-
-                                    <th scope="col">Nombre Completo <a href="#"><i class="fas fa-caret-down"></i></a></th>
-                                    <th scope="col">N&uacute;mero de cuenta <a href="#"><i class="fas fa-caret-down"></i></a></th>
-                                </tr>
-                            </thead>
-                            <tbody id="datos_alumnos">
-                            </tbody>
-                        </table>-->
                     </div>
                 </div>
                 <div class="row">
@@ -99,10 +81,9 @@
         <footer>
             <?php
             $this->load->view('ccaragon/footer.php');
-//        include('footer.php');
             ?>
         </footer>
-    <script  src="<?php echo base_url(); ?>js/controlador_admin_reporte_por_division.js"></script>
+        <script  src="<?php echo base_url(); ?>js/controlador_admin_reporte_por_division.js"></script>
     </body>
 
 </html>

@@ -56,11 +56,10 @@ $(document).ready(function () {
                 type: "GET",
                 url: 'reporte_por_division',
                 data: {fecha_inicio: $('#fecha_inicio_curso').val(), fecha_fin: $('#fecha_fin_curso').val()},
-//                dataType: 'json',
                 success:
                         function (data) {
                             if (data) {
-                                alert(data);
+//                                alert(data);
                                 $('#tabla').html(data);
                                 $('#boton_generar_reporte').show();
                                 $('#boton_generar_reporte').on('click', function () {

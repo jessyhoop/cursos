@@ -402,7 +402,7 @@ class Admin_reportes_generales extends CI_Controller {
         $tabla .= ' <td>';
         $tabla .= $total_inscritos;
         $tabla .= ' </td>';
-     
+
 //            }
 //        }
 //        $tabla .= '</tr>';
@@ -432,7 +432,7 @@ class Admin_reportes_generales extends CI_Controller {
         $this->html2pdf->filename('test.pdf');
         //establecemos el tipo de papel
         $this->html2pdf->paper('a4', 'landscape', 'UTF-8');
-        $datas = $this->cursos_alumno_model->get_alumnos_by_asistencia_curso();
+        $datas = $this->cursos_alumno_model->get_alumnos_by_asistencia_curso($this->input->get('fecha_inicio'), $this->input->get('fecha_fin'));
         if ($datas) {
 //            print_r($datas);
 //
@@ -447,6 +447,24 @@ class Admin_reportes_generales extends CI_Controller {
 //echo '<pre>';
 //        print_r($datas);
 //echo '</pre>';
+    }
+
+    public function reporte_por_asistencia() {
+        $datas = array();
+        $this->form_validation->set_rules('fecha_inicio', 'fecha_inicio', 'trim|required');
+        $this->form_validation->set_rules('fecha_fin', 'fecha_fin', 'trim|required');
+        if ($this->form_validation->run()
+        ) {
+            $datas = $this->cursos_alumno_model->get_alumnos_by_asistencia_curso($this->input->get('fecha_inicio'), $this->input->get('fecha_fin'));
+            if ($datas) {
+                echo json_encode(array("datos" =>
+                    $datas, "codigo" => 200));
+            } else {
+                echo json_encode(array("mensaje" => 'No se encontraron datos', "codigo" => 404));
+            }
+        } else {
+            echo json_encode(array("mensaje" => str_replace("\n", "", validation_errors()), "codigo" => 404));
+        }
     }
 
     public function convertir_fecha_formato_sql_a_diagonal($fecha) {

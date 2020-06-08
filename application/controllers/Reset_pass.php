@@ -33,7 +33,7 @@ class Reset_pass extends CI_Controller {
             $this->usuarios_model->update_passwd_usuario(
                     $this->input->post('idreg_usuario'), $this->input->post('passwd_usuario_edit')
             );
-            echo true;
+            echo TRUE;
         } else {
             return FALSE;
         }
