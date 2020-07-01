@@ -10,17 +10,24 @@ $(document).ready(function () {
         eyeCloseClass: 'fa-eye-slash'
     });
 ////======================================= U S U A R I O S ===============================
+
+    $('.carreraOpt').hide();
+
     $("#formulario_usuario").submit(function (e) {
+        alert($('#carrera1').val());
+        alert($('#carrera2').val());
         if (
                 $('input[name=nombre_usuario]').val() !== "" &&
                 $('input[name=apellidop_usuario]').val() !== "" &&
                 $('input[name=apellidom_usuario]').val() !== "" &&
                 $('input[name=rfc_usuario]').val() !== "" &&
-                $('input[name=correo_usuario]').val().match("^[_a-z0-9-]+(.[_a-z0-9-]+)*@(aragon.unam.mx)$") && $('input[name=rfc_usuario]').val() !== "" &&
+                $('input[name=correo_usuario]').val() !== "" &&
+                $('input[name=rfc_usuario]').val() !== "" &&
                 $('input[name=numcuenta_usuario]').val() !== "" &&
                 coincidePassword($("input[name=passwd_usuario]"),
                         $("input[name=passwd_usuario_confirm]"),
-                        $('#id_pass_confirma'))
+                        $('#id_pass_confirma')) &&
+                ($('#carrera1').val() !== $('#carrera2').val())
                 )
         {
             $datos_usuario = $("#formulario_usuario").serialize();
@@ -72,6 +79,14 @@ $(document).ready(function () {
                 return "NO EXISTE USUARIO"
         }
     }
+    $('.otraCarrera').on('change', function () {
+        if ($(this).is(':checked')) {
+            $('.carreraOpt').show();
+        } else {
+            $('.carreraOpt').hide();
+            $('#carrera2').val('');
+        }
+    });
     function coincidePassword($pass1, $pass2, $mensaje) {
         var confirmacion = "Las contrase\u00F1as si coinciden";
         var negacion = "No coinciden las contrase\u00F1as";
@@ -98,5 +113,28 @@ class="container"></div>').insertAfter($("input[name=passwd_usuario_confirm]"));
         coincidePassword($("input[name=passwd_usuario]"),
                 $("input[name=passwd_usuario_confirm]"),
                 $('#id_pass_confirma_insert'));
+    });
+
+    $.ajax({
+        type: "GET",
+        url: "lista_carreras",
+        async: true,
+        dataType: 'json',
+        success:
+                function (data) {
+                    var html = '<option  selected disabled>Seleccione una carrera</option>';
+                    var i;
+                    for (i = 0; i < data.length; i++) {
+                        html += '<option value="' + data[i].idcarrera + '">' +
+                                data[i].carrera +
+                                '</option>';
+                    }
+                    $('.carreras').html(html);
+                },
+        error: function (errorThrown) {
+            alert('Error');
+            console.log(errorThrown);
+        }
+
     });
 });
