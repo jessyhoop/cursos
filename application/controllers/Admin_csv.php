@@ -75,15 +75,15 @@ class Admin_csv extends CI_Controller {
         $output = '
 		 <h3 align="center">Profesores CSV</h3>
         <div class="table-responsive">
-        	<table class="table table-bordered table-striped">
+        	<table class="table table-bordered  b-4 table-striped">
         		<tr>
-        			<th> Nombre</th>
-        			<th> Apellido P</th>
-        			<th> Apellido M</th>
-                                    <th scope="col">Num.Centa/Trabajador</th>
-        			<th> RFC</th>
-        			<th> id_usuario</th>
-        			<th> correo Electronico</th>
+        			<th style="vertical-align:top"> Nombre</th>
+        			<th style="vertical-align:top"> Apellido P</th>
+        			<th style="vertical-align:top"> Apellido M</th>
+                                <th style="vertical-align:top" scope="col">Num.Centa<br>Trabajador</th>
+        			<th style="vertical-align:top"> RFC</th>
+        			<th style="vertical-align:top"> id_usuario</th>
+        			<th style="vertical-align:top"> correo Electronico</th>
 		';
         $count = 0;
         if ($result) {
@@ -210,20 +210,21 @@ class Admin_csv extends CI_Controller {
     function load_data_alumno() {
         $result = $this->alumnos_model->get_alumnos();
         $output = '
-		 <h3 align="center">Importar archivo CSV </h3>
-        <div class="table-responsive">
-        
-        	<table class="table table-bordered table-striped">
-                
+        	<table id="lista_alumnos" 
+                class="table table-striped lista_alumnos">
+                    <thead class="">
         		<tr>
-        			<th> nombreCompleto</th>
-        			<th> nombre</th>
-        			<th> apellido_p</th>
-        			<th> apellido_m</th>
-                                    <th scope="col">Num.Centa/Trabajador</th>
-        			<th> rfc</th>
-        			<th> id_usuario</th>
-        			<th> correo_electronico</th>
+        			<th> Id Usuario</th>
+        			<th > Nombre Completo</th>
+        			<th> Nombre</th>
+        			<th> Apellido P</th>
+        			<th> Apellido M</th>
+                                    <th>Num.Cuenta/Trabajador</th>
+        			<th> RFC</th>
+        			<th> Correo Electronico</th>
+                                </tr>
+                                    </thead>
+                                        <tbody>
 		';
         $count = 0;
         if ($result) {
@@ -231,13 +232,13 @@ class Admin_csv extends CI_Controller {
                 $count = $count + 1;
                 $output .= '
 				<tr>
+					<td>' . $row['usuario_idusuario'] . '</td>
 					<td>' . $row['nombre_com'] . '</td>
 					<td>' . $row['nombre'] . '</td>
 					<td>' . $row['apellido_p'] . '</td>
 					<td>' . $row['apellido_m'] . '</td>
 					<td>' . $row['num_cuenta'] . '</td>
 					<td>' . $row['rfc'] . '</td>
-					<td>' . $row['usuario_idusuario'] . '</td>
 					<td>' . $row['correoelectronico'] . '</td>
 				</tr>
 				';
@@ -245,11 +246,13 @@ class Admin_csv extends CI_Controller {
         } else {
             $output .= '
 			<tr>
-	    		<td colspan="5" align="center">Datos no encontrados</td>
+	    		<td colspan="5"
+                        align="center">Datos no encontrados</td>
 	    	</tr>
 			';
         }
-        $output .= '</table></div>';
+        $output .= ' </tbody>
+</table>';
         echo $output;
     }
 
@@ -266,10 +269,6 @@ class Admin_csv extends CI_Controller {
                 'correo_ele' => $file_data[$index]['Correo'],
             ];
         }
-
-//        echo '<pre>';
-//        print_r($data);
-//        echo '<pre>';
         for ($i = 0; $i < count($data); $i++) {
             $usuario = $this->usuarios_model->insert_datos_usuario(
                     $data[$i]['correo_ele'], '12345678', 3, 1);
