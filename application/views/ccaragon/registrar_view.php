@@ -53,10 +53,26 @@
                                         </div>
                                         <div class="form-group">
                                             <label for="correo_usuario">Correo Institucional:</label>
-                                            <input pattern = 
-                                                   "^[_a-z0-9-]+(.[_a-z0-9-]+)*@(aragon.unam.mx)$"
-                                                   required="required" name="correo_usuario" type="email"
-                                                   class="form-control"   placeholder="Correo electronico">
+                                            <input 
+                                                required="required" name="correo_usuario" type="email"
+                                                class="form-control"   placeholder="Correo electronico">
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="carrera1">Carrera1:</label>
+                                            <select id="carrera1" class="carreras custom-select" name="carrera1">
+
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            Segunda carrera: <input  class="otraCarrera" type="checkbox" value=1
+                                                   name="otraCarrera" />
+                                        </div>
+                                        <div class="form-group carreraOpt">
+                                            <label for="carrera">Carrera2:</label>
+                                            <select id="carrera2" class="carreras custom-select " name="carrera2">
+
+                                            </select>
                                         </div>
                                         <div class="form-row mb-4">
                                             <div class="col">
@@ -69,7 +85,7 @@
                                                        >
                                             </div>
                                             <div class="col">
-                                                <label for="numcuenta_usuario">N&uacute;mero de Cuenta/N&uacute;mero de Trabajador:<small>9 caracteres(alumnos)/6 caracteres (acad&eactue;mico)</small></label>
+                                                <label for="numcuenta_usuario">N&uacute;mero de Cuenta/N&uacute;mero de Trabajador:<small>9 caracteres(alumnos)/6 caracteres (acad&eacute;mico)</small></label>
                                                 <input required="required" type="text"
                                                        class="form-control" name="numcuenta_usuario"
                                                        placeholder="N&uacute;mero de Cuenta"
