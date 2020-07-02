@@ -10,7 +10,7 @@ class Alumnos_model extends CI_Model {
     }
 
     function valida_existe_alumno($numero_cuenta_, $rfc) {
-        $this->db->select('COUNT(alumno.idprofesor) AS cantidad');
+        $this->db->select('COUNT(alumno.idalumno) AS cantidad');
         $this->db->from('alumno');
         $this->db->where('(alumno.rfc = \'' . $rfc . '\' OR alumno.num_cuenta = \'' . $numero_cuenta_ . '\')');
         $this->db->where('alumno.status', 1);
@@ -57,13 +57,27 @@ class Alumnos_model extends CI_Model {
             'rfc' => $rfc,
             'num_cuenta' => $cuenta,
             'status' => $status,
-            'usuario_idusuario' => $usuario_id
+            'usuario_idusuario' => $usuario_id,
+            'nombre_completo' => $apellido_paterno.' '.$apellido_materno.''.$nombre
         );
         $query = $this->db->insert('alumno', $data);
-
         if ($query) {
+            return $this->db->insert_id();
+        } else {
+            $error = $this->db->error();
+            return $error;
+        }
+    }
 
-            return true;
+    function insert_alumno_carreras($id_carrera, $id_alumno,$status) {
+        $data = array(
+            'id_alumno' => $id_alumno,
+            'id_carrera' => $id_carrera,
+            'status' => $status,
+        );
+        $query = $this->db->insert('alumno_carrera', $data);
+        if ($query) {
+            return TRUE;
         } else {
             $error = $this->db->error();
             return $error;
@@ -108,10 +122,10 @@ usuario.correoelectronico');
 
     function get_alumnos_carrera_division() {
         $this->db->select("alumno.nombre_completo,
-usuario.correoelectronico,
-carrera.carrera,
-carrera.abreviatura,
-division.division");
+        usuario.correoelectronico,
+        carrera.carrera,
+        carrera.abreviatura,
+        division.division");
         $this->db->join("alumno", ' alumno_carrera.id_alumno = alumno.idalumno');
         $this->db->join("carrera", ' alumno_carrera.id_carrera = carrera.idcarrera');
         $this->db->join("division", ' carrera.id_division = division.id_division');
@@ -123,7 +137,8 @@ division.division");
         $query = $this->db->get('alumno_carrera');
         return $query->num_rows() > 0 ? $query->result_array() : false;
     }
-function insert_datos_alumno_csv($nombre_completo, $nombre, $apellido_paterno, $apellido_materno, $rfc, $cuenta, $status, $usuario_id) {
+
+    function insert_datos_alumno_csv($nombre_completo, $nombre, $apellido_paterno, $apellido_materno, $rfc, $cuenta, $status, $usuario_id) {
         $data = array(
             'nombre' => $nombre,
             'nombre_completo' => $nombre_completo,
@@ -144,4 +159,5 @@ function insert_datos_alumno_csv($nombre_completo, $nombre, $apellido_paterno, $
             return $error;
         }
     }
+
 }
