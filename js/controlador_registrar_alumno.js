@@ -14,8 +14,6 @@ $(document).ready(function () {
     $('.carreraOpt').hide();
 
     $("#formulario_usuario").submit(function (e) {
-        alert($('#carrera1').val());
-        alert($('#carrera2').val());
         if (
                 $('input[name=nombre_usuario]').val() !== "" &&
                 $('input[name=apellidop_usuario]').val() !== "" &&
@@ -44,8 +42,7 @@ $(document).ready(function () {
                                 swal(mensaje, "click en el boton para continuar", "warning"); //mandamos el mensaje de la validacion y  lo mandamos 
                             } else {
                                 swal(mensaje, "click en el boton para continuar", "success"); //mandamos el mensaje de la validacion y  lo mandamos 
-                                $("#formulario_usuario")[0].reset();//limpia valores del formulario
-
+//                                $("#formulario_usuario")[0].reset();//limpia valores del formulario
                             }
                         },
                 error: function (errorThrown) {
@@ -108,7 +105,7 @@ $(document).ready(function () {
 class="container"></div>').insertAfter($("input[name=passwd_usuario_confirm]"));
     //agegara el campo de mensaje de confirmacion para el modal de edicion dela contraseÃ±a
     //2.validacion 
-    //ejecuta la funciÃ³n al soltar la tecla
+    //ejecuta la funcion al soltar la tecla
     $("input[name=passwd_usuario_confirm]").keyup(function () {
         coincidePassword($("input[name=passwd_usuario]"),
                 $("input[name=passwd_usuario_confirm]"),
