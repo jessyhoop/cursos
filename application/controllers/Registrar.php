@@ -50,13 +50,11 @@ class Registrar extends CI_Controller {
 
     public function insert_usuario_alumno() {
         $data = [];
-//        $this->form_validation->set_rules('correo_usuario', 'correo de usuario', 'trim|required|regex_match[/^[_a-z0-9-]+(.[_a-z0-9-]+)*@(aragon.unam.mx)$/]');
         $this->form_validation->set_rules('correo_usuario', 'correo de usuario', 'trim|required|valid_email');
         $this->form_validation->set_rules('apellidop_usuario', 'Apellido Peterno', 'trim|required');
         $this->form_validation->set_rules('apellidom_usuario', 'Apellido Materno', 'trim|required');
         $this->form_validation->set_rules('nombre_usuario', 'Apellido Materno', 'trim|required');
         $this->form_validation->set_rules('passwd_usuario', 'passwd_usuario', 'trim|required|exact_length[8]');
-        //$this->form_validation->set_rules('numcuenta_usuario', 'Numero de cuenta', 'trim|required|exact_length[9]'); original;
         $this->form_validation->set_rules('numcuenta_usuario', 'Numero de cuenta', 'trim|required|min_length[6]|max_length[9]');
         $this->form_validation->set_rules('rfc_usuario', 'RFC', 'trim|required|exact_length[13]');
         $this->form_validation->set_rules('carrera1', 'carrera1', 'trim|required');
@@ -72,23 +70,14 @@ class Registrar extends CI_Controller {
                 if ($valida_existe_usuario_alumno['cantidad'] > 0) {
                     echo json_encode(array("mensaje" => "usuario ya esta registrado con los mismo datos", "codigo" => 404));
                 } else {
-                    if (($this->input->post('carrera2'))) {
-                        $data[] = ($this->input->post('carrera2'));
-                        $data[] = ($this->input->post('carrera1'));
+                    $data = $this->input->post();
+//                    print_r($data);
+                    $registrar_alumno = $this->usuarios_model->insert_usuario_alumno($data);
+                    if ($registrar_alumno) {
+                        echo json_encode(array("mensaje" => "Registro creado con exito", "codigo" => 200));
                     } else {
-                        $data[] = ($this->input->post('carrera1'));
+                        echo json_encode(array("mensaje" => "Registro no creado", "codigo" => 404));
                     }
-                    //se inserta el usuario primero y luego al alumno con el id retornado
-                    $id_usuario = $this->usuarios_model->insert_datos_usuario(
-                            $this->input->post('correo_usuario'), $this->input->post('passwd_usuario'), 3, 1);
-                    $id_alumno = $this->alumnos_model->insert_datos_alumno($this->input->post('nombre_usuario'), $this->input->post('apellidop_usuario'), $this->input->post('apellidom_usuario'), $this->input->post('rfc_usuario'), $this->input->post('numcuenta_usuario'), 1, $id_usuario);
-                    for ($i = 0; $i < count($data); $i++) {
-                        $this->alumnos_model->insert_alumno_carreras(
-                                $data[$i],
-                                $id_alumno
-                                , 1);
-                    }
-                    echo json_encode(array("mensaje" => "Registro creado con exito", "codigo" => 200));
                 }
             }
         } else {
