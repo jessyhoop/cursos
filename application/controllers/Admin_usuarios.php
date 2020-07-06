@@ -11,6 +11,7 @@ class Admin_usuarios extends CI_Controller {
         $this->load->model('usuarios_model');
         $this->load->model('profesores_model');
         $this->load->model('alumnos_model');
+        $this->load->model('carreras_model');
     }
 
     public function index() {
@@ -46,7 +47,7 @@ class Admin_usuarios extends CI_Controller {
         $this->form_validation->set_rules('apellidom_usuario', 'Apellido Materno', 'trim|required');
         $this->form_validation->set_rules('nombre_usuario', 'Apellido Materno', 'trim|required');
         $this->form_validation->set_rules('passwd_usuario', 'passwd_usuario', 'trim|required|exact_length[8]');
-        $this->orm_¡validation->set_rules('numcuenta_usuario', 'Numero de cuenta', 'trim|required'
+        $this->form_validation->set_rules('numcuenta_usuario', 'Numero de cuenta', 'trim|required'
         );
         $this->form_validation->set_rules('rfc_usuario', 'RFC', 'trim|required|exact_length[13]');
         //validacion de datos
@@ -73,37 +74,45 @@ class Admin_usuarios extends CI_Controller {
     }
 
     public function insert_usuario_alumno() {
-        $this->form_validation->set_rules('correo_usuario', 'correo de usuario', 'trim|required|regex_match[/^[_a-z0-9-]+(.[_a-z0-9-]+)*@(aragon.unam.mx)$/]');
+        $data = [];
+        $this->form_validation->set_rules('correo_usuario', 'correo de usuario', 'trim|required|valid_email');
         $this->form_validation->set_rules('apellidop_usuario', 'Apellido Peterno', 'trim|required');
         $this->form_validation->set_rules('apellidom_usuario', 'Apellido Materno', 'trim|required');
         $this->form_validation->set_rules('nombre_usuario', 'Apellido Materno', 'trim|required');
         $this->form_validation->set_rules('passwd_usuario', 'passwd_usuario', 'trim|required|exact_length[8]');
-        $this->form_validation->set_rules('numcuenta_usuario', 'Numero de cuenta', 'trim|required'
-        );
+        $this->form_validation->set_rules('numcuenta_usuario', 'Numero de cuenta', 'trim|required|min_length[6]|max_length[9]');
         $this->form_validation->set_rules('rfc_usuario', 'RFC', 'trim|required|exact_length[13]');
+        $this->form_validation->set_rules('carrera1', 'carrera1', 'trim|required');
         //validacion de datos
         if ($this->form_validation->run()) {
-            $valida_existe_usuario = $this->usuarios_model->valida_existe_usuario($this->input->post('correo_usuario'));
+            $valida_existe_usuario = $this->usuarios_model->valida_existe_usuario(
+                    $this->input->post('correo_usuario'));
             if ($valida_existe_usuario['cantidad'] > 0) {
                 echo json_encode(array("mensaje" => "El usuario ya existe (intenta con otro correo)", "codigo" => 404));
             } else {
-                $valida_existe_usuario_alumno = $this->alumnos_model->
-                        valida_existe_alumno($this->input->post('numcuenta_usuario'), $this->input->post('rfc_usuario'));
-                
+                $valida_existe_usuario_alumno = $this->alumnos_model->valida_existe_alumno(
+                        $this->input->post('numcuenta_usuario'), $this->input->post('rfc_usuario'));
                 if ($valida_existe_usuario_alumno['cantidad'] > 0) {
-                    echo json_encode(array("mensaje" => "usuario ya esta registrado con los mismo datos", "codigo" => 401));
+                    echo json_encode(array("mensaje" => "usuario ya esta registrado con los mismo datos", "codigo" => 404));
                 } else {
-                    //se inserta el usuario primero y luego al alumno con el id retornado
-                    $id_usuario = $this->usuarios_model->insert_datos_usuario(
-                            $this->input->post('correo_usuario'), $this->input->post('passwd_usuario'), 2, 1);
-                    $this->alumnos_model->
-                            insert_datos_alumno($this->input->post('nombre_usuario'), $this->input->post('apellidop_usuario'), $this->input->post('apellidom_usuario'), $this->input->post('rfc_usuario'), $this->input->post('numcuenta_usuario'), 1, $id_usuario);
-                    echo json_encode(array("mensaje" => "Registro creado con exito", "codigo" => 200));
+                    $data = $this->input->post();
+//                    print_r($data);
+                    $registrar_alumno = $this->usuarios_model->insert_usuario_alumno($data);
+                    if ($registrar_alumno) {
+                        echo json_encode(array("mensaje" => "Registro creado con exito", "codigo" => 200));
+                    } else {
+                        echo json_encode(array("mensaje" => "Registro no creado", "codigo" => 404));
+                    }
                 }
             }
         } else {
             echo json_encode(array("mensaje" => str_replace("\n", "", validation_errors()), "codigo" => 404));
         }
+    }
+
+    public function lista_carreras() {
+        $lista_carreras = $this->carreras_model->get_carreras();
+        echo json_encode($lista_carreras);
     }
 
     public function lista_profesores() {
@@ -113,7 +122,24 @@ class Admin_usuarios extends CI_Controller {
 
     public function lista_alumnos() {
         $lista_alumnos = $this->alumnos_model->get_alumnos();
-        echo json_encode($lista_alumnos);
+        for ($i = 0; $i < count($lista_alumnos); $i++) {
+            $lista_alumnos_carrera [] = array(
+                'carrera' => $this->alumnos_model->get_carreras_by_alumno($lista_alumnos[$i]['idalumno']),
+                'nombre_com' => $lista_alumnos[$i]['nombre_com'],
+                'correoelectronico' => $lista_alumnos[$i]['correoelectronico'],
+                'idalumno' => $lista_alumnos[$i]['idalumno'],
+                'nombre' => $lista_alumnos[$i]['nombre'],
+                'apellidop' => $lista_alumnos[$i]['apellido_p'],
+                'apellidom' => $lista_alumnos[$i]['apellido_m'],
+                'num_cuenta' => $lista_alumnos[$i]['num_cuenta'],
+                'usuario_idusuario' => $lista_alumnos[$i]['usuario_idusuario'],
+                'rfc' => $lista_alumnos[$i]['rfc']
+            );
+        }
+//        echo '<pre>';
+//        print_r($lista_alumnos_carrera);
+//        echo '</pre>';
+        echo json_encode($lista_alumnos_carrera);
     }
 
     public function update_usuario_profesor() {
@@ -131,11 +157,9 @@ class Admin_usuarios extends CI_Controller {
             if ($valida_existe_usuario['cantidad'] == 0) {
                 $valida_existe_usuario_profesor = $this->profesores_model->
                         valida_existe_profesor_update
-                        ($this->input->post('numcuenta_usuario_edit'), 
-                                $this->input->post('rfc_usuario_edit'), 
-                                $this->input->post('id_usuario')
+                        ($this->input->post('numcuenta_usuario_edit'), $this->input->post('rfc_usuario_edit'), $this->input->post('id_usuario')
                 );
-                
+
 //                echo $valida_existe_usuario_profesor['cantidad'];
                 if ($valida_existe_usuario_profesor['cantidad'] == 0
                 ) {
