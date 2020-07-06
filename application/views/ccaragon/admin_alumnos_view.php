@@ -2,9 +2,6 @@
 <html lang="es" >
     <head>
         <link rel="stylesheet" href="<?php echo base_url(); ?>/assets/nuevoStyle.css" media="all"/> </head>
-    <!--SCRIPTS PARA SWEET-ALERT-->
-    <script src="<?php echo base_url(); ?>/assets/plugins/sweetalert-master/dist/sweetalert-dev.js"></script><link rel="stylesheet" href="<?php echo base_url(); ?>/assets/plugins/sweetalert-master/dist/sweetalert.css"> 
-    <script src="<?php echo base_url(); ?>assets/plugins/package/dist/sweetalert2.all.js" type="text/javascript"></script>
     <!--SCRIPTS PARA CALENDARIO-->
     <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.1/themes/base/jquery-ui.css" />
     <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
@@ -20,9 +17,6 @@
         }
         .negacion{
             color:red;
-            /*            background:ref
-            ;
-                              border:1px solid red;*/
         }
     </style>
 </head>
@@ -49,16 +43,17 @@
                                  id="muestra_lista_alumnos">Lista de alumnos</button>
                     </div>
                 </div>
-
                 <div class="row mt-4">
-                    <div class="col-12">
-                        <table class="table text-center" id="list_usuarios">
-                            <thead class="thead-dark">
+                    <div class="col-12 table-responsive">
+                        <table id="tabla_alumnos" class="table  tabla_alumnos">
+                            <thead class="thead-light">
                                 <tr>
                                     <th scope="col">Nombre</th>
                                     <th scope="col">RFC</th>
-                                    <th scope="col">Num.Centa/Trabajador</th>
+                                    <th scope="col">Num.Centa/<br/>Trabajador</th>
                                     <th scope="col">Correo Electronico</th>
+                                    <th scope="col">Carrera1</th>
+                                    <th scope="col">Carrera2</th>
                                     <th scope="col">Acciones</th>
                                 </tr>
                             </thead>
@@ -117,11 +112,25 @@
                                            placeholder="Apellido Materno">
                                 </div>
                                 <div class="form-group">
-                                    <label for="correo_usuario">Correo Institucional:</label>
-                                    <input pattern = 
-                                           "^[_a-z0-9-]+(.[_a-z0-9-]+)*@(aragon.unam.mx)$"
-                                           required="required" name="correo_usuario" type="email"
+                                    <label for="correo_usuario">Correo Electronico:</label>
+                                    <input required="required" name="correo_usuario" type="email"
                                            class="form-control"   placeholder="Correo electronico">
+                                </div>
+                                <div class="form-group">
+                                    <label for="carrera1">Carrera1:</label>
+                                    <select id="carrera1" class="carreras custom-select" name="carrera1">
+
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    Segunda carrera: <input  class="otraCarrera" type="checkbox" value=1
+                                                             name="otraCarrera" />
+                                </div>
+                                <div class="form-group carreraOpt">
+                                    <label for="carrera">Carrera2:</label>
+                                    <select id="carrera2" class="carreras custom-select " name="carrera2">
+
+                                    </select>
                                 </div>
                                 <div class="form-row mb-4">
                                     <div class="col">
@@ -218,11 +227,27 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="correo_usuario_edit">Correo Institucional:</label>
-                                    <input pattern = 
-                                           "^[_a-z0-9-]+(.[_a-z0-9-]+)*@(aragon.unam.mx)$"
+                                    <input
                                            required="required" name="correo_usuario_edit" type="email"
                                            class="form-control"   placeholder="Correo electronico">
                                 </div>
+                                 <div class="form-group">
+                                    <label for="carrera1_edit">Carrera1:</label>
+                                    <select id="carrera1_edit" class="carreras custom-select" name="carrera1_edit">
+
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    Segunda carrera: <input  class="otraCarrera" type="checkbox" value=1
+                                                             name="otraCarrera" />
+                                </div>
+                                <div class="form-group carreraOpt">
+                                    <label for="carrera2_edit">Carrera2:</label>
+                                    <select id="carrera2_edit" class="carreras custom-select " name="carrera2_edit">
+
+                                    </select>
+                                </div>
+                               
                                 <div class="form-row mb-4">
                                     <div class="col">
                                         <label for="rfc_usuario_edit">RFC:</label><small>13 caracteres</small>
@@ -258,7 +283,7 @@
     <!--CIERRE DE MODAL PARA LA EDICION DE DATOS--> 
 
 
-    <!-- ========================================MODAL PARA LA EDICION DE CONTRASEÑAS===============================
+    <!-- ========================================MODAL PARA LA EDICION DE CONTRASEï¿½AS===============================
         =====================================================================================================-->
     <div class="modal fade" id="editUserPasswd" tabindex="-1" role="dialog"  aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
@@ -300,7 +325,7 @@
         </div>
     </div>
 </body>
-<script src="<?php echo base_url(); ?>/js/controlador_alumnos.js" type="text/javascript"></script>
+<script src="<?php echo base_url(); ?>/js/controlador_admin_alumno.js" type="text/javascript"></script>
 <!------------link para mostrar y ocultar las contrasenias-->
 <script src="<?php echo base_url(); ?>assets/show/bootstrap-show-password.js"></script>
 <link rel="stylesheet" href="<?php echo base_url(); ?>assets/fontawesome/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
