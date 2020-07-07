@@ -1,5 +1,8 @@
 $(document).ready(function () {
     $('.carreraOpt').hide();
+    $('#cargando').hide();
+    $('#checkCarrera').hide();
+    $('#divCarrera2').hide();
 
     $("input[name=passwd_usuario_edit]").password({
         eyeClass: 'fa',
@@ -91,6 +94,9 @@ $(document).ready(function () {
             url: "lista_alumnos",
             async: true,
             dataType: 'json',
+            beforeSend: function () {
+                $('#cargando').show();
+            },
             success:
                     function (data) {
                         var html = '';
@@ -106,13 +112,21 @@ $(document).ready(function () {
                             }
                             html += '<td class="actions-ancors">';
                             html += '<a data-toggle="modal" data-target="#editUser" href="javascript:void(0);"';
-                            html += 'class="item_edit" data-edit_id_user="' + data[i].usuario_idusuario
-                                    + '"data-edit_nombre="' + data[i].nombre
-                                    + '"data-edit_apellido_pat="' + data[i].apellido_p
-                                    + '"data-edit_apellido_mat="' + data[i].apellido_m
-                                    + '"data-edit_rfc="' + data[i].rfc
-                                    + '"data-edit_correo_elec="' + data[i].correoelectronico
-                                    + '"data-edit_num_cuenta="' + data[i].num_cuenta + '">';
+                            html += 'class="item_edit" data-edit_id_user="' + data[i].usuario_idusuario + '"';
+                            html += 'data-edit_nombre="' + data[i].nombre + '"';
+                            html += 'data-edit_apellido_pat="' + data[i].apellido_p + '"';
+                            html += 'data-edit_apellido_mat="' + data[i].apellido_m + '"';
+                            html += 'data-edit_rfc="' + data[i].rfc + ' "';
+                            if (data[i].carrera.length) {
+                                if (data[i].carrera.length === 1) {
+                                    html += 'data-edit_carrera1="' + data[i].carrera[0].id_carrera + ' "';
+                                } else {
+                                    html += 'data-edit_carrera1="' + data[i].carrera[0].id_carrera + ' "';
+                                    html += 'data-edit_carrera2="' + data[i].carrera[1].id_carrera + ' "';
+                                }
+                            }
+                            html += 'data-edit_correo_elec="' + data[i].correoelectronico + ' "';
+                            html += 'data-edit_num_cuenta="' + data[i].num_cuenta + '">';
                             html += '<i class="fa fa-user-edit"></i><span class="editar ml-2"></span></a>';
                             html += '&nbsp; &nbsp;<a href="javascript:void(0);" class="item_delete" name="' + data[i].usuario_idusuario + '">';
                             html += '<i class="fa fa-user-times"></i><span class="borrar ml-2"></span></a>&nbsp;&nbsp;';
@@ -182,6 +196,13 @@ $(document).ready(function () {
 
     let id_usuario = 0;
     $('#show_data').on('click', '.item_edit', function () {
+        var carrera = [$(this).data('edit_carrera1')];
+        $('#checkCarrera').show();
+        if ($(this).data('edit_carrera2')) {
+            $('#checkCarrera').hide();
+            $('#divCarrera2').show();
+            carrera += [$(this).data('edit_carrera2')];
+        }
         id_usuario = $(this).data('edit_id_user');
         $('input[name=nombre_usuario_edit]').val($(this).data('edit_nombre'));
         $('input[name=apellidop_usuario_edit]').val($(this).data('edit_apellido_pat'));
@@ -189,7 +210,52 @@ $(document).ready(function () {
         $('input[name=rfc_usuario_edit]').val($(this).data('edit_rfc'));
         $('input[name=correo_usuario_edit]').val($(this).data('edit_correo_elec'));
         $('input[name=numcuenta_usuario_edit]').val($(this).data('edit_num_cuenta'));
+        mostrar_carrera(carrera);
     });
+
+    function    seleccionar_el_valor_lista_de_carreras(value, id_elemento) {
+        $.ajax({
+            type: "ajax",
+            url: "lista_carreras",
+            async: true,
+            dataType: 'json',
+            success:
+                    function (data) {
+                        console.log(typeof (data[0].idcarrera));
+                        console.log(typeof (value));
+                        var html = '';
+                        var i;
+                        for (i = 0; i < data.length; i++) {
+                            if (data[i].idcarrera === value) {
+                                console.log(data[i].carrera);
+                                html += '<option  selected value="' + data[i].idcarrera + '">' +
+                                        data[i].carrera +
+                                        '</option>';
+                            } else {
+                                console.log(data[i].carrera);
+                                html += '<option   value="' + data[i].idcarrera + '">' +
+                                        data[i].carrera +
+                                        '</option>';
+                            }
+                        }
+                        id_elemento.html(html);
+                    },
+            error: function (errorThrown) {
+                alert('Error');
+                console.log(errorThrown);
+            }
+
+        });
+    }
+
+    function mostrar_carrera(carrera) {
+        console.log(typeof (carrera[0]));
+        seleccionar_el_valor_lista_de_carreras(carrera[0], $("#carrera1_edit"));
+        if (carrera.length === 2) {
+            seleccionar_el_valor_lista_de_carreras(carrera[1], $("#carrera2_edit"));
+        }
+    }
+
 
     $("#formulario_usuario_edit").submit(function (event) {
         if (
@@ -197,7 +263,6 @@ $(document).ready(function () {
                 $('input[name=apellidop_usuario_edit]').val() !== "" &&
                 $('input[name=apellidom_usuario_edit]').val() !== "" &&
                 $('input[name=rfc_usuario_edit]').val() !== "" &&
-                $('input[name=correo_usuario_edit]').val().match("^[_a-z0-9-]+(.[_a-z0-9-]+)*@(aragon.unam.mx)$") &&
                 $('input[name=numcuenta_usuario_edit]').val() !== ""
                 )
         {
@@ -244,6 +309,7 @@ $(document).ready(function () {
         $("#formulario_usuario_edit_passwd")[0].reset();
 
     });
+
     $("#formulario_usuario_edit_passwd").submit(function (event) {
         if ($('input[name=passwd_usuario_edit]').val() !== "" &&
                 $('input[name=passwd_usuario_edit_confirm]').val() !== "" &&
@@ -288,7 +354,6 @@ $(document).ready(function () {
         }
         return html;
     }
-
     function coincidePassword($pass1, $pass2, $mensaje) {
         var confirmacion = "Las contrase\u00F1as si coinciden";
         var negacion = "No coinciden las contrase\u00F1as";
