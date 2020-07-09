@@ -1,4 +1,5 @@
 $(document).ready(function () {
+    let id_usuario = 0;
     $('.carreraOpt').hide();
     $('#cargando').hide();
     $('#checkCarrera').hide();
@@ -113,16 +114,14 @@ $(document).ready(function () {
                             html += '<td class="actions-ancors">';
                             html += '<a data-toggle="modal" data-target="#editUser" href="javascript:void(0);"';
                             html += 'class="item_edit" data-edit_id_user="' + data[i].usuario_idusuario + '"';
-                            html += 'data-edit_nombre="' + data[i].nombre + '"';
-                            html += 'data-edit_apellido_pat="' + data[i].apellido_p + '"';
-                            html += 'data-edit_apellido_mat="' + data[i].apellido_m + '"';
+                            html += ' data-edit_nombre="' + data[i].nombre + '" ';
+                            html += 'data-edit_apellido_pat="' + data[i].apellido_p + ' " ';
+                            html += 'data-edit_apellido_mat="' + data[i].apellido_m + ' " ';
                             html += 'data-edit_rfc="' + data[i].rfc + ' "';
                             if (data[i].carrera.length) {
-                                if (data[i].carrera.length === 1) {
-                                    html += 'data-edit_carrera1="' + data[i].carrera[0].id_carrera + ' "';
-                                } else {
-                                    html += 'data-edit_carrera1="' + data[i].carrera[0].id_carrera + ' "';
-                                    html += 'data-edit_carrera2="' + data[i].carrera[1].id_carrera + ' "';
+                                html += ' data-edit_carrera1="' + data[i].carrera[0].id_carrera + '"';
+                                if (data[i].carrera.length === 2) {
+                                    html += ' data-edit_carrera2="' + data[i].carrera[1].id_carrera + '"';
                                 }
                             }
                             html += 'data-edit_correo_elec="' + data[i].correoelectronico + ' "';
@@ -135,6 +134,7 @@ $(document).ready(function () {
                                     '</tr>';
                         }
                         $('#show_data').html(html);
+                        $('#cargando').hide();
                         $(".tabla_alumnos").fancyTable({
                             sortColumn: 0,
                             pagination: true,
@@ -192,16 +192,18 @@ $(document).ready(function () {
     }
     );
 
+
     //funcion que se pasan los datos de un usaurio al formulario  para la edicion  de usuario
 
-    let id_usuario = 0;
     $('#show_data').on('click', '.item_edit', function () {
-        var carrera = [$(this).data('edit_carrera1')];
+        var carrera = [];
+        carrera.push($(this).data('edit_carrera1'));
         $('#checkCarrera').show();
         if ($(this).data('edit_carrera2')) {
+            $('#borrarCarrera2').attr('name', $(this).data('edit_carrera2'));
             $('#checkCarrera').hide();
             $('#divCarrera2').show();
-            carrera += [$(this).data('edit_carrera2')];
+            carrera.push($(this).data('edit_carrera2'));
         }
         id_usuario = $(this).data('edit_id_user');
         $('input[name=nombre_usuario_edit]').val($(this).data('edit_nombre'));
@@ -213,7 +215,52 @@ $(document).ready(function () {
         mostrar_carrera(carrera);
     });
 
-    function    seleccionar_el_valor_lista_de_carreras(value, id_elemento) {
+    $('.item_delete_carrera_alumno').on('click', function () {
+        alert(id_usuario);
+        alert($(this).attr('name'));
+//        const swalWithBootstrapButtons = swal.mixin({
+//            cancelButtonClass: 'btn btn-danger',
+//            confirmButtonClass: 'btn btn-success',
+//            buttonsStyling: false,
+//        })
+//        swalWithBootstrapButtons({
+//            title: '�Estas seguro de eliminar este registro?',
+//            text: "",
+//            type: 'warning',
+//            showCancelButton: true,
+//            cancelButtonText: 'No, cancelar!',
+//            confirmButtonText: 'Si,eliminar!',
+//            reverseButtons: false//invierte el sentido de los botoness
+//        }).then((result) => {//si si queremos eliminar entonces eliminamos y mandamos a traer el ajax que elimna el registro de la bd
+//            if (result.value) {
+//                var idreg_usuario = $(this).attr('name');
+//                $.ajax({
+//                    type: "POST",
+//                    url: "eliminar_usuario_alumno",
+//                    data: {idreg_usuario: idreg_usuario},
+//                    success: function (data) {
+//                        swal("Registro Eliminado", "", "success"); //mandamos el mensaje de la validacion y  lo mandamos 
+//                        lista_alumnos();
+//                    },
+//                    error: function (errorThrown) {
+//                        swal("Registro Eliminado", "", "success"); //mandamos el mensaje de la validacion y  lo mandamos 
+//                        console.log(errorThrown);
+//                    }
+//                });
+//            } else if (
+//                    result.dismiss === swal.DismissReason.cancel
+//                    ) {
+//                swalWithBootstrapButtons(
+//                        'Calcelado',
+//                        '',
+//                        ''
+//                        )
+//            }
+//        })
+    }
+    );
+    function    seleccionar_el_valor_lista_de_carreras(value_id_carrera, id_elemento) {
+        var valor=$.trim(value_id_carrera);
         $.ajax({
             type: "ajax",
             url: "lista_carreras",
@@ -221,24 +268,20 @@ $(document).ready(function () {
             dataType: 'json',
             success:
                     function (data) {
-                        console.log(typeof (data[0].idcarrera));
-                        console.log(typeof (value));
                         var html = '';
                         var i;
                         for (i = 0; i < data.length; i++) {
-                            if (data[i].idcarrera === value) {
-                                console.log(data[i].carrera);
+                            if (data[i].idcarrera === valor) {
                                 html += '<option  selected value="' + data[i].idcarrera + '">' +
                                         data[i].carrera +
                                         '</option>';
                             } else {
-                                console.log(data[i].carrera);
                                 html += '<option   value="' + data[i].idcarrera + '">' +
                                         data[i].carrera +
                                         '</option>';
                             }
                         }
-                        id_elemento.html(html);
+                        $(id_elemento).html(html);
                     },
             error: function (errorThrown) {
                 alert('Error');
@@ -249,9 +292,11 @@ $(document).ready(function () {
     }
 
     function mostrar_carrera(carrera) {
-        console.log(typeof (carrera[0]));
+        alert('carrera1' + carrera[0]);
+        alert('carrera2' + carrera[1]);
         seleccionar_el_valor_lista_de_carreras(carrera[0], $("#carrera1_edit"));
         if (carrera.length === 2) {
+            alert('carrera2');
             seleccionar_el_valor_lista_de_carreras(carrera[1], $("#carrera2_edit"));
         }
     }
